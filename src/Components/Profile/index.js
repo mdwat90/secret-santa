@@ -18,8 +18,6 @@ class Profile extends Component {
     }
   }
 
-  // This is a test update
-
   componentDidMount() {
     console.log('PROFILE PROPS:', this.props)
 
