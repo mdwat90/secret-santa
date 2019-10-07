@@ -17,7 +17,7 @@ app.use(cors());
 // MongoDB database route
 const dbRoute = process.env.MONGO;
 
-console.log('DB:', dbRoute)
+// console.log('DB:', dbRoute)
 
 // Mongoose boilerplate
 mongoose.connect(dbRoute, { useNewUrlParser: true });
