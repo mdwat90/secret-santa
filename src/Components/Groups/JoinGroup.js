@@ -26,7 +26,12 @@ class JoinGroup extends Component {
     console.log('CLIENT GROUP DATA:', data)
 
     axios.post('http://localhost:3001/api/joinGroup', {
-      data
+      data: {
+        uid: data.uid,
+        name: data.name.trim(),
+        group: data.group.trim(),
+        password: data.password.trim()
+      }
     })
     .then(function (response) {
       console.log('AXIOS RESPONSE:', response)

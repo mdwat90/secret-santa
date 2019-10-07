@@ -29,8 +29,8 @@ class Login extends Component {
 
     axios.get('http://localhost:3001/api/user', {
       params: {
-        name: data.name,
-        password: data.password
+        name: data.name.toLowerCase().trim(),
+        password: data.password.trim()
       }
     })
     .then(function (response) {

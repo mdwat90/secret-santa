@@ -17,15 +17,20 @@ class Register extends Component {
 
   componentDidUpdate(prevProps) {
     if(prevProps.loggedIn !== this.props.loggedIn) {
-      this.props.history.push('/profile')
+      this.props.history.push('/groups/my-groups')
     }
   }
 
   registerUser = (data) => {
     const component = this;
 
+    console.log('REGISTER DATA:', data)
+
     axios.post('http://localhost:3001/api/newUser', {
-      data
+      data : {
+        name: data.name.toLowerCase().trim(),
+        password: data.password.trim()
+      }
     })
     .then(function (response) {
       // console.log('AXIOS RESPONSE:', response)

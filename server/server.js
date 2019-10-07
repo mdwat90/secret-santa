@@ -17,7 +17,7 @@ app.use(cors());
 // MongoDB database route
 const dbRoute = process.env.MONGO;
 
-// console.log('DB:', dbRoute)
+console.log('DB:', dbRoute)
 
 // Mongoose boilerplate
 mongoose.connect(dbRoute, { useNewUrlParser: true });
@@ -35,6 +35,8 @@ app.use(logger('dev'));
 
 app.post('/api/newUser', function(req, response) {
     let user = req.body.data;
+
+    // console.log('NEW USER DATA:', user)
 
     UserSchema.exists({name: user.name}, function (err, res) {
         console.log('USER EXISTS:', res)

@@ -26,7 +26,14 @@ class CreateGroup extends Component {
     console.log('CLIENT GROUP DATA:', data)
 
     axios.post('http://localhost:3001/api/newGroup', {
-      data
+      data : {
+        admin: data.admin,
+        adminName: data.adminName,
+        confirmPassword: data.confirmPassword,
+        memberCount: data.memberCount,
+        name: data.name.trim(),
+        password: data.password.trim()
+      }
     })
     .then(function (response) {
       console.log('AXIOS RESPONSE:', response)
