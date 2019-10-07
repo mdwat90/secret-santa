@@ -12,21 +12,23 @@ class Profile extends Component {
       data: [],
       user_id: null,
       link: null,
-      idToDelete: null,
-      idToUpdate: null,
-      updateToApply: null
+      updateToApply: null,
+      itemToUpdate: null
     }
   }
 
   componentDidMount() {
     console.log('PROFILE PROPS:', this.props)
 
-    this.setState({
-      user_id: this.props.user_info._id
-    }, () => {
-      console.log('PROFILE USER ID:', this.state.user_id)
-      this.getDataFromDb(this.state.user_id);
-    })
+    // this.setState({
+    //   user_id: this.props.user_info._id,
+    //   selectedUserId: this.props.user_info.uidSelected,
+    //   selectedUserName: this.props.user_info.selectedUserName
+    // }, () => {
+    //   console.log('SELECTED USER:', this.state.selectedUserName)
+    //   this.getUserData(this.state.user_id);
+    //   this.getSelectedUsersData(this.state.selectedUserId);
+    // })
   }
  
   // componentDidUpdate(prevProps) {
@@ -36,21 +38,15 @@ class Profile extends Component {
   // }
 
 
-  componentWillUnmount() {
-    // if (this.state.intervalIsSet) {
-    //   clearInterval(this.state.intervalIsSet);
-    //   this.setState({ intervalIsSet: null });
-    // }
-  }
-
-  getDataFromDb = () => {
+  getUserData= (userId) => {
     axios.get('http://localhost:3001/api/getItems', {
       params: {
-        user_id: this.state.user_id
+        user_id: userId
       }
     })
       .then((res) => this.setState({ data: res.data }))
   };
+  
 
   addNewItem = (link) => {
     let component = this;
@@ -61,7 +57,7 @@ class Profile extends Component {
     })
     .then(function (response) {
       // console.log('AXIOS RESPONSE:', response)
-      component.getDataFromDb(component.state.user_id);
+      component.getUserData(component.state.user_id);
     })
     .catch(function (error) {
       console.log('AXIOS ERROR:', error)
@@ -79,7 +75,7 @@ class Profile extends Component {
     })
     .then(function (response) {
       // console.log('AXIOS RESPONSE:', response)
-      component.getDataFromDb(component.state.user_id);
+      component.getUserData(component.state.user_id);
     })
     .catch(function (error) {
       console.log('AXIOS ERROR:', error)
@@ -95,12 +91,13 @@ class Profile extends Component {
     })
     .then(function (response) {
       // console.log('AXIOS RESPONSE:', response)
-      component.getDataFromDb(component.state.user_id);
+      component.getUserData(component.state.user_id);
     })
     .catch(function (error) {
       console.log('AXIOS ERROR:', error)
     })
   };
+
 
   logout = () => {
     this.props.logOut();
@@ -114,10 +111,46 @@ class Profile extends Component {
           {data.length <= 0
             ? 'NO DB ENTRIES YET'
             : data.map((dat) => (
-                <li style={{ padding: '10px' }} key={data._id}>
-                  <span style={{ color: 'gray' }}> id: </span> {dat._id} <br />
+                <li style={{ padding: '10px' }} key={dat._id}>
                   <span style={{ color: 'gray' }}> link: </span>
-                  {dat.link}
+                    {this.state.itemToUpdate === dat._id ? 
+                      <div key={data._id}>
+                        <input
+                          type="text"
+                          style={{ width: '200px' }}
+                          onChange={(e) => this.setState({ updateToApply: e.target.value })}
+                          placeholder={this.state.updateToApply}
+                          value={this.state.updateToApply}
+                        />
+                        <div>
+                          <button 
+                            onClick={() => 
+                              this.deleteFromDB(dat._id)
+                            }>
+                            DELETE ITEM
+                          </button>
+                          <button 
+                            onClick={() => {
+                            this.updateDB(dat._id, this.state.updateToApply);
+                            this.setState({
+                              itemToUpdate: null, 
+                              updateToApply: null
+                              })
+                              }
+                            }>
+                              APPLY UPDATE
+                            </button>
+                        </div>
+                      </div>
+                    :
+                     <div>
+                     <a href={dat.link} target='_blank'>{dat.link}</a>
+                        <div>
+                          <button onClick={() => this.deleteFromDB(dat._id)}>DELETE ITEM</button>
+                          <button onClick={() => this.setState({itemToUpdate: dat._id, updateToApply: dat.link})}>UPDATE ITEM</button>
+                        </div>
+                     </div>
+                    }
                 </li>
               ))}
         </ul>
@@ -134,44 +167,7 @@ class Profile extends Component {
             ADD
           </button>
         </div>
-
-        <div style={{ padding: '10px' }}>
-          <input
-            type="text"
-            style={{ width: '200px' }}
-            onChange={(e) => this.setState({ idToDelete: e.target.value })}
-            placeholder="put id of item to delete here"
-          />
-          <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>
-            DELETE
-          </button>
-        </div>
-
-        <div style={{ padding: '10px' }}>
-          <input
-            type="text"
-            style={{ width: '200px' }}
-            onChange={(e) => this.setState({ idToUpdate: e.target.value }, () => console.log(this.state.idToUpdate))}
-            placeholder="id of item to update here"
-          />
-          <input
-            type="text"
-            style={{ width: '200px' }}
-            onChange={(e) => this.setState({ updateToApply: e.target.value })}
-            placeholder="put new value of the item here"
-          />
-          <button
-            onClick={() =>
-              this.updateDB(this.state.idToUpdate, this.state.updateToApply)
-            }
-          >
-            UPDATE
-          </button>
-        </div>
-
-        <div>
-          <h2>Draw Name</h2>
-        </div>
+        
         
         <div>
           <button onClick={this.logout}>Logout</button>

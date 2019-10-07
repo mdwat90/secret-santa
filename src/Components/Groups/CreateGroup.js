@@ -2,17 +2,16 @@ import React, {Component} from 'react';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { login, userExistsError, connectionError} from '../../actions/UserActions';
+import { connectionError} from '../../actions/UserActions';
+import { groupExistsError } from '../../actions/GroupActions';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-class Register extends Component {
+class CreateGroup extends Component {
   constructor(props) {
     super(props)
-    // this.state={
-    //   registered: false,
-    //   loggedIn: this.props.loggedIn,
-    //   registrationError: false,
-    //   connectionError: false
-    // }
+    this.state={
+      groupCreated: false
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -21,42 +20,57 @@ class Register extends Component {
     }
   }
 
-  registerUser = (data) => {
+  createGroup = (data) => {
     const component = this;
 
-    axios.post('http://localhost:3001/api/newUser', {
+    console.log('CLIENT GROUP DATA:', data)
+
+    axios.post('http://localhost:3001/api/newGroup', {
       data
     })
     .then(function (response) {
-      // console.log('AXIOS RESPONSE:', response)
+      console.log('AXIOS RESPONSE:', response)
       if(response.data._id){
-        component.props.login(response.data)
+        component.setState({
+          groupCreated: !component.state.groupCreated
+        })
       }
       else if(!response.data._id){
-        component.props.userExistsError();
+        component.props.groupExistsError();
       }
     })
     .catch(function (error) {
-      // console.log('AXIOS ERROR:', error)
-      component.props.connectionError(error);
+      console.log('AXIOS ERROR:', error)
+      // component.props.connectionError(error);
     })
   }
 
+
   render() {
+    const {user_info} = this.props;
+
     return (
-      this.props.loggedIn ?
-          <div>
-            <h3>You've already registered!</h3>
-            <p>Click "Profile" to see your profile, or "Groups" to see your groups.</p>
-          </div>
+      this.state.groupCreated ? 
+        <div>
+          <h3>Your group has been created!</h3>
+        </div>
         :
-          <div>
+        <div>
           <Formik
-            initialValues={{ name: '', password: '', confirmPassword: ''}}
+            initialValues={{ admin: user_info._id, adminName: user_info.name, name: '', password: '', confirmPassword: '', memberCount: '' }}
             validate={values => {
               let errors = {};
               if (!values.name) {
                 errors.name = 'Required';
+              } 
+              if (!values.password) {
+                errors.name = 'Required';
+              } 
+              if (!values.confirmPassword) {
+                errors.name = 'Required';
+              } 
+              if (!values.memberCount) {
+                errors.memberCount = 'Required';
               } 
               if (values.password !== values.confirmPassword) {
                 errors.confirmPassword = 'Passwords do not match';
@@ -64,7 +78,7 @@ class Register extends Component {
               return errors;
             }}
             onSubmit={(values, { setSubmitting }) => {
-              this.registerUser(values);
+              this.createGroup(values);
             }}
           >
             {({
@@ -77,8 +91,9 @@ class Register extends Component {
               isSubmitting
             }) => (
               <form onSubmit={handleSubmit}>
+              {errors.admin}
               <div>
-                <h1>Name</h1>
+                <h3>Group Name</h3>
                 <input
                   type="name"
                   name="name"
@@ -92,7 +107,7 @@ class Register extends Component {
                   {errors.name}
               </div>
               <div>
-                <h1>Password</h1>
+                <h3>Password</h3>
                 <input
                   type="password"
                   name="password"
@@ -106,7 +121,7 @@ class Register extends Component {
                   {errors.password}
               </div>
               <div>
-                <h1>Confirm Password</h1>
+                <h3>Confirm Password</h3>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -119,6 +134,20 @@ class Register extends Component {
               <div>
                   {errors.confirmPassword}
               </div>
+              <div>
+                <h3>Number of Members</h3>
+                <input
+                  type="number"
+                  name="memberCount"
+                  placeholder={'Number'}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.memberCount}
+                />
+              </div>
+              <div>
+                  {errors.memberCount}
+              </div>
                 <div>
                   <button type="submit" disabled={isSubmitting}>
                     Submit
@@ -127,55 +156,41 @@ class Register extends Component {
               </form>
             )}
           </Formik>
-          
-          {/* {this.props.history.action === "REPLACE" ?
-              <div>
-                <h2>PLEASE SIGN IN</h2>
-              </div>
-              :
-              null
-          } */}
-          {this.props.userExistsErr ?
-              <div>
-                <h3>USER ALREADY EXISTS</h3>
-              </div>
-              :
-              null
-          }
-          {this.props.connectionErr ?
+
+
+          {this.props.groupExistsErr ?
           <div>
-            <h3>ERROR CONNECTING TO DATABASE</h3>
+            <h3>There's already a group with that name. Try changing the name of the group.</h3>
           </div>
           :
           null
-      }
+          }
           </div>
     )
   }
 }
 
 const mapStateToProps = state => {
-  const { user: {user_info, loggedIn, userExistsErr, connectionErr } } = state;
+  const { user: {user_info, loggedIn, connectionErr }, group: {groupExistsErr } } = state;
 
   return {
     user_info: user_info,
     loggedIn: loggedIn,
-    userExistsErr: userExistsErr,
+    groupExistsErr: groupExistsErr,
     connectionErr: connectionErr
   }
 }
 
 const mapDispatchToProps = {
-  login,
-  userExistsError,
+  groupExistsError,
   connectionError
 }
 
 
-const RegisterScreen = connect(
+const CreateGroupScreen = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Register);
+)(CreateGroup);
 
 
-export default RegisterScreen;
+export default CreateGroupScreen;

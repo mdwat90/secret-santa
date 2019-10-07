@@ -2,17 +2,16 @@ import React, {Component} from 'react';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { login, userExistsError, connectionError} from '../../actions/UserActions';
+import { connectionError } from '../../actions/UserActions';
+import { joinGroupError } from '../../actions/GroupActions';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-class Register extends Component {
+class JoinGroup extends Component {
   constructor(props) {
     super(props)
-    // this.state={
-    //   registered: false,
-    //   loggedIn: this.props.loggedIn,
-    //   registrationError: false,
-    //   connectionError: false
-    // }
+    this.state={
+      groupJoined: false
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -21,50 +20,53 @@ class Register extends Component {
     }
   }
 
-  registerUser = (data) => {
+  JoinGroup = (data) => {
     const component = this;
 
-    axios.post('http://localhost:3001/api/newUser', {
+    console.log('CLIENT GROUP DATA:', data)
+
+    axios.post('http://localhost:3001/api/joinGroup', {
       data
     })
     .then(function (response) {
-      // console.log('AXIOS RESPONSE:', response)
+      console.log('AXIOS RESPONSE:', response)
       if(response.data._id){
-        component.props.login(response.data)
+        component.setState({
+          groupJoined: !component.state.groupJoined
+        })
       }
       else if(!response.data._id){
-        component.props.userExistsError();
+        component.props.joinGroupError();
       }
     })
     .catch(function (error) {
-      // console.log('AXIOS ERROR:', error)
+      console.log('AXIOS ERROR:', error)
       component.props.connectionError(error);
     })
   }
 
+
   render() {
+    const {user_info} = this.props;
+
     return (
-      this.props.loggedIn ?
-          <div>
-            <h3>You've already registered!</h3>
-            <p>Click "Profile" to see your profile, or "Groups" to see your groups.</p>
-          </div>
+      this.state.groupJoined ? 
+        <div>
+          <h3>You have joined the group!</h3>
+        </div>
         :
-          <div>
+        <div>
           <Formik
-            initialValues={{ name: '', password: '', confirmPassword: ''}}
+            initialValues={{ uid: user_info._id, name: '', group: '',  password: '' }}
             validate={values => {
               let errors = {};
               if (!values.name) {
                 errors.name = 'Required';
-              } 
-              if (values.password !== values.confirmPassword) {
-                errors.confirmPassword = 'Passwords do not match';
-              } 
+              }
               return errors;
             }}
             onSubmit={(values, { setSubmitting }) => {
-              this.registerUser(values);
+              this.JoinGroup(values);
             }}
           >
             {({
@@ -77,8 +79,9 @@ class Register extends Component {
               isSubmitting
             }) => (
               <form onSubmit={handleSubmit}>
+              {errors.admin}
               <div>
-                <h1>Name</h1>
+                <h3>Your Name</h3>
                 <input
                   type="name"
                   name="name"
@@ -92,7 +95,21 @@ class Register extends Component {
                   {errors.name}
               </div>
               <div>
-                <h1>Password</h1>
+                <h3>Group Name</h3>
+                <input
+                  type="name"
+                  name="group"
+                  placeholder={'Group Name'}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.group}
+                />
+              </div>
+              <div>
+                  {errors.group}
+              </div>
+              <div>
+                <h3>Password</h3>
                 <input
                   type="password"
                   name="password"
@@ -105,77 +122,48 @@ class Register extends Component {
               <div>
                   {errors.password}
               </div>
-              <div>
-                <h1>Confirm Password</h1>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  placeholder={'Password'}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.confirmPassword}
-                />
-              </div>
-              <div>
-                  {errors.confirmPassword}
-              </div>
                 <div>
-                  <button type="submit" disabled={isSubmitting}>
+                  <button type="submit">
                     Submit
                   </button>
                 </div>
               </form>
             )}
           </Formik>
-          
-          {/* {this.props.history.action === "REPLACE" ?
-              <div>
-                <h2>PLEASE SIGN IN</h2>
-              </div>
-              :
-              null
-          } */}
-          {this.props.userExistsErr ?
-              <div>
-                <h3>USER ALREADY EXISTS</h3>
-              </div>
-              :
-              null
-          }
-          {this.props.connectionErr ?
+
+          {this.props.joinGroupErr ?
           <div>
-            <h3>ERROR CONNECTING TO DATABASE</h3>
+            <h3>There was an error joining the group. Check the group name, password and if you've already joined the group.</h3>
           </div>
           :
           null
-      }
+          }
           </div>
     )
   }
 }
 
 const mapStateToProps = state => {
-  const { user: {user_info, loggedIn, userExistsErr, connectionErr } } = state;
+  const { user: {user_info, loggedIn, connectionErr }, group: {joinGroupErr }  } = state;
 
   return {
     user_info: user_info,
     loggedIn: loggedIn,
-    userExistsErr: userExistsErr,
+    joinGroupErr: joinGroupErr,
     connectionErr: connectionErr
   }
 }
 
 const mapDispatchToProps = {
-  login,
-  userExistsError,
+  joinGroupError,
   connectionError
 }
 
 
-const RegisterScreen = connect(
+const JoinGroupScreen = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Register);
+)(JoinGroup);
 
 
-export default RegisterScreen;
+export default JoinGroupScreen;
