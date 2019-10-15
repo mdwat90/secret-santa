@@ -5,9 +5,28 @@ import { connect } from 'react-redux';
 import { login, userExistsError, connectionError} from '../../actions/UserActions';
 import { withStyles } from '@material-ui/styles';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { Button, Container, Box, Typography, TextField, Card, CardActionArea, Grid, Menu, MenuItem, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
+import { 
+  Button, 
+  Container, 
+  CircularProgress,
+  Box, 
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogContentText, 
+  DialogTitle,
+  Typography, 
+  TextField, 
+  Card, 
+  Grid, 
+  Menu, 
+  MenuItem, 
+  ExpansionPanel, 
+  ExpansionPanelSummary, 
+  ExpansionPanelDetails } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 const styles = {
   root: {
@@ -49,6 +68,11 @@ const styles = {
   icon: {
     margin: 5
   },
+  deleteIcon: {
+    height: '20px',
+    width: '20px',
+    cursor: 'pointer'
+  },
   delete: {
     color: 'red'
   },
@@ -79,7 +103,12 @@ class Groups extends Component {
       selectUserErr: false,
       registrationError: false,
       connectionError: false,
-      anchorEl: null
+      anchorEl: null,
+      deleteUserModal: false,
+      removeUserModal: false,
+      groupId: null,
+      deleteUid: null,
+      loading: null
     }
   }
 
@@ -114,15 +143,59 @@ class Groups extends Component {
     })
   }
 
+  openDeleteModal = (event) => {
+    // console.log('USER:::', event.currentTarget.getAttribute('id'))
+    // console.log('GROUP:::', event.currentTarget.getAttribute('groupId'))
+    this.setState({
+      deleteUserModal: true,
+      deleteUid: event.currentTarget.getAttribute('id'),
+      groupId: event.currentTarget.getAttribute('groupId')
+    })
+  };
+
+  closeDeleteModal = () => {
+    this.setState({
+      deleteUserModal: false,
+      deleteUid: null,
+      groupId: null
+    })
+  };
+  
+  openRemoveModal = (event) => {
+    // console.log('USER:::', event.currentTarget.getAttribute('id'))
+    // console.log('GROUP:::', event.currentTarget.getAttribute('groupId'))
+    this.setState({
+      removeUserModal: true,
+      deleteUid: event.currentTarget.getAttribute('id'),
+      groupId: event.currentTarget.getAttribute('groupId')
+    })
+  };
+
+  closeRemoveModal = () => {
+    this.setState({
+      removeUserModal: false,
+      deleteUid: null,
+      groupId: null
+    })
+  };
+
+
   getUserGroups = (userId) => {
+    this.setState({
+      loading: true
+    }, () => {
+      console.log('LOADING:', this.state.loading)
+    })
+
     axios.get('http://localhost:3001/api/getUserGroups', {
       params: {
         user_id: userId
       }
     })
       .then((res) => {
-        this.setState({ userGroups: res.data }, () => {
+        this.setState({ userGroups: res.data, loading: false }, () => {
           console.log('USERS GROUPS:', this.state.userGroups)
+          console.log('LOADING:', this.state.loading)
         })
     })
     .catch(error => {
@@ -203,6 +276,8 @@ class Groups extends Component {
       // console.log('AXIOS ERROR:', error)
     })
     ;
+
+    this.closeDeleteModal();
   };
 
   drawName = (groupId, userId) => {
@@ -244,7 +319,15 @@ class Groups extends Component {
             alignItems={'flex-start'} 
             spacing={3}
           >
-            {this.state.userGroups.length <= 0 ? 
+            {this.state.loading ?
+              <Container style={{height: '20vh', marginTop: '10vh'}}>
+                <CircularProgress />
+              </Container>
+              :
+              null
+             }
+
+            {this.state.userGroups.length <= 0 && this.state.loading === false ? 
               <Container style={{height: '20vh', marginTop: '10vh'}}>
                 <Typography variant='h4'>You haven't joined any groups yet!</Typography>
                 <Typography variant='body1'>When you create or join a group, it will show up here.</Typography>
@@ -277,24 +360,11 @@ class Groups extends Component {
                       }
                     </Grid>
 
-                    {group.memberCount > 0 ?
-                      <Typography variant='p' key={idx}>Waiting on {group.memberCount} more people to join.</Typography>
-                      :
-                      <Typography variant='p' key={idx}>Everyone has joined!</Typography>
+                    {group.memberCount !== 0 ?
+                      <Typography variant='body1' key={idx}>{group.memberCount} spots left.</Typography>
+                    :
+                      <Typography variant='body1' key={idx}>Ready!</Typography>
                     }
-                    
-                    {/* {group.admin === user_info._id ?
-                    <div>
-                      <Button color='secondary' className={classes.button} onClick={() => this.deleteGroup(group._id)}>Delete Group</Button>
-                      {group.memberCount === 0 ?
-                        <Button color='default' className={classes.button} onClick={() => this.clearSelections(group._id)}>Clear Selections</Button>
-                        :
-                        null
-                      }
-                    </div>
-                      :
-                      null
-                    } */}
 
                     <ExpansionPanel className={classes.panel}>
                       <ExpansionPanelSummary
@@ -305,32 +375,120 @@ class Groups extends Component {
                         <Typography variant='h6'>Members</Typography>
                       </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
+                          <Grid 
+                            container  
+                            wrap='wrap' 
+                            direction='row' 
+                            alignContent={'flex-start'} 
+                            alignItems={'flex-start'} 
+                            spacing={3}
+                          >
                             {group.members.map((member, index) => {
+
+                              //member is NOT current user and current user is the group admin
                               if ((member.uid !== user_info._id) && (group.admin === user_info._id)) {
                                 return (
                                   <div key={index}>
                                     {member.selectedBy === this.props.user_info._id ?
-                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
+                                      <Grid item style={{margin: '1vh'}}>
+                                        <Grid container direction='row' spacing={1}>
+                                          <Grid item>
+                                            <Typography variant='body2' style={{color: '#4f92ff'}} key={index}>{member.name.toUpperCase()}</Typography>
+                                          </Grid>
+                                          <Grid item>
+                                            <HighlightOffIcon className={classes.deleteIcon} id={member.uid} groupId={group._id} onClick={(event) => this.openDeleteModal(event)} />
+                                          </Grid>
+                                        </Grid>
+                                      </Grid>
                                       :
-                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
+                                      <Grid item style={{margin: '1vh'}}>
+                                        <Grid container direction='row' spacing={1}>
+                                          <Grid item>
+                                            <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
+                                          </Grid>
+                                          <Grid item>
+                                            <HighlightOffIcon className={classes.deleteIcon} id={member.uid} groupId={group._id} onClick={(event) => this.openDeleteModal(event)} />
+                                          </Grid>
+                                        </Grid>
+                                      </Grid>
                                     }
-                                    <span>
-                                      <Button color='secondary' onClick={() => this.removeMember(group._id, member.uid)}>Remove member</Button>
-                                    </span>
+                                    
+                                    {/* deleting member */}
+                                    <Dialog
+                                      open={this.state.deleteUserModal}
+                                      onClose={this.closeDeleteModal}
+                                      aria-labelledby="alert-dialog-title"
+                                      aria-describedby="alert-dialog-description"
+                                    >
+                                      <DialogTitle id="alert-dialog-title">{"Delete Member?"}</DialogTitle>
+                                      <DialogContent>
+                                        <DialogContentText id="alert-dialog-description">
+                                          Are you sure you want to delete this member from the group?
+                                        </DialogContentText>
+                                      </DialogContent>
+                                      <DialogActions>
+                                        <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
+                                          Delete
+                                        </Button>
+                                        <Button onClick={ () => this.closeDeleteModal()} color="primary" autoFocus>
+                                          Close
+                                        </Button>
+                                      </DialogActions>
+                                    </Dialog>
                                   </div>
                                   )
                               }
+                              
+                              //member is current user and current user is NOT the group admin
                               else if ((member.uid === user_info._id) && (group.admin !== user_info._id)) {
                                 return (
                                   <div key={index}>
                                     {member.selectedBy === this.props.user_info._id ?
-                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
+                                      <Grid item style={{margin: '1vh'}}>
+                                        <Grid container direction='row' spacing={1}>
+                                          <Grid item>
+                                            <Typography variant='body2' style={{color: '#4f92ff'}} key={index}>{member.name.toUpperCase()}</Typography>
+                                          </Grid>
+                                          <Grid item>
+                                            <HighlightOffIcon className={classes.deleteIcon} id={member.uid} groupId={group._id}   onClick={(event) => this.openRemoveModal(event)} />
+                                          </Grid>
+                                        </Grid>
+                                      </Grid>
                                       :
-                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
+                                      <Grid item style={{margin: '1vh'}}>
+                                        <Grid container direction='row' spacing={1}>
+                                          <Grid item>
+                                            <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
+                                          </Grid>
+                                          <Grid item>
+                                            <HighlightOffIcon className={classes.deleteIcon} id={member.uid} groupId={group._id}  onClick={(event) => this.openRemoveModal(event)} />
+                                          </Grid>
+                                        </Grid>
+                                      </Grid>
                                     }
-                                    <span>
-                                      <Button color='secondary' onClick={() => this.removeMember(group._id, member.uid)}>Leave Group</Button>
-                                    </span>
+
+                                    {/* leaving group */}
+                                    <Dialog
+                                      open={this.state.removeUserModal}
+                                      onClose={this.closeDeleteModal}
+                                      aria-labelledby="alert-dialog-title"
+                                      aria-describedby="alert-dialog-description"
+                                    >
+                                      <DialogTitle id="alert-dialog-title">{"Leave Group?"}</DialogTitle>
+                                      <DialogContent>
+                                        <DialogContentText id="alert-dialog-description">
+                                          Are you sure you want to leave this group?
+                                        </DialogContentText>
+                                      </DialogContent>
+                                      <DialogActions>
+                                        <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
+                                          Leave Group
+                                        </Button>
+                                        <Button onClick={() => this.closeRemoveModal()} color="primary" autoFocus>
+                                          Close
+                                        </Button>
+                                      </DialogActions>
+                                    </Dialog>
                                   </div>
                                   )
                               }
@@ -338,14 +496,30 @@ class Groups extends Component {
                                 return (
                                   <div key={index}>
                                     {member.selectedBy === this.props.user_info._id ?
-                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
+                                      <Grid item style={{margin: '1vh'}}>
+                                        <Grid container direction='row' spacing={1}>
+                                          <Grid item>
+                                            <Typography variant='body2' style={{color: '#4f92ff'}} key={index}>{member.name.toUpperCase()}</Typography>
+                                          </Grid>
+                                          {/* <Grid item>
+                                            <HighlightOffIcon className={classes.deleteIcon} id={member.uid}  onClick={(event) => this.openDeleteModal(event)} />
+                                          </Grid> */}
+                                        </Grid>
+                                      </Grid>
                                       :
-                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
+                                      <Grid item style={{margin: '1vh'}}>
+                                        <Grid container direction='row' spacing={1}>
+                                          <Grid item>
+                                            <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
+                                          </Grid>
+                                        </Grid>
+                                      </Grid>
                                     }
                                   </div>
                                   )
                               }
                             })}
+                          </Grid>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
 
@@ -353,21 +527,43 @@ class Groups extends Component {
                     {group.memberCount !== 0 ?
                       <div>
                         <Typography variant='body1' className={classes.subText}>When everyone joins the group, you can draw a name below.</Typography>
+                        <div>
+                          {/* <Typography variant='h5' className={classes.title}>Draw Name</Typography> */}
+                            <Button color='primary' 
+                              disabled={true} 
+                              className={classes.button} 
+                              onClick={() => this.drawName(group._id, this.props.user_info._id)}
+                            >
+                              Draw
+                            </Button>
+                        </div>
                       </div>
                       :
                       null
                       }
 
-                      <div>
-                        {/* <Typography variant='h5' className={classes.title}>Draw Name</Typography> */}
-                          <Button color='primary' 
-                            disabled={group.memberCount === 0 ? false : true } 
-                            className={classes.button} 
-                            onClick={() => this.drawName(this.props.user_info._id)}
-                          >
-                            Draw
-                          </Button>
-                      </div>
+
+                      {group.members.map((member, index) => {
+                        if(member.selectedBy === this.props.user_info._id) {
+                          return (
+                            <Typography style={{color: '#4f92ff'}}>You selected {member.name.toUpperCase()}</Typography>
+                          )
+                        }
+
+                        if(member.uid === this.props.user_info._id && member.uidSelected === null && group.memberCount === 0) {
+                          return (
+                            <div>
+                              <Button color='primary' 
+                                disabled={false} 
+                                className={classes.button} 
+                                onClick={() => this.drawName(group._id, this.props.user_info._id)}
+                              >
+                                Draw
+                              </Button>
+                            </div>
+                          )
+                        }
+                      })}
 
                   </Card>
                 </Grid>

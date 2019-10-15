@@ -304,6 +304,9 @@ app.delete('/api/removeMember', function(req, response) {
     let groupId = req.body.group_id;
     let userId = req.body.uid;
 
+    console.log('GROUP ID:', groupId)
+    console.log('USER ID:', userId)
+
     GroupSchema.findOneAndUpdate(
         {
             _id: groupId,
