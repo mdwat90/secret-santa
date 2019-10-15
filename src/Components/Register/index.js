@@ -18,7 +18,7 @@ const styles = {
     background: '#fff',
     textAlign: 'center',
     width: '50%',
-    height: '70%',
+    height: '65vh',
     borderRadius: 5
   },
   title: {
@@ -124,7 +124,7 @@ class Register extends Component {
                 isSubmitting
               }) => (
                 <form onSubmit={handleSubmit}>
-                    <Typography variant='h5' className={classes.title}>Register</Typography>
+                    <Typography variant='h4' className={classes.title}>Register</Typography>
                   <div>
                     {/* <Typography variant='h5' className={classes.title}>Name</Typography> */}
                     <TextField
@@ -204,14 +204,14 @@ class Register extends Component {
             } */}
             {this.props.userExistsErr ?
                 <div>
-                  <Typography variant='h6' style={{paddingTop: '2vh', color: 'red'}}>USER ALREADY EXISTS</Typography>
+                  <Typography variant='h6' style={{paddingTop: '4vh', color: 'red'}}>USER ALREADY EXISTS</Typography>
                 </div>
                 :
                 null
             }
             {this.props.connectionErr ?
             <div>
-              <Typography variant='h6' style={{paddingTop: '2vh', color: 'red'}}>ERROR CONNECTING TO DATABASE</Typography>
+              <Typography variant='h6' style={{paddingTop: '4vh', color: 'red'}}>ERROR CONNECTING TO DATABASE</Typography>
             </div>
             :
             null

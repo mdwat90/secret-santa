@@ -19,7 +19,7 @@ const styles = {
     background: '#fff',
     textAlign: 'center',
     width: '50%',
-    height: '60%',
+    height: '60vh',
     borderRadius: 5
   },
   title: {
@@ -102,13 +102,14 @@ class Login extends Component {
               isSubmitting
             }) => (
               <form onSubmit={handleSubmit}>
-                  <Typography variant='h5' className={classes.title}>Login</Typography>
+                  <Typography variant='h4' className={classes.title}>Login</Typography>
                 <div>
                   {/* <Typography variant='h5' className={classes.title}>Name</Typography> */}
                   <TextField
-                    required
                     type="name"
                     name="name"
+                    id="standard-required"
+                    label="First Name"
                     placeholder={'First Name'}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -162,14 +163,14 @@ class Login extends Component {
           } */}
           {this.props.loginErr ?
               <div>
-              <Typography variant='h6' style={{paddingTop: '2vh', color: 'red'}}>ERROR LOGGING IN</Typography>
+              <Typography variant='h6' style={{paddingTop: '3vh', color: 'red'}}>ERROR LOGGING IN</Typography>
               </div>
               :
               null
           }
           {this.props.connectionErr ?
               <div>
-              <Typography variant='h6' style={{paddingTop: '2vh', color: 'red'}}>ERROR CONNECTING TO DATABASE</Typography>
+              <Typography variant='h6' style={{paddingTop: '3vh', color: 'red'}}>ERROR CONNECTING TO DATABASE</Typography>
               </div>
               :
               null

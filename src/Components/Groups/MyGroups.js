@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import { login, userExistsError, connectionError} from '../../actions/UserActions';
 import { withStyles } from '@material-ui/styles';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { Button, Container, Box, Typography, TextField, Card, CardActionArea, Grid, Menu, MenuItem } from '@material-ui/core';
+import { Button, Container, Box, Typography, TextField, Card, CardActionArea, Grid, Menu, MenuItem, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const styles = {
   root: {
@@ -33,6 +34,7 @@ const styles = {
   },
   subText: {
     margin: '2vh',
+    color: '#b8b8b8'
   },
   card: {
     padding: '2vh'
@@ -47,11 +49,20 @@ const styles = {
   icon: {
     margin: 5
   },
+  delete: {
+    color: 'red'
+  },
+  panel: {
+    marginTop: '2vh',
+    borderWidth: '0px',
+    boxShadow: '0 0 0 0',
+    // background: 'red'
+  },
   link: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
     display: 'inline-flex',
-    height: '10vh',
-    width: '25%',
+    height: '8vh',
+    width: '25vh',
     padding: '0 30px',
     margin: '5vh'
   },
@@ -68,7 +79,7 @@ class Groups extends Component {
       selectUserErr: false,
       registrationError: false,
       connectionError: false,
-      openOptions: false
+      anchorEl: null
     }
   }
 
@@ -91,9 +102,15 @@ class Groups extends Component {
     }
   }
   
-  optionsMenu = () => {
+  openOptionsMenu = (event) => {
     this.setState({
-      openOptions: !this.state.openOptions
+      anchorEl: event.currentTarget
+    })
+  }
+  
+  closeOptionsMenu = () => {
+    this.setState({
+      anchorEl: null
     })
   }
 
@@ -126,6 +143,10 @@ class Groups extends Component {
   deleteGroup = (idTodelete) => {
     let component = this;
 
+    this.setState({
+      anchorEl: null
+    })
+
     // console.log('ID OF GROUP>', idTodelete)
     axios.delete('http://localhost:3001/api/deleteGroup', {
       data: {
@@ -144,6 +165,10 @@ class Groups extends Component {
   
   clearSelections = (groupId) => {
     let component = this;
+
+    this.setState({
+      anchorEl: null
+    })
 
     // console.log('ID OF GROUP>', idTodelete)
     axios.post('http://localhost:3001/api/clearSelections', {
@@ -220,7 +245,7 @@ class Groups extends Component {
             spacing={3}
           >
             {this.state.userGroups.length <= 0 ? 
-              <Container>
+              <Container style={{height: '20vh', marginTop: '10vh'}}>
                 <Typography variant='h4'>You haven't joined any groups yet!</Typography>
                 <Typography variant='body1'>When you create or join a group, it will show up here.</Typography>
               </Container>
@@ -235,21 +260,28 @@ class Groups extends Component {
                       </Grid>
                       {group.admin === user_info._id ?
                         <Grid item>
-                          <SettingsIcon className={classes.icon} aria-controls="simple-menu" aria-haspopup="true" onClick={this.optionsMenu} />
+                          <SettingsIcon className={classes.icon} aria-controls="simple-menu" aria-haspopup="true" onClick={this.openOptionsMenu} />
                           <Menu
                             id="simple-menu"
+                            anchorEl={this.state.anchorEl}
                             keepMounted
-                            open={this.state.openOptions}
+                            open={Boolean(this.state.anchorEl)}
+                            onClose={this.closeOptionsMenu}
                           >
-                            <MenuItem className={classes.button} onClick={() => this.deleteGroup(group._id)}>Delete Group</MenuItem>
                             <MenuItem onClick={() => this.clearSelections(group._id)}>Clear Selections</MenuItem>
+                            <MenuItem className={classes.delete} onClick={() => this.deleteGroup(group._id)}>Delete Group</MenuItem>
                           </Menu>
                         </Grid>
                         :
                         null
                       }
                     </Grid>
-                    <Typography variant='p' key={idx}>Waiting on {group.memberCount} more people to join.</Typography>
+
+                    {group.memberCount > 0 ?
+                      <Typography variant='p' key={idx}>Waiting on {group.memberCount} more people to join.</Typography>
+                      :
+                      <Typography variant='p' key={idx}>Everyone has joined!</Typography>
+                    }
                     
                     {/* {group.admin === user_info._id ?
                     <div>
@@ -264,69 +296,79 @@ class Groups extends Component {
                       null
                     } */}
 
-                    <Typography variant='h6'>Members:</Typography>
+                    <ExpansionPanel className={classes.panel}>
+                      <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                      >
+                        <Typography variant='h6'>Members</Typography>
+                      </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            {group.members.map((member, index) => {
+                              if ((member.uid !== user_info._id) && (group.admin === user_info._id)) {
+                                return (
+                                  <div key={index}>
+                                    {member.selectedBy === this.props.user_info._id ?
+                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
+                                      :
+                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
+                                    }
+                                    <span>
+                                      <Button color='secondary' onClick={() => this.removeMember(group._id, member.uid)}>Remove member</Button>
+                                    </span>
+                                  </div>
+                                  )
+                              }
+                              else if ((member.uid === user_info._id) && (group.admin !== user_info._id)) {
+                                return (
+                                  <div key={index}>
+                                    {member.selectedBy === this.props.user_info._id ?
+                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
+                                      :
+                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
+                                    }
+                                    <span>
+                                      <Button color='secondary' onClick={() => this.removeMember(group._id, member.uid)}>Leave Group</Button>
+                                    </span>
+                                  </div>
+                                  )
+                              }
+                              else {
+                                return (
+                                  <div key={index}>
+                                    {member.selectedBy === this.props.user_info._id ?
+                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
+                                      :
+                                      <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
+                                    }
+                                  </div>
+                                  )
+                              }
+                            })}
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
 
-                    {group.members.map((member, index) => {
-                      if ((member.uid !== user_info._id) && (group.admin === user_info._id)) {
-                        return (
-                          <div key={index}>
-                            {member.selectedBy === this.props.user_info._id ?
-                              <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
-                              :
-                              <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
-                            }
-                            <span>
-                              <Button color='secondary' onClick={() => this.removeMember(group._id, member.uid)}>Remove member</Button>
-                            </span>
-                          </div>
-                          )
-                      }
-                      else if ((member.uid === user_info._id) && (group.admin !== user_info._id)) {
-                        return (
-                          <div key={index}>
-                            {member.selectedBy === this.props.user_info._id ?
-                              <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
-                              :
-                              <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
-                            }
-                            <span>
-                              <Button color='secondary' onClick={() => this.removeMember(group._id, member.uid)}>Leave Group</Button>
-                            </span>
-                          </div>
-                          )
-                      }
-                      else {
-                        return (
-                          <div key={index}>
-                            {member.selectedBy === this.props.user_info._id ?
-                              <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
-                              :
-                              <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
-                            }
-                          </div>
-                          )
-                      }
-                    })}
 
-                    {/* <div>
-                        <h3>Draw Name</h3>
-                        <div>
-                          <button onClick={() => this.drawName(group._id, this.props.user_info._id)}>Draw</button>
-                        </div>
-                      </div> */}
-
-                    {group.memberCount === 0 ?
+                    {group.memberCount !== 0 ?
                       <div>
-                        <Typography variant='h5' className={classes.title}>Draw Name</Typography>
-                        <div>
-                          <Button color='primary' className={classes.button} onClick={() => this.drawName(this.props.user_info._id)}>Draw</Button>
-                        </div>
+                        <Typography variant='body1' className={classes.subText}>When everyone joins the group, you can draw a name below.</Typography>
                       </div>
                       :
-                      <div>
-                        <Typography variant='body1' className={classes.subText}>When everyone joins the group, you can draw a name here.</Typography>
-                      </div>
+                      null
                       }
+
+                      <div>
+                        {/* <Typography variant='h5' className={classes.title}>Draw Name</Typography> */}
+                          <Button color='primary' 
+                            disabled={group.memberCount === 0 ? false : true } 
+                            className={classes.button} 
+                            onClick={() => this.drawName(this.props.user_info._id)}
+                          >
+                            Draw
+                          </Button>
+                      </div>
+
                   </Card>
                 </Grid>
               )
@@ -335,19 +377,15 @@ class Groups extends Component {
 
             <Container className={classes.container}>
               <Link to="/groups/create-group" style={{ textDecoration: 'none', color: '#fff'}}>
-                <Card raised={true} className={classes.link}>
-                <CardActionArea>
-                  <Typography style={{color:'#fff'}}>Create Group</Typography>
-                </CardActionArea>
-                </Card>
+                <Button className={classes.link}>
+                    <Typography style={{color:'#fff'}}>Create Group</Typography>
+                </Button>
               </Link>
               
               <Link to="/groups/join-group" style={{ textDecoration: 'none', color: '#fff'}}>
-                <Card raised={true} className={classes.link}>
-                <CardActionArea>
-                  <Typography style={{color:'#fff'}}>Join Group</Typography>
-                </CardActionArea>
-                </Card>
+                <Button className={classes.link}>
+                    <Typography style={{color:'#fff'}}>Join Group</Typography>
+                </Button>
               </Link>
             </Container>
         </div>

@@ -97,9 +97,9 @@ class CreateGroup extends Component {
 
     return (
       this.state.groupCreated ? 
-        <div>
-          <Typography variant='h3'>Your group has been created!</Typography>
-        </div>
+        <Container style={{ marginTop: '5vh'}}>
+          <Typography variant='h4'>Your group has been created!</Typography>
+        </Container>
         :
         <Box className={classes.root}>
           <Container className={classes.form}>
@@ -210,7 +210,7 @@ class CreateGroup extends Component {
                     {/* <Typography style={{color: 'red'}}>{errors.memberCount}</Typography> */}
                   </div>
                   <div>
-                    <Button type="submit" disabled={isSubmitting} className={classes.button}>
+                    <Button type="submit" className={classes.button}>
                       Create Group
                     </Button>
                   </div>

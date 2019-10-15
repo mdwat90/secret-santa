@@ -1,4 +1,4 @@
-import React, {Component } from 'react';
+import React, {Component, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/styles';
@@ -32,24 +32,41 @@ function Navbar(props) {
 
     const { logOut } = props;
 
+    const [activeTab, setTab] = useState('Groups');
+
+    console.log('ACTIVE TAB::', activeTab)
+
     console.log('NAVBAR PROPS:', props)
     return (
         <AppBar position={'sticky'} className={classes.root}>
             <Toolbar>
                 <Typography className={classes.title}>
-                    XMAS LIST
+                    XMAS
                 </Typography>
-                {/* <Link to="/register">Register</Link> */}
-                {props.loggedIn ? 
-                    <Typography className={classes.link}>
-                        <Link to="/Profile" style={{ textDecoration: 'none', color: 'white' }}>Profile</Link>
+                
+                <div className={classes.link}>
+                    <Typography>
+                        <Link to="/Profile" style={{ textDecoration: 'none', color: 'white' }} onClick={() => setTab('Profile')}>Profile</Link>
+                        {activeTab === 'Profile' ?
+                            <div style={{height: '2px', width:'47px', backgroundColor: 'white'}} />
+                        :
+                            <div style={{height: '2px'}} />
+                        }
                     </Typography>
-                    :
-                    null
-                }
-                <Typography className={classes.lastLink}>
-                    <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>My Groups</Link>
-                </Typography>
+                </div>
+                
+                <div  className={classes.lastLink}>
+                    <Typography>
+                        <Link to="/" style={{ textDecoration: 'none', color: 'white' }} onClick={() => setTab('Groups')}>My Groups</Link>
+                        {activeTab === 'Groups' ?
+                            <div style={{height: '2px', width:'80px', backgroundColor: 'white'}} />
+                        :
+                            <div style={{height: '2px'}} />
+                        }
+                    </Typography>
+                </div>
+               
+                
                 <Button onClick={() => logOut()} className={classes.logout}>Logout</Button>
             </Toolbar>
         </AppBar>

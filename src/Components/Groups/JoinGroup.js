@@ -96,7 +96,7 @@ class JoinGroup extends Component {
     return (
       this.state.groupJoined ? 
         <div>
-          <Typography variant='h3'>You have joined the group!</Typography>
+          <Typography variant='h4'>You have joined the group!</Typography>
         </div>
         :
         <Box className={classes.root}>
@@ -181,7 +181,7 @@ class JoinGroup extends Component {
                     {/* <Typography style={{color: 'red'}}>{errors.password}</Typography> */}
                   </div>
                   <div>
-                    <Button type="submit" disabled={isSubmitting} className={classes.button}>
+                    <Button type="submit" className={classes.button}>
                       Join Group
                     </Button>
                   </div>
