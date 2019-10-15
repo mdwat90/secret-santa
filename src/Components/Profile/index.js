@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { logOut } from '../../actions/UserActions';
 
 class Profile extends Component {
   // initialize our state
@@ -52,12 +51,12 @@ class Profile extends Component {
     let component = this;
     console.log('LINK:', link)
     axios.post('http://localhost:3001/api/newItem', {
-      user_id: this.state.user_id,
+      user_id: this.props.user_info._id,
       link: link
     })
     .then(function (response) {
       // console.log('AXIOS RESPONSE:', response)
-      component.getUserData(component.state.user_id);
+      component.getUserData(component.props.user_info._id);
     })
     .catch(function (error) {
       console.log('AXIOS ERROR:', error)
@@ -75,7 +74,7 @@ class Profile extends Component {
     })
     .then(function (response) {
       // console.log('AXIOS RESPONSE:', response)
-      component.getUserData(component.state.user_id);
+      component.getUserData(component.props.user_info._id);
     })
     .catch(function (error) {
       console.log('AXIOS ERROR:', error)
@@ -91,7 +90,7 @@ class Profile extends Component {
     })
     .then(function (response) {
       // console.log('AXIOS RESPONSE:', response)
-      component.getUserData(component.state.user_id);
+      component.getUserData(component.props.user_info._id);
     })
     .catch(function (error) {
       console.log('AXIOS ERROR:', error)
@@ -99,14 +98,10 @@ class Profile extends Component {
   };
 
 
-  logout = () => {
-    this.props.logOut();
-  }
-
   render() {
     const { data } = this.state;
     return (
-      <div>
+      <div className="container">
         <ul>
           {data.length <= 0
             ? 'NO DB ENTRIES YET'
@@ -167,11 +162,7 @@ class Profile extends Component {
             ADD
           </button>
         </div>
-        
-        
-        <div>
-          <button onClick={this.logout}>Logout</button>
-        </div>
+
       </div>
     );
   }
@@ -186,15 +177,11 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = {
-  logOut
-}
-
 
 
 const ProfileScreen = connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(Profile);
 
 

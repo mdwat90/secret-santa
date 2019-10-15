@@ -3,10 +3,59 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { login, userExistsError, connectionError} from '../../actions/UserActions';
+import { withStyles } from '@material-ui/styles';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import CreateGroup from './CreateGroup';
-import JoinGroup from './JoinGroup';
+import { Button, Container, Box, Typography, TextField, Card, CardActionArea, Grid, Menu, MenuItem } from '@material-ui/core';
+import SettingsIcon from '@material-ui/icons/Settings';
 
+const styles = {
+  root: {
+    background: '#4f92ff',
+    margin: 'auto',
+    height: '100vh',
+    paddingTop: '15vh'
+  },
+  container: {
+    background: '#fff',
+    textAlign: 'center',
+    width: '75%',
+    marginTop: '5vh'
+  },
+  form: {
+    background: '#fff',
+    textAlign: 'center',
+    width: '50%',
+    height: '80%',
+    borderRadius: 5
+  },
+  title: {
+    margin: '1vh',
+  },
+  subText: {
+    margin: '2vh',
+  },
+  card: {
+    padding: '2vh'
+  },
+  textInput: {
+    margin: '1vh',
+    width: '80%'
+  },
+  button: {
+    margin: '2vh'
+  },
+  icon: {
+    margin: 5
+  },
+  link: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    display: 'inline-flex',
+    height: '10vh',
+    width: '25%',
+    padding: '0 30px',
+    margin: '5vh'
+  },
+};
 
 class Groups extends Component {
   constructor(props) {
@@ -18,9 +67,11 @@ class Groups extends Component {
       selectedUserName: null,
       selectUserErr: false,
       registrationError: false,
-      connectionError: false
+      connectionError: false,
+      openOptions: false
     }
   }
+
 
   componentDidMount() {
     this.setState({
@@ -40,6 +91,11 @@ class Groups extends Component {
     }
   }
   
+  optionsMenu = () => {
+    this.setState({
+      openOptions: !this.state.openOptions
+    })
+  }
 
   getUserGroups = (userId) => {
     axios.get('http://localhost:3001/api/getUserGroups', {
@@ -151,41 +207,76 @@ class Groups extends Component {
   } 
 
   render() {
-    const { user_info } = this.props;
+    const { user_info, classes } = this.props;
 
     return (
         <div>
+          <Grid 
+            container  
+            wrap='wrap' 
+            direction='row' 
+            alignContent={'flex-start'} 
+            alignItems={'flex-start'} 
+            spacing={3}
+          >
             {this.state.userGroups.length <= 0 ? 
-              <div>
-                <h3>You haven't joined any groups yet!</h3>
-                <p>Create a group or click the "Join Group" tab to join a group.</p>
-              </div>
+              <Container>
+                <Typography variant='h4'>You haven't joined any groups yet!</Typography>
+                <Typography variant='body1'>When you create or join a group, it will show up here.</Typography>
+              </Container>
               :
               this.state.userGroups.map((group, idx) => {
               return (
-                <div key={idx}>
-                  <h4 key={idx}>{group.name}</h4>
-                  <p>Waiting on {group.memberCount} more people to join.</p>
-                  {group.admin === user_info._id ?
-                  <div>
-                    <button onClick={() => this.deleteGroup(group._id)}>Delete Group</button>
-                    <button onClick={() => this.clearSelections(group._id)}>Clear Selections</button>
-                  </div>
-                    :
-                    null
-                  }
-                  <ul>
+                <Grid item xs={12} md={6} lg={4}>
+                  <Card className={classes.card} key={idx}>
+                    <Grid container>
+                      <Grid item style={{ flex: 1 }}>
+                        <Typography variant='h4' className={classes.title} key={idx}>{group.name}</Typography>
+                      </Grid>
+                      {group.admin === user_info._id ?
+                        <Grid item>
+                          <SettingsIcon className={classes.icon} aria-controls="simple-menu" aria-haspopup="true" onClick={this.optionsMenu} />
+                          <Menu
+                            id="simple-menu"
+                            keepMounted
+                            open={this.state.openOptions}
+                          >
+                            <MenuItem className={classes.button} onClick={() => this.deleteGroup(group._id)}>Delete Group</MenuItem>
+                            <MenuItem onClick={() => this.clearSelections(group._id)}>Clear Selections</MenuItem>
+                          </Menu>
+                        </Grid>
+                        :
+                        null
+                      }
+                    </Grid>
+                    <Typography variant='p' key={idx}>Waiting on {group.memberCount} more people to join.</Typography>
+                    
+                    {/* {group.admin === user_info._id ?
+                    <div>
+                      <Button color='secondary' className={classes.button} onClick={() => this.deleteGroup(group._id)}>Delete Group</Button>
+                      {group.memberCount === 0 ?
+                        <Button color='default' className={classes.button} onClick={() => this.clearSelections(group._id)}>Clear Selections</Button>
+                        :
+                        null
+                      }
+                    </div>
+                      :
+                      null
+                    } */}
+
+                    <Typography variant='h6'>Members:</Typography>
+
                     {group.members.map((member, index) => {
                       if ((member.uid !== user_info._id) && (group.admin === user_info._id)) {
                         return (
                           <div key={index}>
                             {member.selectedBy === this.props.user_info._id ?
-                                 <li key={index}>{member.name} :)</li>
+                              <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
                               :
-                                <li key={index}>{member.name}</li>
+                              <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
                             }
                             <span>
-                              <button onClick={() => this.removeMember(group._id, member.uid)}>Remove member</button>
+                              <Button color='secondary' onClick={() => this.removeMember(group._id, member.uid)}>Remove member</Button>
                             </span>
                           </div>
                           )
@@ -194,12 +285,12 @@ class Groups extends Component {
                         return (
                           <div key={index}>
                             {member.selectedBy === this.props.user_info._id ?
-                                 <li key={index}>{member.name} :)</li>
+                              <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
                               :
-                                <li key={index}>{member.name}</li>
+                              <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
                             }
                             <span>
-                              <button onClick={() => this.removeMember(group._id, member.uid)}>Leave Group</button>
+                              <Button color='secondary' onClick={() => this.removeMember(group._id, member.uid)}>Leave Group</Button>
                             </span>
                           </div>
                           )
@@ -208,38 +299,57 @@ class Groups extends Component {
                         return (
                           <div key={index}>
                             {member.selectedBy === this.props.user_info._id ?
-                                 <li key={index}>{member.name} :)</li>
+                              <Typography variant='body2' key={index}>{member.name.toUpperCase()} :)</Typography>
                               :
-                                <li key={index}>{member.name}</li>
+                              <Typography variant='body2' key={index}>{member.name.toUpperCase()}</Typography>
                             }
                           </div>
                           )
                       }
                     })}
-                  </ul>
 
-                  <div>
-                      <h3>Draw Name</h3>
-                      <div>
-                        <button onClick={() => this.drawName(group._id, this.props.user_info._id)}>Draw</button>
-                      </div>
-                    </div>
+                    {/* <div>
+                        <h3>Draw Name</h3>
+                        <div>
+                          <button onClick={() => this.drawName(group._id, this.props.user_info._id)}>Draw</button>
+                        </div>
+                      </div> */}
 
-                  {/* {group.memberCount === 0 ?
-                    <div>
-                      <h3>Draw Name</h3>
+                    {group.memberCount === 0 ?
                       <div>
-                        <button onClick={() => this.drawName(this.props.user_info._id)}>Draw</button>
+                        <Typography variant='h5' className={classes.title}>Draw Name</Typography>
+                        <div>
+                          <Button color='primary' className={classes.button} onClick={() => this.drawName(this.props.user_info._id)}>Draw</Button>
+                        </div>
                       </div>
-                    </div>
-                    :
-                    <div>
-                    <h3>When everyone joins the group, you can draw a name here.</h3>
-                    </div>
-                    } */}
-                </div>
+                      :
+                      <div>
+                        <Typography variant='body1' className={classes.subText}>When everyone joins the group, you can draw a name here.</Typography>
+                      </div>
+                      }
+                  </Card>
+                </Grid>
               )
             })}
+            </Grid>
+
+            <Container className={classes.container}>
+              <Link to="/groups/create-group" style={{ textDecoration: 'none', color: '#fff'}}>
+                <Card raised={true} className={classes.link}>
+                <CardActionArea>
+                  <Typography style={{color:'#fff'}}>Create Group</Typography>
+                </CardActionArea>
+                </Card>
+              </Link>
+              
+              <Link to="/groups/join-group" style={{ textDecoration: 'none', color: '#fff'}}>
+                <Card raised={true} className={classes.link}>
+                <CardActionArea>
+                  <Typography style={{color:'#fff'}}>Join Group</Typography>
+                </CardActionArea>
+                </Card>
+              </Link>
+            </Container>
         </div>
     )
   }
@@ -269,4 +379,4 @@ const GroupsScreen = connect(
 )(Groups);
 
 
-export default GroupsScreen;
+export default withStyles(styles)(GroupsScreen);

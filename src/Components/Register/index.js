@@ -2,7 +2,47 @@ import React, {Component} from 'react';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import { Link } from "react-router-dom";
 import { login, userExistsError, connectionError} from '../../actions/UserActions';
+import { withStyles } from '@material-ui/styles';
+import { Button, Container, Box, Typography, TextField } from '@material-ui/core';
+
+const styles = {
+  root: {
+    background: '#4f92ff',
+    margin: 'auto',
+    height: '100vh',
+    paddingTop: '15vh'
+  },
+  form: {
+    background: '#fff',
+    textAlign: 'center',
+    width: '50%',
+    height: '70%',
+    borderRadius: 5
+  },
+  title: {
+    paddingTop: '5vh',
+  },
+  link: {
+    margin: '2vh',
+  },
+  textInput: {
+    margin: '1vh',
+    width: '80%'
+  },
+  button: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'white',
+    height: 48,
+    width: '25%',
+    padding: '0 30px',
+    margin: '5vh'
+  },
+};
 
 class Register extends Component {
   constructor(props) {
@@ -48,6 +88,7 @@ class Register extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       this.props.loggedIn ?
           <div>
@@ -55,106 +96,128 @@ class Register extends Component {
             <p>Click "Profile" to see your profile, or "Groups" to see your groups.</p>
           </div>
         :
-          <div>
-          <Formik
-            initialValues={{ name: '', password: '', confirmPassword: ''}}
-            validate={values => {
-              let errors = {};
-              if (!values.name) {
-                errors.name = 'Required';
-              } 
-              if (values.password !== values.confirmPassword) {
-                errors.confirmPassword = 'Passwords do not match';
-              } 
-              return errors;
-            }}
-            onSubmit={(values, { setSubmitting }) => {
-              this.registerUser(values);
-            }}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isSubmitting
-            }) => (
-              <form onSubmit={handleSubmit}>
-              <div>
-                <h1>Name</h1>
-                <input
-                  type="name"
-                  name="name"
-                  placeholder={'First Name'}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.name}
-                />
-              </div>
-              <div>
-                  {errors.name}
-              </div>
-              <div>
-                <h1>Password</h1>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder={'Password'}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                />
-              </div>
-              <div>
-                  {errors.password}
-              </div>
-              <div>
-                <h1>Confirm Password</h1>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  placeholder={'Password'}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.confirmPassword}
-                />
-              </div>
-              <div>
-                  {errors.confirmPassword}
-              </div>
+        <Box className={classes.root}>
+          <Container className={classes.form}>
+            <Formik
+              initialValues={{ name: '', password: '', confirmPassword: ''}}
+              validate={values => {
+                let errors = {};
+                if (!values.name) {
+                  errors.name = 'Required';
+                } 
+                if (values.password !== values.confirmPassword) {
+                  errors.confirmPassword = 'Passwords do not match';
+                } 
+                return errors;
+              }}
+              onSubmit={(values, { setSubmitting }) => {
+                this.registerUser(values);
+              }}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isSubmitting
+              }) => (
+                <form onSubmit={handleSubmit}>
+                    <Typography variant='h5' className={classes.title}>Register</Typography>
+                  <div>
+                    {/* <Typography variant='h5' className={classes.title}>Name</Typography> */}
+                    <TextField
+                      required
+                      type="name"
+                      name="name"
+                      id="standard-required"
+                      label="First Name"
+                      placeholder={'First Name'}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.name}
+                      className={classes.textInput}
+                    />
+                  </div>
+                  {/* <div>
+                    <Typography style={{color: 'red'}}>{errors.name}</Typography>
+                  </div> */}
+
+                  <div>
+                    {/* <Typography variant='h5' className={classes.title}>Password</Typography> */}
+                    <TextField
+                      required
+                      type="password"
+                      name="password"
+                      id="standard-password-input"
+                      label="Password"
+                      placeholder={'Password'}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.password}
+                      className={classes.textInput}
+                    />
+                  </div>
+                  <div>
+                    <Typography style={{color: 'red'}}>{errors.password}</Typography>
+                  </div>
+
+                  <div>
+                    {/* <Typography variant='h5' className={classes.title}>Confirm Password</Typography> */}
+                    <TextField
+                        required
+                        type="password"
+                        name="confirmPassword"
+                        id="standard-password-input"
+                        label="Password"
+                        placeholder={'Password'}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.confirmPassword}
+                        className={classes.textInput}
+                      />
+                  </div>
+                  <div>
+                    <Typography style={{color: 'red'}}>{errors.confirmPassword}</Typography>
+                  </div>
+
+                  <div>
+                    <Button type="submit" className={classes.button}>
+                      Register
+                    </Button>
+                  </div>
+                </form>
+              )}
+            </Formik>
+
+            <Typography>
+              <Link to="/" className={classes.link} style={{ textDecoration: 'none', color: '#4f92ff' }}>Login to Account</Link>
+            </Typography>
+            
+            {/* {this.props.history.action === "REPLACE" ?
                 <div>
-                  <button type="submit" disabled={isSubmitting}>
-                    Submit
-                  </button>
+                  <h2>PLEASE SIGN IN</h2>
                 </div>
-              </form>
-            )}
-          </Formik>
-          
-          {/* {this.props.history.action === "REPLACE" ?
-              <div>
-                <h2>PLEASE SIGN IN</h2>
-              </div>
-              :
-              null
-          } */}
-          {this.props.userExistsErr ?
-              <div>
-                <h3>USER ALREADY EXISTS</h3>
-              </div>
-              :
-              null
-          }
-          {this.props.connectionErr ?
-          <div>
-            <h3>ERROR CONNECTING TO DATABASE</h3>
-          </div>
-          :
-          null
-      }
-          </div>
+                :
+                null
+            } */}
+            {this.props.userExistsErr ?
+                <div>
+                  <Typography variant='h6' style={{paddingTop: '2vh', color: 'red'}}>USER ALREADY EXISTS</Typography>
+                </div>
+                :
+                null
+            }
+            {this.props.connectionErr ?
+            <div>
+              <Typography variant='h6' style={{paddingTop: '2vh', color: 'red'}}>ERROR CONNECTING TO DATABASE</Typography>
+            </div>
+            :
+            null
+        }
+      </Container>
+    </Box>  
     )
   }
 }
@@ -183,4 +246,4 @@ const RegisterScreen = connect(
 )(Register);
 
 
-export default RegisterScreen;
+export default withStyles(styles)(RegisterScreen);

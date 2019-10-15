@@ -1,4 +1,5 @@
 import React, {Component } from 'react';
+import Navbar from './Components/Navbar';
 import Register from './Components/Register';
 import Login from './Components/Login';
 import Profile from './Components/Profile';
@@ -41,30 +42,17 @@ class Main extends Component {
         return (
           <Router>
             <div>
-                <nav>
-                    <div>
-                        <ul>
-                            <li>
-                                <Link to="/register">Register</Link>
-                            </li>
-                            {this.props.loggedIn ? 
-                              <li>
-                                  <Link to="/Profile">Profile</Link>
-                              </li>
-                              :
-                              null
-                            }
-                            <li>
-                                <Link to="/">{loggedIn ? 'My Groups' : 'Login'}</Link>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-
-                <Route path='/register' exact render = {(props) => <Register {...props}  /> } />
-                <Route path='/profile' render = {(props) => loggedIn ? <Profile {...props} /> : <Redirect to='/'/> } />
-                <Route path='/' exact render = {(props) => loggedIn ? <Redirect to='/groups/my-groups'/> : <Login {...props}  />} />
-                <PrivateRoute path='/groups' {...this.props} component = {Groups} />
+              {loggedIn ?
+                <Navbar {...this.props} />
+              :
+                null
+              }
+              <div>
+                  <Route path='/register' exact render = {(props) => <Register {...props}  /> } />
+                  <Route path='/profile' render = {(props) => loggedIn ? <Profile {...props} /> : <Redirect to='/'/> } />
+                  <Route path='/' exact render = {(props) => loggedIn ? <Redirect to='/groups/my-groups'/> : <Login {...props}  />} />
+                  <PrivateRoute path='/groups' {...this.props} component = {Groups} />
+              </div>
             </div>
           </Router>
         ) 

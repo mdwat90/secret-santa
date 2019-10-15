@@ -7,17 +7,37 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import CreateGroup from './CreateGroup';
 import JoinGroup from './JoinGroup';
 import MyGroups from './MyGroups';
+import { withStyles } from '@material-ui/styles';
+import { Button, Container, Box, Typography, TextField, Card, CardActionArea } from '@material-ui/core';
   
+const styles = {
+  root: {
+    background: '#fff',
+    margin: 'auto',
+    height: '100vh'
+  },
+  container: {
+    background: '#fff',
+    textAlign: 'center',
+    width: '75%',
+    marginTop: '5vh'
+  },
+  title: {
+    paddingTop: '5vh',
+  },
+  link: {
+    margin: '2vh',
+  },
+  textInput: {
+    margin: '1vh',
+    width: '80%'
+  },
+  
+};
 
 class Groups extends Component {
   constructor(props) {
     super(props)
-    // this.state={
-    //   registered: false,
-    //   loggedIn: this.props.loggedIn,
-    //   registrationError: false,
-    //   connectionError: false
-    // }
   }
 
   componentDidUpdate(prevProps) {
@@ -53,28 +73,16 @@ class Groups extends Component {
   }
 
   render() {
-    return (
-        <div>
-            <nav>
-                <div>
-                    <ul>
-                        {/* <li>
-                            <Link to="/groups/my-groups">My Groups</Link>
-                        </li> */}
-                        <li>
-                            <Link to="/groups/create-group">Create Group</Link>
-                        </li>
-                        <li>
-                            <Link to="/groups/join-group">Join Group</Link>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+    const {classes} = this.props;
 
-            <Route path='/groups/my-groups' render = {(props) => <MyGroups {...props}  /> }/>
-            <Route path='/groups/create-group' render = {(props) => <CreateGroup {...props}  /> }/>
-            <Route path='/groups/join-group' render = {(props) => <JoinGroup {...props}  /> } />
-        </div>
+    return (
+        <Box className={classes.root}>
+            <Container className={classes.container}>
+              <Route path='/groups/my-groups' render = {(props) => <MyGroups {...props}  /> }/>
+              <Route path='/groups/create-group' render = {(props) => <CreateGroup {...props}  /> }/>
+              <Route path='/groups/join-group' render = {(props) => <JoinGroup {...props}  /> } />
+            </Container>
+        </Box>
 
     )
   }
@@ -104,4 +112,4 @@ const GroupsScreen = connect(
 )(Groups);
 
 
-export default GroupsScreen;
+export default withStyles(styles)(GroupsScreen);

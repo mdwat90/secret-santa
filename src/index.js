@@ -5,6 +5,7 @@ import * as serviceWorker from './serviceWorker';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import XmasApp from './reducers/index';
+import { Button, Container, Box } from '@material-ui/core';
 
 const store = createStore(XmasApp);
 
