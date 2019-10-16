@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import { login, loginError, connectionError} from '../../actions/UserActions';
 import { withStyles } from '@material-ui/styles';
-import { Button, Container, Box, Typography, TextField } from '@material-ui/core';
+import { Button, Container, Box, Typography, TextField, CircularProgress } from '@material-ui/core';
 
 
 const styles = {
@@ -48,6 +48,9 @@ const styles = {
 class Login extends Component {
   constructor(props) {
     super(props)
+    this.state={
+      loading: false
+    }
   }
 
   loginUser = (data) => {
@@ -66,10 +69,16 @@ class Login extends Component {
       }
       else if(!response.data._id){
         component.props.loginError();
+        component.setState({
+          loading: false
+        })
       }
     })
     .catch(function (error) {
       component.props.connectionError(error);
+      component.setState({
+        loading: false
+      })
     })
   }
 
@@ -78,7 +87,7 @@ class Login extends Component {
     const { classes } = this.props;
     return (
       <Box className={classes.root}>
-        <Container className={classes.form}>
+        <Container className={classes.form} >
           <Formik
             initialValues={{ name: '', password: '' }}
             validate={values => {
@@ -90,6 +99,9 @@ class Login extends Component {
             }}
             onSubmit={(values, { setSubmitting }) => {
               this.loginUser(values);
+              this.setState({
+                loading: true
+              })
             }}
           >
             {({
@@ -140,9 +152,15 @@ class Login extends Component {
                 </div>
                 
                 <div>
-                  <Button type="submit" className={classes.button}>
-                    Login
-                  </Button>
+                  {this.state.loading ? 
+                    <Container style={{height: 48, marginBottom: '5vh', marginTop: '5vh'}}>
+                      <CircularProgress />
+                    </Container>
+                    :
+                    <Button type="submit" className={classes.button}>
+                      Login
+                    </Button>
+                  }
                 </div>
               </form>
             )}

@@ -5,6 +5,7 @@ const id = new mongoose.Types.ObjectId();
 const ItemSchema = new Schema(
   {
     user_id: String,
+    description: String,
     link: String,
     notes: String
   },

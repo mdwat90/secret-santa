@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import { login, userExistsError, connectionError} from '../../actions/UserActions';
 import { withStyles } from '@material-ui/styles';
-import { Button, Container, Box, Typography, TextField } from '@material-ui/core';
+import { Button, Container, Box, Typography, TextField, CircularProgress} from '@material-ui/core';
 
 const styles = {
   root: {
@@ -47,12 +47,9 @@ const styles = {
 class Register extends Component {
   constructor(props) {
     super(props)
-    // this.state={
-    //   registered: false,
-    //   loggedIn: this.props.loggedIn,
-    //   registrationError: false,
-    //   connectionError: false
-    // }
+    this.state={
+      loading: false
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -79,11 +76,17 @@ class Register extends Component {
       }
       else if(!response.data._id){
         component.props.userExistsError();
+        component.setState({
+          loading: false
+        })
       }
     })
     .catch(function (error) {
       // console.log('AXIOS ERROR:', error)
       component.props.connectionError(error);
+      component.setState({
+        loading: false
+      })
     })
   }
 
@@ -96,7 +99,7 @@ class Register extends Component {
             <p>Click "Profile" to see your profile, or "Groups" to see your groups.</p>
           </div>
         :
-        <Box className={classes.root}>
+        <Box className={classes.root} >
           <Container className={classes.form}>
             <Formik
               initialValues={{ name: '', password: '', confirmPassword: ''}}
@@ -112,6 +115,9 @@ class Register extends Component {
               }}
               onSubmit={(values, { setSubmitting }) => {
                 this.registerUser(values);
+                this.setState({
+                  loading: true
+                })
               }}
             >
               {({
@@ -183,9 +189,15 @@ class Register extends Component {
                   </div>
 
                   <div>
-                    <Button type="submit" className={classes.button}>
-                      Register
-                    </Button>
+                    {this.state.loading ? 
+                      <Container style={{height: 48, marginBottom: '5vh', marginTop: '5vh'}}>
+                        <CircularProgress />
+                      </Container>
+                      :
+                      <Button type="submit" className={classes.button}>
+                        Register
+                      </Button>
+                    }
                   </div>
                 </form>
               )}

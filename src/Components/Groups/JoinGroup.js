@@ -77,7 +77,10 @@ class JoinGroup extends Component {
       if(response.data._id){
         component.setState({
           groupJoined: !component.state.groupJoined
-        })
+        });
+        setTimeout(function() {
+          component.props.history.push('/groups/my-groups')
+        }, 1500)
       }
       else if(!response.data._id){
         component.props.joinGroupError();

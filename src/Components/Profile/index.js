@@ -10,7 +10,9 @@ class Profile extends Component {
     this.state = {
       data: [],
       user_id: null,
+      description: null,
       link: null,
+      notes: null,
       updateToApply: null,
       itemToUpdate: null
     }
@@ -47,21 +49,24 @@ class Profile extends Component {
   };
   
 
-  addNewItem = (link) => {
+  addNewItem = (description, link, notes) => {
     let component = this;
+    console.log('Description:', description)
     console.log('LINK:', link)
-    axios.post('http://localhost:3001/api/newItem', {
-      user_id: this.props.user_info._id,
-      link: link
-    })
-    .then(function (response) {
-      // console.log('AXIOS RESPONSE:', response)
-      component.getUserData(component.props.user_info._id);
-    })
-    .catch(function (error) {
-      console.log('AXIOS ERROR:', error)
-    })
-    ;
+    console.log('Notes:', notes)
+    // axios.post('http://localhost:3001/api/newItem', {
+    //   user_id: this.props.user_info._id,
+    //   description: description,
+    //   link: link,
+    //   notes: notes
+    // })
+    // .then(function (response) {
+    //   // console.log('AXIOS RESPONSE:', response)
+    //   component.getUserData(component.props.user_info._id);
+    // })
+    // .catch(function (error) {
+    //   console.log('AXIOS ERROR:', error)
+    // });
   };
 
 
@@ -154,11 +159,23 @@ class Profile extends Component {
         <div style={{ padding: '10px' }}>
           <input
             type="text"
-            onChange={(e) => this.setState({ link: e.target.value })}
-            placeholder="add something in the database"
+            onChange={(e) => this.setState({ description: e.target.value })}
+            placeholder="item description"
             style={{ width: '200px' }}
           />
-          <button onClick={() => this.addNewItem(this.state.link)}>
+          <input
+            type="text"
+            onChange={(e) => this.setState({ link: e.target.value })}
+            placeholder="link to item"
+            style={{ width: '200px' }}
+          />
+          <input
+            type="text"
+            onChange={(e) => this.setState({ notes: e.target.value })}
+            placeholder="add any notes about this item"
+            style={{ width: '200px' }}
+          />
+          <button onClick={() => this.addNewItem(this.state.description, this.state.link, this.state.notes )}>
             ADD
           </button>
         </div>

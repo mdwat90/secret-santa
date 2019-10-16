@@ -246,8 +246,8 @@ app.post('/api/selectUser', function(req, response) {
     let groupId = req.body.group_id;
     let userId = req.body.user_id;
 
-    // console.log(groupId)
-    // console.log(userId)
+    console.log(groupId)
+    console.log(userId)
 
     let update = {
         $set: {'members.$.selected': true, 'members.$.selectedBy': userId}

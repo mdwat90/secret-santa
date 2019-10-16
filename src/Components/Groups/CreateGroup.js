@@ -79,7 +79,10 @@ class CreateGroup extends Component {
       if(response.data._id){
         component.setState({
           groupCreated: !component.state.groupCreated
-        })
+        });
+        setTimeout(function() {
+          component.props.history.push('/groups/my-groups')
+        }, 1500)
       }
       else if(!response.data._id){
         component.props.groupExistsError();
