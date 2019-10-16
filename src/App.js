@@ -4,6 +4,7 @@ import Register from './Components/Register';
 import Login from './Components/Login';
 import Profile from './Components/Profile';
 import Groups from './Components/Groups';
+import WishList from './Components/WishList';
 import { connect } from 'react-redux';
 
 import {
@@ -50,6 +51,7 @@ class Main extends Component {
               <div>
                   <Route path='/register' exact render = {(props) => <Register {...props}  /> } />
                   <Route path='/profile' render = {(props) => loggedIn ? <Profile {...props} /> : <Redirect to='/'/> } />
+                  <Route path='/wish-list/:id' render = {(props) => loggedIn ? <WishList {...props} /> : <Redirect to='/'/> } />
                   <Route path='/' exact render = {(props) => loggedIn ? <Redirect to='/groups/my-groups'/> : <Login {...props}  />} />
                   <PrivateRoute path='/groups' {...this.props} component = {Groups} />
               </div>

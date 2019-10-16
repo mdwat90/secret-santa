@@ -114,7 +114,7 @@ app.post('/api/newItem', function(req, response) {
 
     console.log('NEW ITEM SERVER:', item)
 
-    new ItemSchema({user_id: item.user_id, link: item.link }).save((err, res) => {
+    new ItemSchema({user_id: item.user_id, description: item.description, link: item.link, notes: item.notes }).save((err, res) => {
         if(err) {
             console.log('ERROR SAVING ITEM:', err)
             response.send(err)
@@ -130,6 +130,8 @@ app.post('/api/updateItem', function(req, response) {
     let itemId = req.body._id;
     let update = req.body.update;
 
+    // console.log('ITEM TO UPDATE SERVER:', itemId)
+    // console.log('UPDATE TO APPLY SERVER:', update)
 
     ItemSchema.findOneAndUpdate({_id: itemId}, update, function (err, res) {
         if(err) {

@@ -46,23 +46,23 @@ function Navbar(props) {
                 
                 <div className={classes.link}>
                     <Typography>
-                        <Link to="/Profile" style={{ textDecoration: 'none', color: 'white' }} onClick={() => setTab('Profile')}>Profile</Link>
-                        {activeTab === 'Profile' ?
-                            <div style={{height: '2px', width:'47px', backgroundColor: 'white'}} />
+                        <Link to="/Profile" style={{ textDecoration: 'none', color: 'white' }} onClick={() => setTab('Profile')}>My List</Link>
+                        {/* {activeTab === 'Profile' ?
+                            <div style={{height: '2px', width:'52px', backgroundColor: 'white'}} />
                         :
                             <div style={{height: '2px'}} />
-                        }
+                        } */}
                     </Typography>
                 </div>
                 
                 <div  className={classes.lastLink}>
                     <Typography>
                         <Link to="/" style={{ textDecoration: 'none', color: 'white' }} onClick={() => setTab('Groups')}>My Groups</Link>
-                        {activeTab === 'Groups' ?
+                        {/* {activeTab === 'Groups' ?
                             <div style={{height: '2px', width:'80px', backgroundColor: 'white'}} />
                         :
                             <div style={{height: '2px'}} />
-                        }
+                        } */}
                     </Typography>
                 </div>
                

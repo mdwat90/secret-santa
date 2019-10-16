@@ -134,10 +134,10 @@ class Groups extends Component {
   }
   
   openOptionsMenu = (event) => {
-    // console.log('EVENT::', event.currentTarget.getAttribute('groupId'))
+    // console.log('EVENT::', event.currentTarget.getAttribute('groupid'))
     this.setState({
       anchorEl: event.currentTarget,
-      groupId: event.currentTarget.getAttribute('groupId')
+      groupId: event.currentTarget.getAttribute('groupid')
     })
   }
   
@@ -343,7 +343,7 @@ class Groups extends Component {
                   :
                   this.state.userGroups.map((group, idx) => {
                   return (
-                    <Grid item xs={12} md={6} lg={4}>
+                    <Grid item xs={12} md={6} lg={4} key={group._id}>
                       <Card className={classes.card} style={{minHeight: '30vh'}} key={idx}>
                         <Grid container>
                           <Grid item style={{ flex: 1 }}>
@@ -351,7 +351,7 @@ class Groups extends Component {
                           </Grid>
                           {group.admin === user_info._id ?
                             <Grid item style={{ position:'relative', right: 25, bottom: 10 }}>
-                              <SettingsIcon className={classes.icon} groupId={group._id} aria-controls="simple-menu" aria-haspopup="true" onClick={(event) => this.openOptionsMenu(event)} />
+                              <SettingsIcon className={classes.icon} groupid={group._id} aria-controls="simple-menu" aria-haspopup="true" onClick={(event) => this.openOptionsMenu(event)} />
                               <Menu
                                 id="simple-menu"
                                 anchorEl={this.state.anchorEl}
@@ -506,7 +506,7 @@ class Groups extends Component {
 
                              if(member.uid === this.props.user_info._id && member.uidSelected === null && group.memberCount === 0) {
                               return (
-                                <div>
+                                <div key={index}>
                                   <Button 
                                     variant="outlined"
                                     style={{color: '#4f92ff', backgroundColor: 'white', margin: '4vh'}}
@@ -522,8 +522,20 @@ class Groups extends Component {
                             
                             else if(member.selectedBy === this.props.user_info._id) {
                               return (
-                                <Container>
-                                  <Typography className={classes.button} style={{color: '#4f92ff', margin: '4vh'}}>You selected {member.name.toUpperCase()}</Typography>
+                                <Container key={index}>
+                                  <Typography className={classes.button} style={{color: '#4f92ff', margin: '4vh'}}>
+                                    You selected
+                                    <Link  
+                                      to={{
+                                        pathname: `/wish-list/${member.uid}`,
+                                        state: {
+                                          user: member.name
+                                        }
+                                      }}
+                                      style={{color: '#4f92ff'}}> 
+                                        {member.name.toUpperCase()}
+                                      </Link>
+                                    </Typography>
                                 </Container>
                               )
                             }
