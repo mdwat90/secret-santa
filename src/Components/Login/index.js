@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import { login, loginError, connectionError} from '../../actions/UserActions';
 import { withStyles } from '@material-ui/styles';
-import { Button, Container, Box, Typography, TextField, CircularProgress } from '@material-ui/core';
+import { Button, Container, Box, Typography, TextField, CircularProgress, Grid } from '@material-ui/core';
 
 
 const styles = {
@@ -18,8 +18,7 @@ const styles = {
   form: {
     background: '#fff',
     textAlign: 'center',
-    width: '50%',
-    height: '60vh',
+    paddingBottom: '5vh',
     borderRadius: 5
   },
   title: {
@@ -30,7 +29,24 @@ const styles = {
   },
   textInput: {
     margin: '2vh',
-    width: '80%'
+    width: '80%',
+    '& label.Mui-focused': {
+      color: '#4f92ff',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#4f92ff',
+    },
+    // '& .MuiOutlinedInput-root': {
+    //   '& fieldset': {
+    //     borderColor: 'red',
+    //   },
+    //   '&:hover fieldset': {
+    //     borderColor: 'yellow',
+    //   },
+    //   '&.Mui-focused fieldset': {
+    //     borderColor: 'green',
+    //   },
+    // }
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -87,114 +103,117 @@ class Login extends Component {
     const { classes } = this.props;
     return (
       <Box className={classes.root}>
-        <Container className={classes.form} >
-          <Formik
-            initialValues={{ name: '', password: '' }}
-            validate={values => {
-              let errors = {};
-              if (!values.name) {
-                errors.name = 'Required';
-              }
-              return errors;
-            }}
-            onSubmit={(values, { setSubmitting }) => {
-              this.loginUser(values);
-              this.setState({
-                loading: true
-              })
-            }}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isSubmitting
-            }) => (
-              <form onSubmit={handleSubmit}>
-                  <Typography variant='h4' className={classes.title}>Login</Typography>
-                <div>
-                  {/* <Typography variant='h5' className={classes.title}>Name</Typography> */}
-                  <TextField
-                    type="name"
-                    name="name"
-                    id="standard-required"
-                    label="First Name"
-                    placeholder={'First Name'}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.name}
-                    className={classes.textInput}
-                  />
-                </div>
-                <div>
-                    <Typography style={{color: 'red'}}>{errors.name}</Typography>
-                </div>
+        <Grid container justify={'center'}>
+          <Grid item xl ={6} lg={6} md={6} xs={10}>
+              <Container className={classes.form} >
+                <Formik
+                  initialValues={{ name: '', password: '' }}
+                  validate={values => {
+                    let errors = {};
+                    if (!values.name) {
+                      errors.name = 'Required';
+                    }
+                    return errors;
+                  }}
+                  onSubmit={(values, { setSubmitting }) => {
+                    this.loginUser(values);
+                    this.setState({
+                      loading: true
+                    })
+                  }}
+                >
+                  {({
+                    values,
+                    errors,
+                    touched,
+                    handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    isSubmitting
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+                        <Typography variant='h4' className={classes.title}>Login</Typography>
+                      <div>
+                        {/* <Typography variant='h5' className={classes.title}>Name</Typography> */}
+                        <TextField
+                          type="name"
+                          name="name"
+                          id="standard-required"
+                          label="First Name"
+                          placeholder={'First Name'}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.name}
+                          className={classes.textInput}
+                        />
+                      </div>
+                      <div>
+                          <Typography style={{color: 'red'}}>{errors.name}</Typography>
+                      </div>
 
-                <div>
-                {/* <Typography variant='h5' className={classes.title}>Password</Typography> */}
-                    <TextField
-                      type="password"
-                      name="password"
-                      id="standard-password-input"
-                      label="Password"
-                      placeholder={'Password'}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.password}
-                      className={classes.textInput}
-                    />
-                </div>
-                <div>
-                  <Typography style={{color: 'red'}}>{errors.password}</Typography>
-                </div>
+                      <div>
+                      {/* <Typography variant='h5' className={classes.title}>Password</Typography> */}
+                          <TextField
+                            type="password"
+                            name="password"
+                            id="standard-password-input"
+                            label="Password"
+                            placeholder={'Password'}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.password}
+                            className={classes.textInput}
+                          />
+                      </div>
+                      <div>
+                        <Typography style={{color: 'red'}}>{errors.password}</Typography>
+                      </div>
+                      
+                      <div>
+                        {this.state.loading ? 
+                          <Container style={{height: 48, marginBottom: '5vh', marginTop: '5vh'}}>
+                            <CircularProgress />
+                          </Container>
+                          :
+                          <Button type="submit" className={classes.button}>
+                            Login
+                          </Button>
+                        }
+                      </div>
+                    </form>
+                  )}
+                </Formik>
+
                 
-                <div>
-                  {this.state.loading ? 
-                    <Container style={{height: 48, marginBottom: '5vh', marginTop: '5vh'}}>
-                      <CircularProgress />
-                    </Container>
+                <Typography>
+                  <Link to="/register" className={classes.link} style={{ textDecoration: 'none', color: '#4f92ff' }}>Register Here</Link>
+                </Typography>
+            
+                {/* {this.props.history.action === "REPLACE" 
+                ?
+                    <div>
+                      <h2>PLEASE SIGN IN</h2>
+                    </div>
                     :
-                    <Button type="submit" className={classes.button}>
-                      Login
-                    </Button>
-                  }
-                </div>
-              </form>
-            )}
-          </Formik>
-
-          
-          <Typography>
-            <Link to="/register" className={classes.link} style={{ textDecoration: 'none', color: '#4f92ff' }}>Register Here</Link>
-          </Typography>
-      
-          {/* {this.props.history.action === "REPLACE" 
-          ?
-              <div>
-                <h2>PLEASE SIGN IN</h2>
-              </div>
-              :
-              null
-          } */}
-          {this.props.loginErr ?
-              <div>
-              <Typography variant='h6' style={{paddingTop: '3vh', color: 'red'}}>ERROR LOGGING IN</Typography>
-              </div>
-              :
-              null
-          }
-          {this.props.connectionErr ?
-              <div>
-              <Typography variant='h6' style={{paddingTop: '3vh', color: 'red'}}>ERROR CONNECTING TO DATABASE</Typography>
-              </div>
-              :
-              null
-          }
-
-        </Container>
+                    null
+                } */}
+                {this.props.loginErr ?
+                    <div>
+                    <Typography variant='h6' style={{paddingTop: '3vh', color: 'red'}}>ERROR LOGGING IN</Typography>
+                    </div>
+                    :
+                    null
+                }
+                {this.props.connectionErr ?
+                    <div>
+                    <Typography variant='h6' style={{paddingTop: '3vh', color: 'red'}}>ERROR CONNECTING TO DATABASE</Typography>
+                    </div>
+                    :
+                    null
+                }
+              </Container>
+          </Grid>
+        </Grid>
       </Box>      
     )
   }

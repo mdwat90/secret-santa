@@ -11,6 +11,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grid,
   Container, 
   ExpansionPanel,
   ExpansionPanelDetails,
@@ -48,6 +49,7 @@ const styles = {
   },
   link: {
     marginTop: '5vh',
+    color: '#4f92ff',
     textDecoration: 'underline'
   },
   textInput: {
@@ -55,8 +57,10 @@ const styles = {
     width: '80%'
   },
   heading: {
-    flexBasis: '33.33%',
-    flexShrink: 0,
+    fontSize: '4vh'
+  },
+  details: {
+    backgroundColor: '#d1d1d1'
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -88,7 +92,8 @@ class WishList extends Component {
       formError: false,
       panel: null,
       panelOpen: false,
-      linkError: false
+      linkError: false,
+      loading: false
     }
   }
 
@@ -119,12 +124,16 @@ class WishList extends Component {
 
 
   getUserData= (userId) => {
+    this.setState({
+      loading: true
+    })
+
     axios.get('http://localhost:3001/api/getItems', {
       params: {
         user_id: userId
       }
     })
-      .then((res) => this.setState({ data: res.data }))
+      .then((res) => this.setState({ data: res.data, loading: false}))
   };
 
 
@@ -133,37 +142,52 @@ class WishList extends Component {
     const { data } = this.state;
     const { classes } = this.props;
     return (
-      <Box className={classes.root}>
-        <Container className={classes.container}>
-          {data.length <= 0 ? 
-            <Container style={{height: '20vh', marginTop: '10vh'}}>
-              <Typography variant="h5">{this.state.userName} hasn't added any items to their list yet</Typography>
+      <div>
+        {this.state.loading ? 
+          <Box className={classes.root}>
+            <Container className={classes.container} style={{marginTop: '10vh'}}>
+              <CircularProgress />
             </Container>
-            : 
-             data.map((item, index) => (
-              <div key={item._id}>
-                  <ExpansionPanel expanded={this.state.panel === item._id && this.state.panelOpen} onChange={() => this.expandPanel(item._id)}>
-                    <ExpansionPanelSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1bh-content"
-                      id="panel1bh-header"
-                    >
-                      <Typography className={classes.heading}>
-                        <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
-                          {item.description}
-                        </Link>
-                      </Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                      <Typography>
-                        {item.notes}
-                      </Typography>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-                </div>
-             ))}
-        </Container>
-      </Box>
+          </Box>
+        :
+          <Box className={classes.root}>
+            <Container className={classes.container}>
+              {data.length <= 0 ? 
+                <Container style={{height: '20vh', marginTop: '10vh'}}>
+                  <Typography variant="h5">{this.state.userName} hasn't added any items to their list yet</Typography>
+                </Container>
+                : 
+                data.map((item, index) => (
+                  <div key={item._id}>
+                      <ExpansionPanel 
+                        style={this.state.panel === item._id && this.state.panelOpen ? {marginBottom: '4vh'} : {marginBottom: '2vh'}} 
+                        expanded={this.state.panel === item._id && this.state.panelOpen} 
+                        onChange={() => this.expandPanel(item._id)}>
+                        <ExpansionPanelSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1bh-content"
+                          id="panel1bh-header"
+                        >
+                          <Grid container justify={'flex-start'}>
+                            <Typography className={classes.heading}>
+                              <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
+                                {item.description}
+                              </Link>
+                            </Typography>
+                          </Grid>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails className={classes.details}>
+                          <Typography>
+                            {item.notes}
+                          </Typography>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </div>
+                ))}
+            </Container>
+          </Box>
+        }
+      </div>
     );
   }
 }

@@ -17,11 +17,14 @@ import {
   ExpansionPanelSummary,
   Box, 
   Link,
+  Grid,
   Typography, 
   TextField, 
   CircularProgress
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 
 const styles = {
@@ -48,27 +51,47 @@ const styles = {
   },
   link: {
     marginTop: '5vh',
+    color: '#4f92ff',
     textDecoration: 'underline'
   },
   textInput: {
-    margin: '1vh',
-    width: '80%'
+    '& label.Mui-focused': {
+      color: '#4f92ff',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#4f92ff',
+    },
+    // '& .MuiOutlinedInput-root': {
+    //   '& fieldset': {
+    //     borderColor: 'red',
+    //   },
+    //   '&:hover fieldset': {
+    //     borderColor: 'yellow',
+    //   },
+    //   '&.Mui-focused fieldset': {
+    //     borderColor: 'green',
+    //   },
+    // }
   },
   heading: {
-    flexBasis: '33.33%',
-    flexShrink: 0,
+    fontSize: '4vh'
+  },
+  details: {
+    backgroundColor: '#d1d1d1'
+  },
+  icon: {
+    marginRight: '2vh',
+    height: '4vh'
   },
   button: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    border: 0,
-    borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'white',
-    height: 48,
-    width: '25%',
-    padding: '0 30px',
-    margin: '5vh'
+    borderColor: '#4f92ff', 
+    color: '#4f92ff',
+    height: '6vh',
+    width: '20vh'
   },
+  buttonText: {
+    fontSize: '2vh'
+  }
 };
 
 class Profile extends Component {
@@ -87,7 +110,8 @@ class Profile extends Component {
       formError: false,
       panel: null,
       panelOpen: false,
-      linkError: false
+      linkError: false,
+      loading: false
     }
   }
 
@@ -149,12 +173,16 @@ class Profile extends Component {
 
 
   getUserData= (userId) => {
+    this.setState({
+      loading: true
+    })
+
     axios.get('http://localhost:3001/api/getItems', {
       params: {
         user_id: userId
       }
     })
-      .then((res) => this.setState({ data: res.data }))
+      .then((res) => this.setState({ data: res.data, loading: false }))
   };
 
 
@@ -250,161 +278,180 @@ class Profile extends Component {
     const { data } = this.state;
     const { classes } = this.props;
     return (
-      <Box className={classes.root}>
-        <Container className={classes.container}>
-          {data.length <= 0 ? 
-            <Container style={{height: '20vh', marginTop: '10vh'}}>
-              <Typography variant="h5">You haven't added any items to your list</Typography>
+      <div>
+        {this.state.loading ?
+          <Box className={classes.root}>
+            <Container className={classes.container} style={{marginTop: '10vh'}}>
+              <CircularProgress />
             </Container>
-            : 
-             data.map((item, index) => (
-              <div key={item._id}>
-                  <ExpansionPanel expanded={this.state.panel === item._id && this.state.panelOpen} onChange={() => this.expandPanel(item._id)}>
-                    <ExpansionPanelSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1bh-content"
-                      id="panel1bh-header"
-                    >
-                      <Typography className={classes.heading}>
-                        <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
-                          {item.description}
-                        </Link>
-                      </Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                      <Typography>
-                        {item.notes}
-                      </Typography>
-                      <Box>
-                        <Container style={{flex: 1}}>
-                          <Button 
-                            onClick={() => 
-                              this.deleteFromDB(item._id)
-                            }>
-                            DELETE ITEM
-                          </Button>
-                          <Button 
-                            onClick={() => this.editForm(item)}
-                          >
-                            UPDATE ITEM
-                          </Button>
-                        </Container>
-                      </Box>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-                </div>
-             ))}
+          </Box>
+          :
+          <Box className={classes.root}>
+            <Container className={classes.container}>
+              {data.length <= 0 ? 
+                <Container style={{height: '20vh', marginTop: '10vh'}}>
+                  <Typography variant="h5">You haven't added any items to your list</Typography>
+                </Container>
+                : 
+                data.map((item, index) => (
+                  <div key={item._id}>
+                      <ExpansionPanel 
+                        style={this.state.panel === item._id && this.state.panelOpen ? {marginBottom: '4vh'} : {marginBottom: '2vh'}} 
+                        expanded={this.state.panel === item._id && this.state.panelOpen} 
+                        onChange={() => this.expandPanel(item._id)}>
+                        <ExpansionPanelSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1bh-content"
+                          id="panel1bh-header"
+                        >
+                          <Grid container justify={'flex-start'}>
+                            <Typography className={classes.heading}>
+                              <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
+                                {item.description}
+                              </Link>
+                            </Typography>
+                          </Grid>
+                          <Grid container justify={'center'} direction={'column'}>
+                            <Grid container justify={'flex-end'}>
+                                <DeleteIcon onClick={() => this.deleteFromDB(item._id)} className={classes.icon}/>
+                                <EditIcon onClick={() => this.editForm(item)} className={classes.icon}/>
+                            </Grid>
+                          </Grid>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails className={classes.details}>
+                          <Typography>
+                            {item.notes}
+                          </Typography>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </div>
+                ))
+              }
 
-             <Container className={classes.link}>
-              <Button variant="outlined" color="primary" onClick={this.openAddForm}>
-                Add Item
-              </Button>
+                <Container style={{marginTop: '5vh'}}>
+                  <Button variant="outlined" className={classes.button} onClick={this.openAddForm}>
+                    <Typography className={classes.buttonText}>
+                      Add Item
+                    </Typography>
+                  </Button>
+                </Container>
             </Container>
-        </Container>
 
 
-        {/* Update Item Modal */}
-        <Dialog open={this.state.updateItemForm} onClose={this.closeEditForm} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Update Item</DialogTitle>
-          <DialogContent>
-            {/* <DialogContentText>
-              Add item details below
-            </DialogContentText> */}
-            <TextField
-              required
-              id="standard-required"
-              label={"Item description"}
-              value={this.state.description}
-              autoFocus
-              margin="dense"
-              fullWidth
-              onChange={(e) => this.setState({ description: e.target.value })}
-            />
-            <TextField
-              required
-              error={this.state.linkError ? true : false}
-              id="standard-error"
-              margin="dense"
-              label={this.state.linkError ? "Must be a valid link": "Item link"}
-              type="name"
-              fullWidth
-              value={this.state.link}
-              onChange={(e) => this.setState({ link: e.target.value })}
-            />
-            <TextField
-              multiline={true}
-              margin="dense"
-              label="Additional notes"
-              type="name"
-              fullWidth
-              value={this.state.notes}
-              onChange={(e) => this.setState({ notes: e.target.value })}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button  onClick={this.closeEditForm} color="primary">
-              Cancel
-            </Button>
-            <Button 
-              disabled={!this.state.description} 
-              onClick={() => this.updateDB(this.state.itemToUpdate, this.state.description, this.state.link, this.state.notes)} 
-              color="primary"
-              >
-                <Typography>Update Item</Typography>
-            </Button>
-          </DialogActions>
-        </Dialog>
+            {/* Update Item Modal */}
+            <Dialog open={this.state.updateItemForm} onClose={this.closeEditForm} aria-labelledby="form-dialog-title">
+              <DialogTitle id="form-dialog-title">Update Item</DialogTitle>
+              <DialogContent>
+                {/* <DialogContentText>
+                  Add item details below
+                </DialogContentText> */}
+                <TextField
+                  required
+                  id="standard-required"
+                  label={"Item description"}
+                  value={this.state.description}
+                  autoFocus
+                  margin="dense"
+                  fullWidth
+                  className={classes.textInput}
+                  onChange={(e) => this.setState({ description: e.target.value })}
+                />
+                <TextField
+                  required
+                  error={this.state.linkError ? true : false}
+                  id="standard-error"
+                  margin="dense"
+                  label={this.state.linkError ? "Must be a valid link": "Item link"}
+                  type="name"
+                  fullWidth
+                  className={this.state.linkError ? null : classes.textInput}
+                  value={this.state.link}
+                  onChange={(e) => this.setState({ link: e.target.value })}
+                />
+                <TextField
+                  multiline={true}
+                  margin="dense"
+                  label="Additional notes"
+                  type="name"
+                  fullWidth
+                  className={classes.textInput}
+                  value={this.state.notes}
+                  onChange={(e) => this.setState({ notes: e.target.value })}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button className={classes.button} onClick={this.closeEditForm} color="primary">
+                  <Typography>
+                    Cancel
+                  </Typography>
+                </Button>
+                <Button 
+                  className={classes.button}
+                  disabled={!this.state.description} 
+                  onClick={() => this.updateDB(this.state.itemToUpdate, this.state.description, this.state.link, this.state.notes)} 
+                  >
+                    <Typography>Update Item</Typography>
+                </Button>
+              </DialogActions>
+            </Dialog>
 
 
-        {/* Add Item Modal */}
-        <Dialog open={this.state.addItemForm} onClose={this.closeAddForm} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Add Item</DialogTitle>
-          <DialogContent>
-            {/* <DialogContentText>
-              Add item details below
-            </DialogContentText> */}
-            <TextField
-              required
-              id="standard-required"
-              label="Item description"
-              autoFocus
-              margin="dense"
-              fullWidth
-              onChange={(e) => this.setState({ description: e.target.value })}
-            />
-            <TextField
-              required
-              error={this.state.linkError ? true : false}
-              id="standard-error"
-              margin="dense"
-              label={this.state.linkError ? "Must be a valid link": "Item link"}
-              type="name"
-              fullWidth
-              onChange={(e) => this.setState({ link: e.target.value })}
-            />
-            <TextField
-              multiline={true}
-              margin="dense"
-              label="Additional notes"
-              type="name"
-              fullWidth
-              onChange={(e) => this.setState({ notes: e.target.value })}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button  onClick={this.closeAddForm} color="primary">
-              Cancel
-            </Button>
-            <Button 
-              disabled={!this.state.description} 
-              onClick={() => this.addNewItem(this.state.description, this.state.link, this.state.notes )} 
-              color="primary"
-              >
-                <Typography>Add Item</Typography>
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
+            {/* Add Item Modal */}
+            <Dialog open={this.state.addItemForm} onClose={this.closeAddForm} aria-labelledby="form-dialog-title">
+              <DialogTitle id="form-dialog-title">Add Item</DialogTitle>
+              <DialogContent>
+                {/* <DialogContentText>
+                  Add item details below
+                </DialogContentText> */}
+                <TextField
+                  required
+                  id="standard-required"
+                  label="Item description"
+                  autoFocus
+                  margin="dense"
+                  fullWidth
+                  className={classes.textInput}
+                  onChange={(e) => this.setState({ description: e.target.value })}
+                />
+                <TextField
+                  required
+                  error={this.state.linkError ? true : false}
+                  id="standard-error"
+                  margin="dense"
+                  label={this.state.linkError ? "Must be a valid link": "Item link"}
+                  type="name"
+                  fullWidth
+                  className={classes.textInput}
+                  onChange={(e) => this.setState({ link: e.target.value })}
+                />
+                <TextField
+                  multiline={true}
+                  margin="dense"
+                  label="Additional notes"
+                  type="name"
+                  fullWidth
+                  className={classes.textInput}
+                  onChange={(e) => this.setState({ notes: e.target.value })}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button className={classes.button} onClick={this.closeEditForm}>
+                  <Typography>
+                    Cancel
+                  </Typography>
+                </Button>
+                <Button 
+                  className={classes.button}
+                  disabled={!this.state.description} 
+                  onClick={() => this.addNewItem(this.state.description, this.state.link, this.state.notes )} 
+                  >
+                    <Typography>Add Item</Typography>
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
+        }
+      </div>
     );
   }
 }

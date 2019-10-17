@@ -3,9 +3,9 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
-import { login, userExistsError, connectionError} from '../../actions/UserActions';
+import { login, userExistsError, connectionError } from '../../actions/UserActions';
 import { withStyles } from '@material-ui/styles';
-import { Button, Container, Box, Typography, TextField, CircularProgress} from '@material-ui/core';
+import { Button, Container, Box, Typography, TextField, CircularProgress, Grid } from '@material-ui/core';
 
 const styles = {
   root: {
@@ -17,8 +17,7 @@ const styles = {
   form: {
     background: '#fff',
     textAlign: 'center',
-    width: '50%',
-    height: '65vh',
+    paddingBottom: '5vh',
     borderRadius: 5
   },
   title: {
@@ -29,7 +28,24 @@ const styles = {
   },
   textInput: {
     margin: '1vh',
-    width: '80%'
+    width: '80%',
+    '& label.Mui-focused': {
+      color: '#4f92ff',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#4f92ff',
+    },
+    // '& .MuiOutlinedInput-root': {
+    //   '& fieldset': {
+    //     borderColor: 'red',
+    //   },
+    //   '&:hover fieldset': {
+    //     borderColor: 'yellow',
+    //   },
+    //   '&.Mui-focused fieldset': {
+    //     borderColor: 'green',
+    //   },
+    // }
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -100,135 +116,139 @@ class Register extends Component {
           </div>
         :
         <Box className={classes.root} >
-          <Container className={classes.form}>
-            <Formik
-              initialValues={{ name: '', password: '', confirmPassword: ''}}
-              validate={values => {
-                let errors = {};
-                if (!values.name) {
-                  errors.name = 'Required';
-                } 
-                if (values.password !== values.confirmPassword) {
-                  errors.confirmPassword = 'Passwords do not match';
-                } 
-                return errors;
-              }}
-              onSubmit={(values, { setSubmitting }) => {
-                this.registerUser(values);
-                this.setState({
-                  loading: true
-                })
-              }}
-            >
-              {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                isSubmitting
-              }) => (
-                <form onSubmit={handleSubmit}>
-                    <Typography variant='h4' className={classes.title}>Register</Typography>
-                  <div>
-                    {/* <Typography variant='h5' className={classes.title}>Name</Typography> */}
-                    <TextField
-                      required
-                      type="name"
-                      name="name"
-                      id="standard-required"
-                      label="First Name"
-                      placeholder={'First Name'}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.name}
-                      className={classes.textInput}
-                    />
-                  </div>
-                  {/* <div>
-                    <Typography style={{color: 'red'}}>{errors.name}</Typography>
-                  </div> */}
+          <Grid container justify={'center'}>
+            <Grid item xl ={6} lg={6} md={6} xs={10}>
+                  <Container className={classes.form}>
+                    <Formik
+                      initialValues={{ name: '', password: '', confirmPassword: ''}}
+                      validate={values => {
+                        let errors = {};
+                        if (!values.name) {
+                          errors.name = 'Required';
+                        } 
+                        if (values.password !== values.confirmPassword) {
+                          errors.confirmPassword = 'Passwords do not match';
+                        } 
+                        return errors;
+                      }}
+                      onSubmit={(values, { setSubmitting }) => {
+                        this.registerUser(values);
+                        this.setState({
+                          loading: true
+                        })
+                      }}
+                    >
+                      {({
+                        values,
+                        errors,
+                        touched,
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        isSubmitting
+                      }) => (
+                        <form onSubmit={handleSubmit}>
+                            <Typography variant='h4' className={classes.title}>Register</Typography>
+                          <div>
+                            {/* <Typography variant='h5' className={classes.title}>Name</Typography> */}
+                            <TextField
+                              required
+                              type="name"
+                              name="name"
+                              id="standard-required"
+                              label="First Name"
+                              placeholder={'First Name'}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.name}
+                              className={classes.textInput}
+                            />
+                          </div>
+                          {/* <div>
+                            <Typography style={{color: 'red'}}>{errors.name}</Typography>
+                          </div> */}
 
-                  <div>
-                    {/* <Typography variant='h5' className={classes.title}>Password</Typography> */}
-                    <TextField
-                      required
-                      type="password"
-                      name="password"
-                      id="standard-password-input"
-                      label="Password"
-                      placeholder={'Password'}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.password}
-                      className={classes.textInput}
-                    />
-                  </div>
-                  <div>
-                    <Typography style={{color: 'red'}}>{errors.password}</Typography>
-                  </div>
+                          <div>
+                            {/* <Typography variant='h5' className={classes.title}>Password</Typography> */}
+                            <TextField
+                              required
+                              type="password"
+                              name="password"
+                              id="standard-password-input"
+                              label="Password"
+                              placeholder={'Password'}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.password}
+                              className={classes.textInput}
+                            />
+                          </div>
+                          <div>
+                            <Typography style={{color: 'red'}}>{errors.password}</Typography>
+                          </div>
 
-                  <div>
-                    {/* <Typography variant='h5' className={classes.title}>Confirm Password</Typography> */}
-                    <TextField
-                        required
-                        type="password"
-                        name="confirmPassword"
-                        id="standard-password-input"
-                        label="Password"
-                        placeholder={'Password'}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.confirmPassword}
-                        className={classes.textInput}
-                      />
-                  </div>
-                  <div>
-                    <Typography style={{color: 'red'}}>{errors.confirmPassword}</Typography>
-                  </div>
+                          <div>
+                            {/* <Typography variant='h5' className={classes.title}>Confirm Password</Typography> */}
+                            <TextField
+                                required
+                                type="password"
+                                name="confirmPassword"
+                                id="standard-password-input"
+                                label="Password"
+                                placeholder={'Password'}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.confirmPassword}
+                                className={classes.textInput}
+                              />
+                          </div>
+                          <div>
+                            <Typography style={{color: 'red'}}>{errors.confirmPassword}</Typography>
+                          </div>
 
-                  <div>
-                    {this.state.loading ? 
-                      <Container style={{height: 48, marginBottom: '5vh', marginTop: '5vh'}}>
-                        <CircularProgress />
-                      </Container>
-                      :
-                      <Button type="submit" className={classes.button}>
-                        Register
-                      </Button>
+                          <div>
+                            {this.state.loading ? 
+                              <Container style={{height: 48, marginBottom: '5vh', marginTop: '5vh'}}>
+                                <CircularProgress />
+                              </Container>
+                              :
+                              <Button type="submit" className={classes.button}>
+                                Register
+                              </Button>
+                            }
+                          </div>
+                        </form>
+                      )}
+                    </Formik>
+
+                    <Typography>
+                      <Link to="/" className={classes.link} style={{ textDecoration: 'none', color: '#4f92ff' }}>Login to Account</Link>
+                    </Typography>
+                    
+                    {/* {this.props.history.action === "REPLACE" ?
+                        <div>
+                          <h2>PLEASE SIGN IN</h2>
+                        </div>
+                        :
+                        null
+                    } */}
+                    {this.props.userExistsErr ?
+                        <div>
+                          <Typography variant='h6' style={{paddingTop: '4vh', color: 'red'}}>USER ALREADY EXISTS</Typography>
+                        </div>
+                        :
+                        null
                     }
-                  </div>
-                </form>
-              )}
-            </Formik>
-
-            <Typography>
-              <Link to="/" className={classes.link} style={{ textDecoration: 'none', color: '#4f92ff' }}>Login to Account</Link>
-            </Typography>
-            
-            {/* {this.props.history.action === "REPLACE" ?
-                <div>
-                  <h2>PLEASE SIGN IN</h2>
-                </div>
-                :
-                null
-            } */}
-            {this.props.userExistsErr ?
-                <div>
-                  <Typography variant='h6' style={{paddingTop: '4vh', color: 'red'}}>USER ALREADY EXISTS</Typography>
-                </div>
-                :
-                null
-            }
-            {this.props.connectionErr ?
-            <div>
-              <Typography variant='h6' style={{paddingTop: '4vh', color: 'red'}}>ERROR CONNECTING TO DATABASE</Typography>
-            </div>
-            :
-            null
-        }
-      </Container>
+                    {this.props.connectionErr ?
+                    <div>
+                      <Typography variant='h6' style={{paddingTop: '4vh', color: 'red'}}>ERROR CONNECTING TO DATABASE</Typography>
+                    </div>
+                    :
+                    null
+                }
+              </Container>
+            </Grid>
+          </Grid>
     </Box>  
     )
   }

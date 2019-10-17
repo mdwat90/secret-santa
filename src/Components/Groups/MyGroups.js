@@ -87,7 +87,7 @@ const styles = {
   link: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
     display: 'inline-flex',
-    height: '8vh',
+    height: '50px',
     width: '25vh',
     padding: '0 30px',
     margin: '4vw'
@@ -188,8 +188,6 @@ class Groups extends Component {
   getUserGroups = (userId) => {
     this.setState({
       loading: true
-    }, () => {
-      console.log('LOADING:', this.state.loading)
     })
 
     axios.get('http://localhost:3001/api/getUserGroups', {
@@ -268,8 +266,6 @@ class Groups extends Component {
 
   removeMember = (groupId, userId) => {
     let component = this;
-
-    
 
     axios.delete('http://localhost:3001/api/removeMember', {
       data: {

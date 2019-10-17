@@ -3,10 +3,10 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { connectionError } from '../../actions/UserActions';
-import { joinGroupError } from '../../actions/GroupActions';
+import { joinGroupError, joinGroupSuccess } from '../../actions/GroupActions';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { withStyles } from '@material-ui/styles';
-import { Button, Container, Box, Typography, TextField } from '@material-ui/core';
+import { Button, Container, Box, Typography, TextField, Grid } from '@material-ui/core';
 
 const styles = {
   root: {
@@ -18,19 +18,34 @@ const styles = {
   form: {
     background: '#fff',
     textAlign: 'center',
-    width: '60%',
-    height: '80%',
     borderRadius: 5
   },
   title: {
     paddingTop: '5vh',
   },
   link: {
-    margin: '2vh',
+    margin: '4vh',
   },
   textInput: {
     margin: '1vh',
-    width: '80%'
+    width: '80%',
+    '& label.Mui-focused': {
+      color: '#4f92ff',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#4f92ff',
+    },
+    // '& .MuiOutlinedInput-root': {
+    //   '& fieldset': {
+    //     borderColor: 'red',
+    //   },
+    //   '&:hover fieldset': {
+    //     borderColor: 'yellow',
+    //   },
+    //   '&.Mui-focused fieldset': {
+    //     borderColor: 'green',
+    //   },
+    // }
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -41,7 +56,8 @@ const styles = {
     height: 48,
     // width: '25%',
     padding: '0 30px',
-    margin: '5vh'
+    margin: '5vh',
+    marginTop: '7vh'
   },
 };
 
@@ -75,6 +91,7 @@ class JoinGroup extends Component {
     .then(function (response) {
       console.log('AXIOS RESPONSE:', response)
       if(response.data._id){
+        component.props.joinGroupSuccess();
         component.setState({
           groupJoined: !component.state.groupJoined
         });
@@ -98,114 +115,118 @@ class JoinGroup extends Component {
 
     return (
       this.state.groupJoined ? 
-        <div>
+        <Container style={{ marginTop: '5vh'}}>
           <Typography variant='h4'>You have joined the group!</Typography>
-        </div>
+        </Container>
         :
         <Box className={classes.root}>
-          <Container className={classes.form}>
-            <Formik
-              initialValues={{ uid: user_info._id, name: '', group: '',  password: '' }}
-              validate={values => {
-                let errors = {};
-                if (!values.name) {
-                  errors.name = 'Required';
-                }
-                return errors;
-              }}
-              onSubmit={(values, { setSubmitting }) => {
-                this.JoinGroup(values);
-              }}
-            >
-              {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                isSubmitting
-              }) => (
-                <form onSubmit={handleSubmit}>
-                  {errors.admin}
-                    <Typography variant='h5' className={classes.title}>Join Group</Typography>
-                  <div>
-                    {/* <Typography variant='h5' className={classes.title}>Your Name</Typography> */}
-                    <TextField
-                      required
-                      type="name"
-                      name="name"
-                      id="standard-required"
-                      label="Your Name"
-                      placeholder={'Your Name'}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.name}
-                      className={classes.textInput}
-                    />
-                  </div>
-                  <div>
-                    {/* <Typography style={{color: 'red'}}>{errors.name}</Typography> */}
-                  </div>
-                  <div>
-                    {/* <Typography variant='h5' className={classes.title}>Group Name</Typography> */}
-                    <TextField
-                      required
-                      type="name"
-                      name="group"
-                      id="standard-required"
-                      label="Group Name"
-                      placeholder={'Group Name'}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.group}
-                      className={classes.textInput}
-                    />
-                  </div>
-                  <div>
-                    {/* <Typography style={{color: 'red'}}>{errors.group}</Typography> */}
-                  </div>
-                  <div>
-                    {/* <Typography variant='h5' className={classes.title}>Password</Typography> */}
-                    <TextField
-                      required
-                      type="password"
-                      name="password"
-                      id="standard-password-input"
-                      label="Password"
-                      placeholder={'Password'}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.password}
-                      className={classes.textInput}
-                    />
-                  </div>
-                  <div>
-                    {/* <Typography style={{color: 'red'}}>{errors.password}</Typography> */}
-                  </div>
-                  <div>
-                    <Button type="submit" className={classes.button}>
-                      Join Group
-                    </Button>
-                  </div>
-                </form>
-              )}
-            </Formik>
+          <Grid container justify={'center'}>
+            <Grid item xl ={6} lg={7} md={10} xs={12}>
+              <Container className={classes.form}>
+                <Formik
+                  initialValues={{ uid: user_info._id, name: '', group: '',  password: '' }}
+                  validate={values => {
+                    let errors = {};
+                    if (!values.name) {
+                      errors.name = 'Required';
+                    }
+                    return errors;
+                  }}
+                  onSubmit={(values, { setSubmitting }) => {
+                    this.JoinGroup(values);
+                  }}
+                >
+                  {({
+                    values,
+                    errors,
+                    touched,
+                    handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    isSubmitting
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+                      {errors.admin}
+                        <Typography variant='h5' className={classes.title}>Join Group</Typography>
+                      <div>
+                        {/* <Typography variant='h5' className={classes.title}>Your Name</Typography> */}
+                        <TextField
+                          required
+                          type="name"
+                          name="name"
+                          id="standard-required"
+                          label="Your Name"
+                          placeholder={'Your Name'}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.name}
+                          className={classes.textInput}
+                        />
+                      </div>
+                      <div>
+                        {/* <Typography style={{color: 'red'}}>{errors.name}</Typography> */}
+                      </div>
+                      <div>
+                        {/* <Typography variant='h5' className={classes.title}>Group Name</Typography> */}
+                        <TextField
+                          required
+                          type="name"
+                          name="group"
+                          id="standard-required"
+                          label="Group Name"
+                          placeholder={'Group Name'}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.group}
+                          className={classes.textInput}
+                        />
+                      </div>
+                      <div>
+                        {/* <Typography style={{color: 'red'}}>{errors.group}</Typography> */}
+                      </div>
+                      <div>
+                        {/* <Typography variant='h5' className={classes.title}>Password</Typography> */}
+                        <TextField
+                          required
+                          type="password"
+                          name="password"
+                          id="standard-password-input"
+                          label="Password"
+                          placeholder={'Password'}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.password}
+                          className={classes.textInput}
+                        />
+                      </div>
+                      <div>
+                        {/* <Typography style={{color: 'red'}}>{errors.password}</Typography> */}
+                      </div>
+                      <div>
+                        <Button type="submit" className={classes.button}>
+                          Join Group
+                        </Button>
+                      </div>
+                    </form>
+                  )}
+                </Formik>
 
-            <Typography>
-              <Link to="/groups/create-group" className={classes.link} style={{ textDecoration: 'none', color: '#4f92ff' }}>
-                Haven't created a group? You can create one here.
-              </Link>
-            </Typography>
+                <Typography className={classes.link}>
+                  <Link to="/groups/create-group" className={classes.link} style={{ textDecoration: 'none', color: '#4f92ff' }}>
+                    Haven't created a group? You can create one here.
+                  </Link>
+                </Typography>
 
-            {this.props.joinGroupErr ?
-              <div>
-                <Typography variant='h6' style={{paddingTop: '2vh', color: 'red'}}>There was an error joining the group. Check the group name, password and if you've already joined the group.</Typography>
-              </div>
-              :
-              null
-              }
-          </Container>
+                {this.props.joinGroupErr ?
+                  <div>
+                    <Typography style={{paddingTop: '2vh', color: 'red', fontWeight: 'bold'}}>There was an error joining the group. Check the group name, password and if you've already joined the group.</Typography>
+                  </div>
+                  :
+                  null
+                  }
+            </Container>
+            </Grid>
+          </Grid>
         </Box>  
     )
   }

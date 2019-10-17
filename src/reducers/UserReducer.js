@@ -13,12 +13,12 @@ const initialState = {
     switch (action.type) {
     case type.SET_USER_INFO: {
       console.log('USER REDUCER ACTION:', action);
-      return Object.assign({}, state, { user_info: action.payload, loggedIn: true, loginErr: null, connectionErr: null });
+      return Object.assign({}, state, { user_info: action.payload, loggedIn: true, loginErr: null, connectionErr: null, userExistsErr: null });
     }
     
     case type.LOGOUT_USER: {
       console.log('USER REDUCER ACTION:', action);
-      return Object.assign({}, state, { user_info: null, loggedIn: false });
+      return Object.assign({}, state, { user_info: null, loggedIn: false, loginErr: null, connectionErr: null, userExistsErr: null });
     }
   
     case type.LOGIN_ERROR: {
