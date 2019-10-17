@@ -523,19 +523,20 @@ class Groups extends Component {
                             else if(member.selectedBy === this.props.user_info._id) {
                               return (
                                 <Container key={index}>
-                                  <Typography className={classes.button} style={{color: '#4f92ff', margin: '4vh'}}>
-                                    You selected
-                                    <Link  
-                                      to={{
-                                        pathname: `/wish-list/${member.uid}`,
-                                        state: {
-                                          user: member.name
-                                        }
-                                      }}
-                                      style={{color: '#4f92ff'}}> 
-                                        {member.name.toUpperCase()}
-                                      </Link>
+                                  <Typography style={{margin: '4vh'}}>
+                                    You drew {' '}
+                                      <Link  
+                                        to={{
+                                          pathname: `/wish-list/${member.uid}`,
+                                          state: {
+                                            user: member.name
+                                          }
+                                        }}
+                                        style={{textDecoration: 'none'}}> 
+                                          <Chip style={{backgroundColor: '#4f92ff', color: 'white', cursor:'pointer'}} label={member.name.toUpperCase()}/>
+                                        </Link>
                                     </Typography>
+                                    <Typography className={classes.subText}>You can click their name to see their wish list.</Typography>
                                 </Container>
                               )
                             }
