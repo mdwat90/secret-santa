@@ -74,14 +74,15 @@ const styles = {
     // }
   },
   heading: {
-    fontSize: '3vh'
+    // fontSize: '3vh'
   },
   details: {
     backgroundColor: '#d1d1d1'
   },
   icon: {
-    marginRight: '2vh',
-    height: '4vh'
+    marginRight: '1vw',
+    fontSize: '20px',
+    color: '#8f8f8f'
   },
   button: {
     borderColor: '#4f92ff', 
