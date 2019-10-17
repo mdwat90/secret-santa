@@ -87,6 +87,9 @@ const styles = {
   button: {
     borderColor: '#4f92ff', 
     color: '#4f92ff'
+  },
+  cancelButton: {
+    color: '#6b6b6b'
   }
 };
 
@@ -285,7 +288,7 @@ class Profile extends Component {
           <Box className={classes.root}>
             <Container className={classes.container}>
               {data.length <= 0 ? 
-                <Container style={{height: '20vh', marginTop: '10vh'}}>
+                <Container style={{height: '10vh', marginTop: '10vh'}}>
                   <Typography variant="h5">You haven't added any items to your list</Typography>
                 </Container>
                 : 
@@ -324,7 +327,7 @@ class Profile extends Component {
                 ))
               }
 
-                <Container style={{marginTop: '5vh'}}>
+                <Container style={data.length > 0 ? {marginTop: '5vh'} : null }>
                   <Button variant="outlined" className={classes.button} onClick={this.openAddForm}>
                     <Typography className={classes.buttonText}>
                       Add Item
@@ -376,7 +379,7 @@ class Profile extends Component {
                 />
               </DialogContent>
               <DialogActions>
-                <Button className={classes.button} onClick={this.closeEditForm} color="primary">
+                <Button className={classes.cancelButton} onClick={() => this.closeEditForm()}>
                   <Typography>
                     Cancel
                   </Typography>
@@ -431,7 +434,7 @@ class Profile extends Component {
                 />
               </DialogContent>
               <DialogActions>
-                <Button className={classes.button} onClick={this.closeEditForm}>
+                <Button className={classes.cancelButton} onClick={() => this.closeAddForm()}>
                   <Typography>
                     Cancel
                   </Typography>

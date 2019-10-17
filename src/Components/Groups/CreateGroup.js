@@ -242,7 +242,7 @@ class CreateGroup extends Component {
                 </Formik>
 
 
-                <Typography style={{marginTop: '4vh'}}>
+                <Typography style={{marginTop: '4vh', marginBottom: '4vh'}}>
                   <Link to="/groups/join-group" style={{ textDecoration: 'none', color: '#4f92ff'}}>
                     You can join a group that's already been created by clicking here.
                   </Link>

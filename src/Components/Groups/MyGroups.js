@@ -75,6 +75,12 @@ const styles = {
     width: '20px',
     cursor: 'pointer'
   },
+  drawButton: {
+    color: '#4f92ff',  
+    borderColor: '#4f92ff', 
+    backgroundColor: 'white', 
+    margin: '4vh'
+  },
   delete: {
     color: 'red'
   },
@@ -151,6 +157,7 @@ class Groups extends Component {
   openDeleteModal = (groupId, memberId) => {
     // console.log('Group:::', groupId)
     // console.log('User:::', memberId)
+    // console.log('OPENING DELETE MODAL')
     this.setState({
       deleteUserModal: true,
       deleteUid: memberId,
@@ -169,6 +176,7 @@ class Groups extends Component {
   openRemoveModal = (groupId, memberId) => {
     // console.log('Group:::', groupId)
     // console.log('User:::', memberId)
+    // console.log('OPENING REMOVE MODAL')
     this.setState({
       removeUserModal: true,
       deleteUid: memberId,
@@ -406,30 +414,6 @@ class Groups extends Component {
                                             <Chip label={member.name.toUpperCase()} onDelete={() => this.openDeleteModal(group._id, member.uid)} />
                                           </Grid>
                                         }
-                                        
-                                        {/* deleting member */}
-                                        <Dialog
-                                          open={this.state.deleteUserModal}
-                                          onClose={this.closeDeleteModal}
-                                          aria-labelledby="alert-dialog-title"
-                                          aria-describedby="alert-dialog-description"
-                                        >
-                                          <DialogTitle id="alert-dialog-title">{"Delete Member?"}</DialogTitle>
-                                          <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                              <Typography style={{textAlign: 'center'}}>Are you sure you want to delete this member from the group?</Typography>
-                                              <Typography style={{textAlign: 'center', fontWeight: 'bold'}}>This will reset the drawing for the entire group.</Typography>
-                                            </DialogContentText>
-                                          </DialogContent>
-                                          <DialogActions>
-                                            <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
-                                              Delete
-                                            </Button>
-                                            <Button onClick={ () => this.closeDeleteModal()} color="primary" autoFocus>
-                                              Close
-                                            </Button>
-                                          </DialogActions>
-                                        </Dialog>
                                       </div>
                                       )
                                   }
@@ -441,30 +425,6 @@ class Groups extends Component {
                                           <Grid item style={{margin: '1vh'}}>
                                             <Chip label={member.name.toUpperCase()} onDelete={() => this.openRemoveModal(group._id, member.uid)}/>
                                           </Grid>
-
-                                        {/* leaving group */}
-                                        <Dialog
-                                          open={this.state.removeUserModal}
-                                          onClose={this.closeDeleteModal}
-                                          aria-labelledby="alert-dialog-title"
-                                          aria-describedby="alert-dialog-description"
-                                        >
-                                          <DialogTitle id="alert-dialog-title">{"Leave Group?"}</DialogTitle>
-                                          <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                              <Typography style={{textAlign: 'center'}}> Are you sure you want to leave this group? </Typography>
-                                              <Typography style={{textAlign: 'center', fontWeight: 'bold'}}>This will reset the drawing for the entire group.</Typography>
-                                            </DialogContentText>
-                                          </DialogContent>
-                                          <DialogActions>
-                                            <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
-                                              Leave Group
-                                            </Button>
-                                            <Button onClick={() => this.closeRemoveModal()} color="primary" autoFocus>
-                                              Close
-                                            </Button>
-                                          </DialogActions>
-                                        </Dialog>
                                       </div>
                                       )
                                   }
@@ -505,12 +465,13 @@ class Groups extends Component {
                                 <div key={index}>
                                   <Button 
                                     variant="outlined"
-                                    style={{color: '#4f92ff', backgroundColor: 'white', margin: '4vh'}}
                                     disabled={false} 
-                                    className={classes.button} 
+                                    className={classes.drawButton} 
                                     onClick={() => this.drawName(group._id, this.props.user_info._id)}
                                   >
-                                    Draw
+                                    <Typography>
+                                      Draw
+                                    </Typography>
                                   </Button>
                                 </div>
                               )
@@ -557,6 +518,55 @@ class Groups extends Component {
                     </Button>
                   </Link>
                 </Container>
+
+
+                {/* deleting member modal */}
+                <Dialog
+                    open={this.state.deleteUserModal}
+                    onClose={this.closeDeleteModal}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">{"Delete Member?"}</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        <Typography style={{textAlign: 'center'}}>Are you sure you want to delete this member from the group?</Typography>
+                        <Typography style={{textAlign: 'center', fontWeight: 'bold'}}>This will reset the drawing for the entire group.</Typography>
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
+                        Delete
+                      </Button>
+                      <Button onClick={ () => this.closeDeleteModal()} style={{color: '#6b6b6b'}} autoFocus>
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+
+                {/* leaving group modal */}
+                <Dialog
+                  open={this.state.removeUserModal}
+                  onClose={this.closeRemoveModal}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">{"Leave Group?"}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <Typography style={{textAlign: 'center'}}> Are you sure you want to leave this group? </Typography>
+                      <Typography style={{textAlign: 'center', fontWeight: 'bold'}}>This will reset the drawing for the entire group.</Typography>
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
+                      Leave Group
+                    </Button>
+                    <Button onClick={() => this.closeRemoveModal()} style={{color: '#6b6b6b'}}  autoFocus>
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
             </div>
           }
       </div>

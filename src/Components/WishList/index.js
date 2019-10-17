@@ -22,6 +22,7 @@ import {
   TextField, 
   CircularProgress
 } from '@material-ui/core';
+import { Link as DomLink } from "react-router-dom";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
@@ -57,10 +58,14 @@ const styles = {
     width: '80%'
   },
   heading: {
-    fontSize: '4vh'
+    // fontSize: '4vh'
   },
   details: {
     backgroundColor: '#d1d1d1'
+  },
+  drawButton: {
+    color: '#4f92ff',  
+    borderColor: '#4f92ff'
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -153,7 +158,7 @@ class WishList extends Component {
           <Box className={classes.root}>
             <Container className={classes.container}>
               {data.length <= 0 ? 
-                <Container style={{height: '20vh', marginTop: '10vh'}}>
+                <Container style={{height: '10vh', marginTop: '10vh'}}>
                   <Typography variant="h5">{this.state.userName} hasn't added any items to their list yet</Typography>
                 </Container>
                 : 
@@ -184,6 +189,20 @@ class WishList extends Component {
                       </ExpansionPanel>
                     </div>
                 ))}
+
+                <Container>
+                  <DomLink to="/groups/my-groups" style={{ textDecoration: 'none', color: '#4f92ff' }}>
+                      <Button 
+                        variant="outlined"
+                        disabled={false} 
+                        className={classes.drawButton} 
+                      >
+                        <Typography>
+                          Go Back
+                        </Typography>
+                      </Button>
+                  </DomLink>
+                </Container>
             </Container>
           </Box>
         }
