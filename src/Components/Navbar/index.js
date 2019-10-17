@@ -21,8 +21,8 @@ const useStyles = makeStyles({
     },
     title: {
         marginRight: 20,
-        color: '#ff5e5e',
-        fontSize: '1.5vw'
+        color:'#ff476f',
+        // fontSize: '1.5vw'
     }
   });
 
@@ -40,9 +40,9 @@ function Navbar(props) {
     return (
         <AppBar position={'sticky'} className={classes.root}>
             <Toolbar>
-                <Typography className={classes.title}>
+                {/* <Typography className={classes.title}>
                     XMAS
-                </Typography>
+                </Typography> */}
                 
                 <div className={classes.link}>
                     <Typography>

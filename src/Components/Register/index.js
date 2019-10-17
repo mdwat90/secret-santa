@@ -209,7 +209,7 @@ class Register extends Component {
                           <div>
                             {this.state.loading ? 
                               <Container style={{height: 48, marginBottom: '5vh', marginTop: '5vh'}}>
-                                <CircularProgress />
+                                <CircularProgress style={{color:'#ff476f'}} />
                               </Container>
                               :
                               <Button type="submit" className={classes.button}>

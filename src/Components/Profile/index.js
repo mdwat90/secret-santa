@@ -277,7 +277,7 @@ class Profile extends Component {
         {this.state.loading ?
           <Box className={classes.root}>
             <Container className={classes.container} style={{marginTop: '10vh'}}>
-              <CircularProgress />
+              <CircularProgress style={{color:'#ff476f'}} />
             </Container>
           </Box>
           :

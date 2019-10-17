@@ -319,7 +319,7 @@ class Groups extends Component {
       <div>
           {this.state.loading ?
             <Container style={{height: '20vh', marginTop: '10vh'}}>
-              <CircularProgress />
+              <CircularProgress style={{color:'#ff476f'}}/>
             </Container>
             :
             <div>
