@@ -214,17 +214,17 @@ app.post('/api/joinGroup', function(req, response) {
             $push: {members: {uid: request.uid, name: request.name, selected: false, selectedBy: null, uidSelected: null } }
         }
         , function (err, res) {
-        
             console.log('RESPONSE:', res)
-        if(res === null) {
-            console.log('ERROR ADDING USER')
-            response.send(err)
-        }
-        else {
-            console.log('USER ADDED TO GROUP', res)
-            response.send(res)
-        }
-    })
+            console.log('ERROR:', err)
+            if(res === null) {
+                console.log('ERROR ADDING USER')
+                response.send(err)
+            }
+            else {
+                console.log('USER ADDED TO GROUP', res)
+                response.send(res)
+            }
+        })
 })
 
 app.delete('/api/deleteGroup', function(req, response) {

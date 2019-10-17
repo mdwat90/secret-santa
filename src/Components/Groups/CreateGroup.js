@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { connectionError } from '../../actions/UserActions';
-import { groupExistsError, createGroupSuccess } from '../../actions/GroupActions';
+import { groupExistsError, createGroupSuccess, joinGroupSuccess } from '../../actions/GroupActions';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { withStyles } from '@material-ui/styles';
 import { Button, Container, Box, Typography, TextField, Grid } from '@material-ui/core';
@@ -94,6 +94,7 @@ class CreateGroup extends Component {
       console.log('AXIOS RESPONSE:', response)
       if(response.data._id){
         component.props.createGroupSuccess();
+        component.props.joinGroupSuccess();
         component.setState({
           groupCreated: !component.state.groupCreated
         });
@@ -242,7 +243,7 @@ class CreateGroup extends Component {
 
 
                 <Typography style={{marginTop: '4vh'}}>
-                  <Link to="/groups/join-group" className={classes.link} style={{ textDecoration: 'none', color: '#4f92ff' }}>
+                  <Link to="/groups/join-group" style={{ textDecoration: 'none', color: '#4f92ff'}}>
                     You can join a group that's already been created by clicking here.
                   </Link>
                 </Typography>
@@ -277,7 +278,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   groupExistsError,
   connectionError,
-  createGroupSuccess
+  createGroupSuccess, 
+  joinGroupSuccess
 }
 
 

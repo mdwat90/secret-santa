@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { connectionError } from '../../actions/UserActions';
-import { joinGroupError, joinGroupSuccess } from '../../actions/GroupActions';
+import { joinGroupError, joinGroupSuccess, createGroupSuccess } from '../../actions/GroupActions';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { withStyles } from '@material-ui/styles';
 import { Button, Container, Box, Typography, TextField, Grid } from '@material-ui/core';
@@ -92,6 +92,7 @@ class JoinGroup extends Component {
       console.log('AXIOS RESPONSE:', response)
       if(response.data._id){
         component.props.joinGroupSuccess();
+        component.props.createGroupSuccess();
         component.setState({
           groupJoined: !component.state.groupJoined
         });
@@ -212,14 +213,14 @@ class JoinGroup extends Component {
                 </Formik>
 
                 <Typography className={classes.link}>
-                  <Link to="/groups/create-group" className={classes.link} style={{ textDecoration: 'none', color: '#4f92ff' }}>
+                  <Link to="/groups/create-group" style={{ textDecoration: 'none', color: '#4f92ff' }}>
                     Haven't created a group? You can create one here.
                   </Link>
                 </Typography>
 
                 {this.props.joinGroupErr ?
                   <div>
-                    <Typography style={{paddingTop: '2vh', color: 'red', fontWeight: 'bold'}}>There was an error joining the group. Check the group name, password and if you've already joined the group.</Typography>
+                    <Typography style={{paddingTop: '2vh', color: 'red', fontWeight: 'bold'}}>There was an error joining the group. Check the following: group name, password, if you've already joined the group, or if the group is full.</Typography>
                   </div>
                   :
                   null
@@ -245,7 +246,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   joinGroupError,
-  connectionError
+  connectionError,
+  joinGroupSuccess,
+  createGroupSuccess
 }
 
 

@@ -74,7 +74,7 @@ const styles = {
     // }
   },
   heading: {
-    fontSize: '4vh'
+    fontSize: '3vh'
   },
   details: {
     backgroundColor: '#d1d1d1'
@@ -85,12 +85,7 @@ const styles = {
   },
   button: {
     borderColor: '#4f92ff', 
-    color: '#4f92ff',
-    height: '6vh',
-    width: '20vh'
-  },
-  buttonText: {
-    fontSize: '2vh'
+    color: '#4f92ff'
   }
 };
 
