@@ -146,6 +146,14 @@ class WishList extends Component {
   render() {
     const { data } = this.state;
     const { classes } = this.props;
+
+    let userName;
+    let upperCaseName;
+    if(this.state.userName) {
+      userName = this.state.userName;
+      upperCaseName = userName.replace(/^\w/, c => c.toUpperCase());
+    }
+
     return (
       <div>
         {this.state.loading ? 
@@ -159,10 +167,10 @@ class WishList extends Component {
             <Container className={classes.container}>
               {data.length <= 0 ? 
                 <Container style={{height: '10vh', marginTop: '10vh'}}>
-                  <Typography variant="h5">{this.state.userName} hasn't added any items to their list yet</Typography>
+                  <Typography variant="h5">{upperCaseName} hasn't added any items to their list yet</Typography>
                 </Container>
                 : 
-                [<Typography variant="h5" style={{color: '#6b6b6b', marginBottom: '3vh'}}>{this.state.userName}'s Wishlist</Typography>,
+                [<Typography variant="h5" style={{color: '#6b6b6b', marginBottom: '3vh'}}>{upperCaseName}'s Wishlist</Typography>,
                 data.map((item, index) => (
                   <div key={item._id}>
                       <ExpansionPanel 

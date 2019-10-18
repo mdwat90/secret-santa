@@ -115,6 +115,8 @@ class Groups extends Component {
       anchorEl: null,
       deleteUserModal: false,
       removeUserModal: false,
+      resetDrawingModal: false,
+      deleteGroupModal: false,
       groupId: null,
       deleteUid: null,
       loading: null
@@ -193,6 +195,42 @@ class Groups extends Component {
     })
   };
 
+  openResetDrawingModal = (groupId) => {
+    console.log('Group:::', groupId)
+    // console.log('User:::', memberId)
+    // console.log('OPENING REMOVE MODAL')
+    this.setState({
+      resetDrawingModal: true,
+      groupId: groupId
+    })
+  };
+
+  closeResetDrawingModal = () => {
+    this.setState({
+      resetDrawingModal: false,
+      deleteUid: null,
+      groupId: null
+    })
+  };
+
+  
+  openDeleteGroupModal = (groupId) => {
+    console.log('Group:::', groupId)
+    // console.log('User:::', memberId)
+    // console.log('OPENING REMOVE MODAL')
+    this.setState({
+      deleteGroupModal: true,
+      groupId: groupId
+    })
+  };
+
+  closeDeleteGroupModal = () => {
+    this.setState({
+      deleteGroupModal: false,
+      groupId: null
+    })
+  };
+
 
   getUserGroups = (userId) => {
     this.setState({
@@ -241,6 +279,7 @@ class Groups extends Component {
     })
     .then(function (response) {
       // console.log('AXIOS RESPONSE:', response)
+      component.closeDeleteGroupModal();
       component.getUserGroups(component.props.user_info._id);
     })
     .catch(function (error) {
@@ -265,6 +304,7 @@ class Groups extends Component {
     })
     .then(function (response) {
       // console.log('AXIOS RESPONSE:', response)
+      component.closeResetDrawingModal();
       component.getUserGroups(component.props.user_info._id);
     })
     .catch(function (error) {
@@ -368,8 +408,8 @@ class Groups extends Component {
                                   open={Boolean(this.state.anchorEl)}
                                   onClose={this.closeOptionsMenu}
                                 >
-                                  <MenuItem onClick={() => this.clearSelections(this.state.groupId)}>Reset Drawing</MenuItem>
-                                  <MenuItem className={classes.delete} onClick={() => this.deleteGroup(this.state.groupId)}>Delete Group</MenuItem>
+                                  <MenuItem onClick={() => this.openResetDrawingModal(this.state.groupId)}>Reset Drawing</MenuItem>
+                                  <MenuItem onClick={() => this.openDeleteGroupModal(this.state.groupId)} className={classes.delete}>Delete Group</MenuItem>
                                 </Menu>
                               </Grid>
                               :
@@ -567,6 +607,52 @@ class Groups extends Component {
                       Leave Group
                     </Button>
                     <Button onClick={() => this.closeRemoveModal()} style={{color: '#6b6b6b'}}  autoFocus>
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                
+                {/* reset drawing modal */}
+                <Dialog
+                  open={this.state.resetDrawingModal}
+                  onClose={this.closeResetDrawingModal}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">{"Reset Drawing?"}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <Typography style={{textAlign: 'center'}}> Are you sure you want to reset the drawing for this group? </Typography>
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => this.clearSelections(this.state.groupId)} color="secondary">
+                      Reset
+                    </Button>
+                    <Button onClick={() => this.closeResetDrawingModal()} style={{color: '#6b6b6b'}}  autoFocus>
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                
+                {/* delete group modal */}
+                <Dialog
+                  open={this.state.deleteGroupModal}
+                  onClose={this.closeDeleteGroupModal}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">{"Delete Group?"}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <Typography style={{textAlign: 'center'}}> Are you sure you want to delete this group? </Typography>
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => this.deleteGroup(this.state.groupId)} color="secondary">
+                      Delete Group
+                    </Button>
+                    <Button onClick={() => this.closeDeleteGroupModal()} style={{color: '#6b6b6b'}}  autoFocus>
                       Close
                     </Button>
                   </DialogActions>
