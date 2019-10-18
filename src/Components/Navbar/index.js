@@ -34,9 +34,9 @@ function Navbar(props) {
 
     const [activeTab, setTab] = useState('Groups');
 
-    console.log('ACTIVE TAB::', activeTab)
+    // console.log('ACTIVE TAB::', activeTab)
 
-    console.log('NAVBAR PROPS:', props)
+    // console.log('NAVBAR PROPS:', props)
     return (
         <AppBar position={'sticky'} className={classes.root}>
             <Toolbar>

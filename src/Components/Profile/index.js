@@ -115,7 +115,7 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    console.log('PROFILE PROPS:', this.props)
+    // console.log('PROFILE PROPS:', this.props)
 
     this.setState({
       user_id: this.props.user_info._id
@@ -214,7 +214,7 @@ class Profile extends Component {
           component.getUserData(component.props.user_info._id);
         })
         .catch(function (error) {
-          console.log('AXIOS ERROR:', error)
+          // console.log('AXIOS ERROR:', error)
         });
       }
     }
@@ -235,7 +235,7 @@ class Profile extends Component {
           component.getUserData(component.props.user_info._id);
         })
         .catch(function (error) {
-          console.log('AXIOS ERROR:', error)
+          // console.log('AXIOS ERROR:', error)
         });
     }
   };
@@ -253,7 +253,7 @@ class Profile extends Component {
       component.getUserData(component.props.user_info._id);
     })
     .catch(function (error) {
-      console.log('AXIOS ERROR:', error)
+      // console.log('AXIOS ERROR:', error)
     })
     ;
   };
@@ -261,20 +261,20 @@ class Profile extends Component {
   updateDB = (idToUpdate, description, link, notes) => {
     let component = this;
 
-    console.log('UPDATE ITEM:', idToUpdate)
-    console.log('Description UPDATE:', description)
-    console.log('LINK UPDATE:', link)
-    console.log('NOTES UPDATE:', notes)
+    // console.log('UPDATE ITEM:', idToUpdate)
+    // console.log('Description UPDATE:', description)
+    // console.log('LINK UPDATE:', link)
+    // console.log('NOTES UPDATE:', notes)
 
     var validateLink = link.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
     if(validateLink === null) {
-      console.log('NOT A VALID LINK')
+      // console.log('NOT A VALID LINK')
       this.setState({
         linkError: true
       })
     }
     else {
-      console.log('GOOD TO GO')
+      // console.log('GOOD TO GO')
       component.closeEditForm();
 
       axios.post('http://localhost:3001/api/updateItem', {
@@ -286,7 +286,7 @@ class Profile extends Component {
         component.getUserData(component.props.user_info._id);
       })
       .catch(function (error) {
-        console.log('AXIOS ERROR:', error)
+        // console.log('AXIOS ERROR:', error)
       })
 
     }

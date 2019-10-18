@@ -39,7 +39,7 @@ app.use(cors());
 // MongoDB database route
 const dbRoute = process.env.MONGO;
 
-console.log('DB:', dbRoute)
+// console.log('DB:', dbRoute)
 
 // Initialize passport
 app.use(passport.initialize());
@@ -73,15 +73,15 @@ app.post('/api/newUser', function(req, response) {
     // console.log('NEW USER DATA:', user)
 
     UserSchema.exists({email: user.email}, function (err, res) {
-        console.log('USER EXISTS:', res)
+        // console.log('USER EXISTS:', res)
         if(res === false) {
             new UserSchema({name: user.name, email: user.email, password: hash }).save((err, res) => {
                 if(err) {
-                    console.log('ERROR SAVING USER:', err)
+                    // console.log('ERROR SAVING USER:', err)
                     response.send(err)
                 }
                 else {
-                    console.log('SUCCESS!!', res)
+                    // console.log('SUCCESS!!', res)
                     response.send(res)
                 }
             })
@@ -98,7 +98,7 @@ app.get('/api/user', function(req, response) {
 
     UserSchema.findOne({email: user.email }, function (err, res) {
         if(res === null) {
-            console.log('ERROR FINDING USER')
+            // console.log('ERROR FINDING USER')
             response.send('EMAIL ERROR')
         }
         else {
@@ -120,32 +120,32 @@ app.get('/api/user', function(req, response) {
 // ITEM ROUTES
 
 app.get('/api/getItems', function(req, response) {
-    console.log('GET USER ITEMS REQUEST:', req.query)
+    // console.log('GET USER ITEMS REQUEST:', req.query)
     let user_id = req.query.user_id;
 
    ItemSchema.find({user_id: user_id}, function (err, res) {
         if(res === null) {
-            console.log('ERROR FINDING USER')
+            // console.log('ERROR FINDING USER')
             response.send(err)
         }
         else {
-            console.log('USER LOGGED IN', res)
+            // console.log('USER LOGGED IN', res)
             response.send(res)
         }
     })
 })
 
 app.get('/api/getSelectedUsersItems', function(req, response) {
-    console.log('GET SELECTED USER ITEMS REQUEST:', req.query)
+    // console.log('GET SELECTED USER ITEMS REQUEST:', req.query)
     let user_id = req.query.user_id;
 
    ItemSchema.find({user_id: user_id}, function (err, res) {
         if(res === null) {
-            console.log('ERROR FINDING USER')
+            // console.log('ERROR FINDING USER')
             response.send(err)
         }
         else {
-            console.log('USER LOGGED IN', res)
+            // console.log('USER LOGGED IN', res)
             response.send(res)
         }
     })
@@ -154,15 +154,15 @@ app.get('/api/getSelectedUsersItems', function(req, response) {
 app.post('/api/newItem', function(req, response) {
     let item = req.body;
 
-    console.log('NEW ITEM SERVER:', item)
+    // console.log('NEW ITEM SERVER:', item)
 
     new ItemSchema({user_id: item.user_id, description: item.description, link: item.link, notes: item.notes }).save((err, res) => {
         if(err) {
-            console.log('ERROR SAVING ITEM:', err)
+            // console.log('ERROR SAVING ITEM:', err)
             response.send(err)
         }
         else {
-            console.log('SUCCESS SAVING ITEM!', res)
+            // console.log('SUCCESS SAVING ITEM!', res)
             response.send(res)
         }
     })
@@ -177,11 +177,11 @@ app.post('/api/updateItem', function(req, response) {
 
     ItemSchema.findOneAndUpdate({_id: itemId}, update, function (err, res) {
         if(err) {
-            console.log('ERROR UPDATING ITEM:', err)
+            // console.log('ERROR UPDATING ITEM:', err)
             response.send(err)
         }
         else {
-            console.log('SUCCESS UPDATING ITEM', res)
+            // console.log('SUCCESS UPDATING ITEM', res)
             response.send(res)
         }
     })
@@ -190,15 +190,15 @@ app.post('/api/updateItem', function(req, response) {
 app.delete('/api/deleteItem', function(req, response) {
     let itemId = req.body._id;
 
-    console.log('ITEM TO DELETE:', itemId)
+    // console.log('ITEM TO DELETE:', itemId)
 
     ItemSchema.findOneAndDelete({_id: itemId}, function (err, res) {
         if(err) {
-            console.log('ERROR DELETING ITEM:', err)
+            // console.log('ERROR DELETING ITEM:', err)
             response.send(err)
         }
         else {
-            console.log('SUCCESS DELETING ITEM', res)
+            // console.log('SUCCESS DELETING ITEM', res)
             response.send(res)
         }
     })
@@ -212,12 +212,12 @@ app.delete('/api/deleteItem', function(req, response) {
 app.post('/api/newGroup', function(req, response) {
     let group = req.body.data;
 
-    console.log('GROUP:', group)
+    // console.log('GROUP:', group)
 
     let hash = bcrypt.hashSync(group.password, saltRounds);
 
     GroupSchema.exists({name: group.name}, function (err, res) {
-        console.log('GROUP ALREADY EXISTS:', res)
+        // console.log('GROUP ALREADY EXISTS:', res)
         if(res === false) {
             new GroupSchema({
                 admin: group.admin, 
@@ -226,11 +226,11 @@ app.post('/api/newGroup', function(req, response) {
                 memberCount: group.memberCount - 1, 
                 members: [{uid: group.admin, name: group.adminName, selected: false, selectedBy: null, uidSelected: null }]}).save((err, res) => {
                 if(err) {
-                    console.log('ERROR CREATING GROUP:', err)
+                    // console.log('ERROR CREATING GROUP:', err)
                     response.send(err)
                 }
                 else {
-                    console.log('SUCCESS!! GROUP CREATED', res)
+                    // console.log('SUCCESS!! GROUP CREATED', res)
                     response.send(res)
                 }
             })
@@ -247,7 +247,7 @@ app.post('/api/joinGroup', function(req, response) {
     // console.log('REQUEST :', request)
 
     GroupSchema.findOne({ name: request.group }, function (err, res) {
-            console.log('FIND GROUP RESPONSE:', res)
+            // console.log('FIND GROUP RESPONSE:', res)
             // console.log('FIND GROUP ERROR:', err)
             if(res === null) {
                 // console.log('ERROR FINDING GROUP')
@@ -276,14 +276,14 @@ app.post('/api/joinGroup', function(req, response) {
                             $push: {members: {uid: request.uid, name: request.name.toLowerCase(), selected: false, selectedBy: null, uidSelected: null } }
                         }
                         , function (errs, resp) {
-                            console.log('ADD USER RESPONSE:', resp)
-                            console.log('ADD USER ERROR:', errs)
+                            // console.log('ADD USER RESPONSE:', resp)
+                            // console.log('ADD USER ERROR:', errs)
                             if(resp === null) {
-                                console.log('ERROR ADDING USER')
+                                // console.log('ERROR ADDING USER')
                                 response.send(errs)
                             }
                             else {
-                                console.log('USER ADDED TO GROUP', resp)
+                                // console.log('USER ADDED TO GROUP', resp)
                                 response.send(resp)
                             }
                         })
@@ -297,17 +297,17 @@ app.post('/api/joinGroup', function(req, response) {
 })
 
 app.delete('/api/deleteGroup', function(req, response) {
-    let groupId = req.body._id;
+    // let groupId = req.body._id;
 
-    console.log('GROUP:', groupId)
+    // console.log('GROUP:', groupId)
 
     GroupSchema.findOneAndDelete({_id: groupId}, function (err, res) {
         if(err) {
-            console.log('ERROR DELETING GROUP:', err)
+            // console.log('ERROR DELETING GROUP:', err)
             response.send(err)
         }
         else {
-            console.log('SUCCESS DELETING GROUP', res)
+            // console.log('SUCCESS DELETING GROUP', res)
             response.send(res)
         }
     })
@@ -317,8 +317,8 @@ app.post('/api/selectUser', function(req, response) {
     let groupId = req.body.group_id;
     let userId = req.body.user_id;
 
-    console.log(groupId)
-    console.log(userId)
+    // console.log(groupId)
+    // console.log(userId)
 
     let update = {
         $set: {'members.$.selected': true, 'members.$.selectedBy': userId}
@@ -334,15 +334,15 @@ app.post('/api/selectUser', function(req, response) {
             }}
         }, update, {new: true}, function (err, res) {
         if(err) {
-            console.log('ERROR SELECTING USER:', err)
+            // console.log('ERROR SELECTING USER:', err)
             response.send(err)
         }
         else if (res === null ) {
-            console.log('ERROR SELECTING USER:', res)
+            // console.log('ERROR SELECTING USER:', res)
             response.send(res)
         }
         else {
-            console.log('SUCCESS SELECTING USER:', res)
+            // console.log('SUCCESS SELECTING USER:', res)
             response.send(res)
 
             res.members.map((member, index) => {
@@ -359,10 +359,10 @@ app.post('/api/selectUser', function(req, response) {
                             }}
                     }, userUpdate, {new: true}, function (error, resp) {
                         if(res) {
-                            console.log('UPDATE USER RESPONSE:',res)
+                            // console.log('UPDATE USER RESPONSE:',res)
                         }
                         else {
-                            console.log('UPDATE USER ERROR:',error)
+                            // console.log('UPDATE USER ERROR:',error)
                         }
                     })
                 }
@@ -375,8 +375,8 @@ app.delete('/api/removeMember', function(req, response) {
     let groupId = req.body.group_id;
     let userId = req.body.uid;
 
-    console.log('GROUP ID:', groupId)
-    console.log('USER ID:', userId)
+    // console.log('GROUP ID:', groupId)
+    // console.log('USER ID:', userId)
 
     GroupSchema.findOneAndUpdate(
         {
@@ -389,7 +389,7 @@ app.delete('/api/removeMember', function(req, response) {
         }
         , {new: true}, function (err, res) {
             if(res) {
-                console.log('RESPONSE:', res)
+                // console.log('RESPONSE:', res)
 
                 response.send(res);
 
@@ -408,10 +408,10 @@ app.delete('/api/removeMember', function(req, response) {
                                 }}
                         }, update, {new: true}, function (error, resp) {
                             if(res) {
-                                console.log('UPDATE MEMBER RESPONSE:',res)
+                                // console.log('UPDATE MEMBER RESPONSE:',res)
                             }
                             else {
-                                console.log('UPDATE MEMBER ERROR:',error)
+                                // console.log('UPDATE MEMBER ERROR:',error)
                             }
                         })
                     }
@@ -428,10 +428,10 @@ app.delete('/api/removeMember', function(req, response) {
                                 }}
                         }, update, {new: true}, function (error, resp) {
                             if(res) {
-                                console.log('UPDATE MEMBER RESPONSE TWO:',res)
+                                // console.log('UPDATE MEMBER RESPONSE TWO:',res)
                             }
                             else {
-                                console.log('UPDATE MEMBER ERROR TWO:',error)
+                                // console.log('UPDATE MEMBER ERROR TWO:',error)
                             }
                         })
                     }
@@ -439,7 +439,7 @@ app.delete('/api/removeMember', function(req, response) {
                 
             }
             else {
-                console.log('ERROR:', err)
+                // console.log('ERROR:', err)
             }
     })
 })
@@ -447,7 +447,7 @@ app.delete('/api/removeMember', function(req, response) {
 app.post('/api/clearSelections', function(req, response) {
     let groupId = req.body.data.group_id;
 
-    console.log('GROUP ID:', groupId)
+    // console.log('GROUP ID:', groupId)
     let update = {
         $set: {'members.$[].uidSelected': null, 'members.$[].selectedBy': null, 'members.$[].selected': false }
     }
@@ -456,11 +456,11 @@ app.post('/api/clearSelections', function(req, response) {
         _id: groupId
     }, update, {new: true}, function (error, resp) {
         if(resp) {
-            console.log('UPDATE MEMBERS RESPONSE:',resp)
+            // console.log('UPDATE MEMBERS RESPONSE:',resp)
             response.send(resp);
         }
         else {
-            console.log('UPDATE MEMBERS ERROR:',error);
+            // console.log('UPDATE MEMBERS ERROR:',error);
             response.send(error);
         }
     })
@@ -468,16 +468,16 @@ app.post('/api/clearSelections', function(req, response) {
 
 
 app.get('/api/getUserGroups', function(req, response) {
-    console.log('GET USER GROUPS REQUEST:', req.query)
+    // console.log('GET USER GROUPS REQUEST:', req.query)
     let user_id = req.query.user_id;
 
    GroupSchema.find( {$or: [ {admin: user_id} ,{ 'members.uid' : {$eq: user_id} }] }, function (err, res) {
         if(res === null) {
-            console.log('ERROR FINDING GROUPS')
+            // console.log('ERROR FINDING GROUPS')
             response.send(err)
         }
         else {
-            console.log('GROUPS FOUND', res)
+            // console.log('GROUPS FOUND', res)
             response.send(res)
         }
     })

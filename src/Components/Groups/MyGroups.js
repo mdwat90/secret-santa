@@ -196,7 +196,7 @@ class Groups extends Component {
   };
 
   openResetDrawingModal = (groupId) => {
-    console.log('Group:::', groupId)
+    // console.log('Group:::', groupId)
     // console.log('User:::', memberId)
     // console.log('OPENING REMOVE MODAL')
     this.setState({
@@ -215,7 +215,7 @@ class Groups extends Component {
 
   
   openDeleteGroupModal = (groupId) => {
-    console.log('Group:::', groupId)
+    // console.log('Group:::', groupId)
     // console.log('User:::', memberId)
     // console.log('OPENING REMOVE MODAL')
     this.setState({
@@ -243,13 +243,10 @@ class Groups extends Component {
       }
     })
       .then((res) => {
-        this.setState({ userGroups: res.data, loading: false }, () => {
-          console.log('USERS GROUPS:', this.state.userGroups)
-          console.log('LOADING:', this.state.loading)
-        })
+        this.setState({ userGroups: res.data, loading: false })
     })
     .catch(error => {
-      console.log('AXIOS GET USER GROUPS ERROR', error)
+      // console.log('AXIOS GET USER GROUPS ERROR', error)
     })
   };
 
@@ -259,7 +256,7 @@ class Groups extends Component {
         user_id: id
       }
     })
-      .then((res) => this.setState({ selectedUsersData: res.data }, () => {console.log('SELECTED USERS DATA:', this.state.selectedUsersData)}))
+      .then((res) => this.setState({ selectedUsersData: res.data }))
   };
 
 
@@ -338,8 +335,8 @@ class Groups extends Component {
   drawName = (groupId, userId) => {
     let component = this;
 
-    console.log('GROUP ID:', groupId)
-    console.log('USER ID:', userId)
+    // console.log('GROUP ID:', groupId)
+    // console.log('USER ID:', userId)
     axios.post('http://localhost:3001/api/selectUser', {
       group_id: groupId,
       user_id: userId
@@ -347,17 +344,17 @@ class Groups extends Component {
     .then(function (response) {
       // console.log('DRAW NAME AXIOS RESPONSE:', response)
        if (response.data === '') {
-          console.log('SELECT USER ERROR!!')
+          // console.log('SELECT USER ERROR!!')
       }
       else {
-        console.log('USER SELECTED:', response)
+        // console.log('USER SELECTED:', response)
         component.getUserGroups(component.props.user_info._id);
         // component.getSelectedUsersData(response.data._id);
       }
         
     })
     .catch(function (error) {
-      console.log('DRAW NAME AXIOS ERROR:', error)
+      // console.log('DRAW NAME AXIOS ERROR:', error)
     })
   } 
 

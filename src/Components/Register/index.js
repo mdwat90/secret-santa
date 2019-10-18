@@ -77,7 +77,7 @@ class Register extends Component {
   registerUser = (data) => {
     const component = this;
 
-    console.log('REGISTER DATA:', data)
+    // console.log('REGISTER DATA:', data)
 
     axios.post('http://localhost:3001/api/newUser', {
       data : {

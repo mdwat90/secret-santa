@@ -78,7 +78,7 @@ class JoinGroup extends Component {
   JoinGroup = (data) => {
     const component = this;
 
-    console.log('CLIENT GROUP DATA:', data)
+    // console.log('CLIENT GROUP DATA:', data)
 
     axios.post('http://localhost:3001/api/joinGroup', {
       data: {
@@ -89,7 +89,7 @@ class JoinGroup extends Component {
       }
     })
     .then(function (response) {
-      console.log('AXIOS RESPONSE:', response)
+      // console.log('AXIOS RESPONSE:', response)
       if(response.data._id){
         component.props.joinGroupSuccess();
         component.props.createGroupSuccess();
@@ -101,12 +101,12 @@ class JoinGroup extends Component {
         }, 1500)
       }
       else if(!response.data._id){
-        console.log('JOIN GROUP ERROR', response)
+        // console.log('JOIN GROUP ERROR', response)
         component.props.joinGroupError(response.data);
       }
     })
     .catch(function (error) {
-      console.log('AXIOS ERROR:', error)
+      // console.log('AXIOS ERROR:', error)
       component.props.connectionError(error);
     })
   }

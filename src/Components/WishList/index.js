@@ -103,7 +103,7 @@ class WishList extends Component {
   }
 
   componentDidMount() {
-    console.log('WISHLIST PROPS:', this.props)
+    // console.log('WISHLIST PROPS:', this.props)
 
     this.setState({
       user_id: this.props.match.params.id,
