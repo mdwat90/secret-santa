@@ -347,163 +347,166 @@ class Groups extends Component {
                   </Container>
                   :
                   this.state.userGroups.map((group, idx) => {
-                  return (
-                    <Grid item xs={12} md={6} lg={4} key={group._id}>
-                      <Card className={classes.card} style={{minHeight: '30vh'}} key={idx}>
-                        <Grid container>
-                          <Grid item style={{ flex: 1 }}>
-                            <Typography variant='h4' className={classes.title} key={idx}>{group.name}</Typography>
-                          </Grid>
-                          {group.admin === user_info._id ?
-                            <Grid item style={{ position:'relative', right: 25, bottom: 10 }}>
-                              <SettingsIcon className={classes.icon} groupid={group._id} aria-controls="simple-menu" aria-haspopup="true" onClick={(event) => this.openOptionsMenu(event)} />
-                              <Menu
-                                id="simple-menu"
-                                anchorEl={this.state.anchorEl}
-                                keepMounted
-                                transformOrigin={{horizontal: 'right', vertical: -30}}
-                                open={Boolean(this.state.anchorEl)}
-                                onClose={this.closeOptionsMenu}
-                              >
-                                <MenuItem onClick={() => this.clearSelections(this.state.groupId)}>Reset Drawing</MenuItem>
-                                <MenuItem className={classes.delete} onClick={() => this.deleteGroup(this.state.groupId)}>Delete Group</MenuItem>
-                              </Menu>
+                    let groupName = group.name;
+                    const upperCaseGroup = groupName.replace(/^\w/, c => c.toUpperCase());
+
+                    return (
+                      <Grid item xs={12} md={6} lg={4} key={group._id}>
+                        <Card className={classes.card} style={{minHeight: '30vh'}} key={idx}>
+                          <Grid container>
+                            <Grid item style={{ flex: 1 }}>
+                              <Typography variant='h4' className={classes.title} key={idx}>{upperCaseGroup}</Typography>
                             </Grid>
-                            :
+                            {group.admin === user_info._id ?
+                              <Grid item style={{ position:'relative', right: 25, bottom: 10 }}>
+                                <SettingsIcon className={classes.icon} groupid={group._id} aria-controls="simple-menu" aria-haspopup="true" onClick={(event) => this.openOptionsMenu(event)} />
+                                <Menu
+                                  id="simple-menu"
+                                  anchorEl={this.state.anchorEl}
+                                  keepMounted
+                                  transformOrigin={{horizontal: 'right', vertical: -30}}
+                                  open={Boolean(this.state.anchorEl)}
+                                  onClose={this.closeOptionsMenu}
+                                >
+                                  <MenuItem onClick={() => this.clearSelections(this.state.groupId)}>Reset Drawing</MenuItem>
+                                  <MenuItem className={classes.delete} onClick={() => this.deleteGroup(this.state.groupId)}>Delete Group</MenuItem>
+                                </Menu>
+                              </Grid>
+                              :
+                              null
+                            }
+                          </Grid>
+
+                          {group.memberCount !== 0 ?
+                            group.memberCount === 1 ?
+                              <Typography variant='body1' key={idx}>{group.memberCount} spot left</Typography>
+                              :
+                              <Typography variant='body1' key={idx}>{group.memberCount} spots left</Typography>
+                          :
                             null
                           }
-                        </Grid>
 
-                        {group.memberCount !== 0 ?
-                          group.memberCount === 1 ?
-                            <Typography variant='body1' key={idx}>{group.memberCount} spot left</Typography>
-                            :
-                            <Typography variant='body1' key={idx}>{group.memberCount} spots left</Typography>
-                        :
-                          null
-                        }
+                          <ExpansionPanel className={classes.panel}>
+                            <ExpansionPanelSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              aria-controls="panel1a-content"
+                              id="panel1a-header"
+                            >
+                              <Typography variant='h6'>Members</Typography>
+                            </ExpansionPanelSummary>
+                              <ExpansionPanelDetails>
+                                <Grid 
+                                  container  
+                                  wrap='wrap' 
+                                  direction='row' 
+                                  alignContent={'flex-start'} 
+                                  alignItems={'flex-start'} 
+                                  spacing={3}
+                                >
+                                  {group.members.map((member, index) => {
 
-                        <ExpansionPanel className={classes.panel}>
-                          <ExpansionPanelSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                          >
-                            <Typography variant='h6'>Members</Typography>
-                          </ExpansionPanelSummary>
-                            <ExpansionPanelDetails>
-                              <Grid 
-                                container  
-                                wrap='wrap' 
-                                direction='row' 
-                                alignContent={'flex-start'} 
-                                alignItems={'flex-start'} 
-                                spacing={3}
-                              >
-                                {group.members.map((member, index) => {
-
-                                  //member is NOT current user and current user is the group admin
-                                  if ((member.uid !== user_info._id) && (group.admin === user_info._id)) {
-                                    return (
-                                      <div key={index}>
-                                        {member.selectedBy === this.props.user_info._id ?
-                                          <Grid item style={{margin: '1vh'}}>
-                                            <Chip label={member.name.toUpperCase()} style={{backgroundColor: '#4f92ff', color: 'white'}} onDelete={() => this.openDeleteModal(group._id, member.uid)} />
-                                          </Grid>
-                                          :
-                                          <Grid item style={{margin: '1vh'}}>
-                                            <Chip label={member.name.toUpperCase()} onDelete={() => this.openDeleteModal(group._id, member.uid)} />
-                                          </Grid>
-                                        }
-                                      </div>
-                                      )
-                                  }
-                                  
-                                  //member is current user and current user is NOT the group admin
-                                  else if ((member.uid === user_info._id) && (group.admin !== user_info._id)) {
-                                    return (
-                                      <div key={index}>
-                                          <Grid item style={{margin: '1vh'}}>
-                                            <Chip label={member.name.toUpperCase()} onDelete={() => this.openRemoveModal(group._id, member.uid)}/>
-                                          </Grid>
-                                      </div>
-                                      )
-                                  }
-                                  else {
-                                    return (
-                                      <div key={index}>
-                                        {member.selectedBy === this.props.user_info._id ?
-                                          <Grid item style={{margin: '1vh'}}>
-                                            <Chip style={{backgroundColor: '#4f92ff', color: 'white'}} label={member.name.toUpperCase()}/>
-                                          </Grid>
-                                          :
-                                          <Grid item style={{margin: '1vh'}}>
-                                            <Chip label={member.name.toUpperCase()} />
-                                          </Grid>
-                                        }
-                                      </div>
-                                      )
-                                  }
-                                })}
-                              </Grid>
-                            </ExpansionPanelDetails>
-                        </ExpansionPanel>
-
-
-                        {group.memberCount !== 0 ?
-                          <div>
-                            <Typography variant='body1' className={classes.subText}>Once everyone joins the group, you can draw a name here.</Typography>
-                          </div>
-                          :
-                          null
-                          }
-
-
-                          {group.members.map((member, index) => {
-
-                             if(member.uid === this.props.user_info._id && member.uidSelected === null && group.memberCount === 0) {
-                              return (
-                                <div key={index}>
-                                  <Button 
-                                    variant="outlined"
-                                    disabled={false} 
-                                    className={classes.drawButton} 
-                                    onClick={() => this.drawName(group._id, this.props.user_info._id)}
-                                  >
-                                    <Typography>
-                                      Draw
-                                    </Typography>
-                                  </Button>
-                                </div>
-                              )
-                            }
-                            
-                            else if(member.selectedBy === this.props.user_info._id) {
-                              return (
-                                <Container key={index}>
-                                  <Typography style={{margin: '4vh'}}>
-                                    You drew {' '}
-                                      <Link  
-                                        to={{
-                                          pathname: `/wish-list/${member.uid}`,
-                                          state: {
-                                            user: member.name
+                                    //member is NOT current user and current user is the group admin
+                                    if ((member.uid !== user_info._id) && (group.admin === user_info._id)) {
+                                      return (
+                                        <div key={index}>
+                                          {member.selectedBy === this.props.user_info._id ?
+                                            <Grid item style={{margin: '1vh'}}>
+                                              <Chip label={member.name.toUpperCase()} style={{backgroundColor: '#4f92ff', color: 'white'}} onDelete={() => this.openDeleteModal(group._id, member.uid)} />
+                                            </Grid>
+                                            :
+                                            <Grid item style={{margin: '1vh'}}>
+                                              <Chip label={member.name.toUpperCase()} onDelete={() => this.openDeleteModal(group._id, member.uid)} />
+                                            </Grid>
                                           }
-                                        }}
-                                        style={{textDecoration: 'none'}}> 
-                                          <Chip style={{backgroundColor: '#4f92ff', color: 'white', cursor:'pointer'}} label={member.name.toUpperCase()}/>
-                                        </Link>
-                                    </Typography>
-                                    <Typography className={classes.subText}>You can click their name to see their wish list.</Typography>
-                                </Container>
-                              )
-                            }
-                          })}
+                                        </div>
+                                        )
+                                    }
+                                    
+                                    //member is current user and current user is NOT the group admin
+                                    else if ((member.uid === user_info._id) && (group.admin !== user_info._id)) {
+                                      return (
+                                        <div key={index}>
+                                            <Grid item style={{margin: '1vh'}}>
+                                              <Chip label={member.name.toUpperCase()} onDelete={() => this.openRemoveModal(group._id, member.uid)}/>
+                                            </Grid>
+                                        </div>
+                                        )
+                                    }
+                                    else {
+                                      return (
+                                        <div key={index}>
+                                          {member.selectedBy === this.props.user_info._id ?
+                                            <Grid item style={{margin: '1vh'}}>
+                                              <Chip style={{backgroundColor: '#4f92ff', color: 'white'}} label={member.name.toUpperCase()}/>
+                                            </Grid>
+                                            :
+                                            <Grid item style={{margin: '1vh'}}>
+                                              <Chip label={member.name.toUpperCase()} />
+                                            </Grid>
+                                          }
+                                        </div>
+                                        )
+                                    }
+                                  })}
+                                </Grid>
+                              </ExpansionPanelDetails>
+                          </ExpansionPanel>
 
-                      </Card>
-                    </Grid>
-                  )
-                })}
+
+                          {group.memberCount !== 0 ?
+                            <div>
+                              <Typography variant='body1' className={classes.subText}>Once everyone joins the group, you can draw a name here.</Typography>
+                            </div>
+                            :
+                            null
+                            }
+
+
+                            {group.members.map((member, index) => {
+
+                              if(member.uid === this.props.user_info._id && member.uidSelected === null && group.memberCount === 0) {
+                                return (
+                                  <div key={index}>
+                                    <Button 
+                                      variant="outlined"
+                                      disabled={false} 
+                                      className={classes.drawButton} 
+                                      onClick={() => this.drawName(group._id, this.props.user_info._id)}
+                                    >
+                                      <Typography>
+                                        Draw
+                                      </Typography>
+                                    </Button>
+                                  </div>
+                                )
+                              }
+                              
+                              else if(member.selectedBy === this.props.user_info._id) {
+                                return (
+                                  <Container key={index}>
+                                    <Typography style={{margin: '4vh'}}>
+                                      You drew {' '}
+                                        <Link  
+                                          to={{
+                                            pathname: `/wish-list/${member.uid}`,
+                                            state: {
+                                              user: member.name
+                                            }
+                                          }}
+                                          style={{textDecoration: 'none'}}> 
+                                            <Chip style={{backgroundColor: '#4f92ff', color: 'white', cursor:'pointer'}} label={member.name.toUpperCase()}/>
+                                          </Link>
+                                      </Typography>
+                                      <Typography className={classes.subText}>You can click their name to see their wish list.</Typography>
+                                  </Container>
+                                )
+                              }
+                            })}
+
+                        </Card>
+                      </Grid>
+                    )
+                  })}
                 </Grid>
 
                 <Container xs={12} m={6} lg={6} className={classes.container}>

@@ -86,7 +86,7 @@ class CreateGroup extends Component {
         adminName: data.adminName,
         confirmPassword: data.confirmPassword,
         memberCount: data.memberCount,
-        name: data.name.trim(),
+        name: data.name.toLowerCase().trim(),
         password: data.password.trim()
       }
     })

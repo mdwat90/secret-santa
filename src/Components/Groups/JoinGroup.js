@@ -83,8 +83,8 @@ class JoinGroup extends Component {
     axios.post('http://localhost:3001/api/joinGroup', {
       data: {
         uid: data.uid,
-        name: data.name.trim(),
-        group: data.group.trim(),
+        name: data.name.toLowerCase().trim(),
+        group: data.group.toLowerCase().trim(),
         password: data.password.trim()
       }
     })
@@ -126,7 +126,7 @@ class JoinGroup extends Component {
             <Grid item xl ={6} lg={7} md={10} xs={12}>
               <Container className={classes.form}>
                 <Formik
-                  initialValues={{ uid: user_info._id, name: '', group: '',  password: '' }}
+                  initialValues={{ uid: user_info._id, name: user_info.name, group: '',  password: '' }}
                   validate={values => {
                     let errors = {};
                     if (!values.name) {
@@ -150,8 +150,7 @@ class JoinGroup extends Component {
                     <form onSubmit={handleSubmit}>
                       {errors.admin}
                         <Typography variant='h5' className={classes.title}>Join Group</Typography>
-                      <div>
-                        {/* <Typography variant='h5' className={classes.title}>Your Name</Typography> */}
+                      {/* <div>
                         <TextField
                           required
                           type="name"
@@ -164,10 +163,8 @@ class JoinGroup extends Component {
                           value={values.name}
                           className={classes.textInput}
                         />
-                      </div>
-                      <div>
-                        {/* <Typography style={{color: 'red'}}>{errors.name}</Typography> */}
-                      </div>
+                      </div> */}
+
                       <div>
                         {/* <Typography variant='h5' className={classes.title}>Group Name</Typography> */}
                         <TextField
