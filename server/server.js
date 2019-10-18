@@ -21,10 +21,6 @@ const dbRoute = process.env.MONGO;
 
 // console.log('DB:', dbRoute)
 
-// Initialize passport
-app.use(passport.initialize());
-app.use(passport.session());
-
 // Mongoose boilerplate
 mongoose.connect(dbRoute, { useNewUrlParser: true });
 mongoose.set('useNewUrlParser', true);
