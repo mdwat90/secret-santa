@@ -8,26 +8,6 @@ const saltRounds = 10;
 const ItemSchema = require('./Models/ItemSchema/schema');
 const UserSchema = require('./Models/UserSchema/schema');
 const GroupSchema = require('./Models/GroupSchema/schema');
-var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
-
-    // passport.use('local', new LocalStrategy(
-    // function(username, password, done) {
-    //     UserSchema.findOne({ username: username }, function(err, user) {
-    //     if (err) { return done(err); }
-    //     if (!user) {
-    //         console.log('WRONG USERNAME')
-    //         return done(null, false, { message: 'Incorrect username.' });
-    //     }
-    //     if (!user.validPassword(password)) {
-    //         console.log('WRONG PASSWORD')
-    //         return done(null, false, { message: 'Incorrect password.' });
-    //     }
-    //     console.log('SUCCESS')
-    //     return done(null, user);
-    //     });
-    // }
-    // ));
 
 require('dotenv').config();
 
