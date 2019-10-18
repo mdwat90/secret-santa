@@ -3,6 +3,8 @@ const express = require('express');
 var cors = require('cors');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const ItemSchema = require('./Models/ItemSchema/schema');
 const UserSchema = require('./Models/UserSchema/schema');
 const GroupSchema = require('./Models/GroupSchema/schema');
@@ -60,12 +62,16 @@ app.use(logger('dev'));
 app.post('/api/newUser', function(req, response) {
     let user = req.body.data;
 
+    let hash = bcrypt.hashSync(user.password, saltRounds);
+
+    // console.log('HASH PASSWORD:', hash)
+
     // console.log('NEW USER DATA:', user)
 
-    UserSchema.exists({name: user.name}, function (err, res) {
+    UserSchema.exists({email: user.email}, function (err, res) {
         console.log('USER EXISTS:', res)
         if(res === false) {
-            new UserSchema({name: user.name, password: user.password }).save((err, res) => {
+            new UserSchema({name: user.name, email: user.email, password: hash }).save((err, res) => {
                 if(err) {
                     console.log('ERROR SAVING USER:', err)
                     response.send(err)
@@ -83,19 +89,27 @@ app.post('/api/newUser', function(req, response) {
 })
 
 app.get('/api/user', function(req, response) {
-    console.log('GET USER REQUEST:', req.query)
+    // console.log('GET USER REQUEST:', req.query)
     let user = req.query;
 
-   UserSchema.findOne({name: user.name, password: user.password}, function (err, res) {
+    UserSchema.findOne({email: user.email }, function (err, res) {
         if(res === null) {
             console.log('ERROR FINDING USER')
-            response.send(err)
+            response.send('EMAIL ERROR')
         }
         else {
-            console.log('USER LOGGED IN', res)
-            response.send(res)
+            // console.log('USER LOGIN RESULT', res)
+            let compare = bcrypt.compareSync(user.password, res.password)
+
+            if(compare) {
+                response.send(res)
+            }
+            else {
+                response.send('INVALID PASSWORD')
+            }
         }
     })
+
 })
 
 
@@ -196,13 +210,15 @@ app.post('/api/newGroup', function(req, response) {
 
     console.log('GROUP:', group)
 
+    let hash = bcrypt.hashSync(group.password, saltRounds);
+
     GroupSchema.exists({name: group.name}, function (err, res) {
         console.log('GROUP ALREADY EXISTS:', res)
         if(res === false) {
             new GroupSchema({
                 admin: group.admin, 
                 name: group.name, 
-                password: group.password, 
+                password: hash, 
                 memberCount: group.memberCount - 1, 
                 members: [{uid: group.admin, name: group.adminName, selected: false, selectedBy: null, uidSelected: null }]}).save((err, res) => {
                 if(err) {
@@ -224,29 +240,54 @@ app.post('/api/newGroup', function(req, response) {
 app.post('/api/joinGroup', function(req, response) {
     let request = req.body.data;
 
-    console.log('REQUEST :', request)
+    // console.log('REQUEST :', request)
 
-    GroupSchema.findOneAndUpdate(
-        {
-            name: request.group, 
-            password: request.password, 
-            memberCount: {$gte: 1 }, 
-            'members.uid' : {$ne: request.uid} 
-        }, 
-        {
-            $inc: { memberCount: -1 },
-            $push: {members: {uid: request.uid, name: request.name, selected: false, selectedBy: null, uidSelected: null } }
-        }
-        , function (err, res) {
-            console.log('RESPONSE:', res)
-            console.log('ERROR:', err)
+    GroupSchema.findOne({ name: request.group }, function (err, res) {
+            console.log('FIND GROUP RESPONSE:', res)
+            // console.log('FIND GROUP ERROR:', err)
             if(res === null) {
-                console.log('ERROR ADDING USER')
-                response.send(err)
+                // console.log('ERROR FINDING GROUP')
+                response.send('ERROR FINDING GROUP')
+            }
+            else if(res.members.some(e => e.uid === request.uid)) {
+                response.send("YOU'VE ALREADY JOINED THIS GROUP")
+            }
+            else if (res.memberCount === 0) {
+                response.send('GROUP IS FULL')
             }
             else {
-                console.log('USER ADDED TO GROUP', res)
-                response.send(res)
+                let compare = bcrypt.compareSync(request.password, res.password)
+
+                if(compare) {
+                    // console.log('PASSWORDS MATCH')
+                    GroupSchema.findOneAndUpdate(
+                        {
+                            name: request.group, 
+                            password: res.password, 
+                            memberCount: {$gte: 1 }, 
+                            'members.uid' : {$ne: request.uid} 
+                        }, 
+                        {
+                            $inc: { memberCount: -1 },
+                            $push: {members: {uid: request.uid, name: request.name.toLowerCase(), selected: false, selectedBy: null, uidSelected: null } }
+                        }
+                        , function (errs, resp) {
+                            console.log('ADD USER RESPONSE:', resp)
+                            console.log('ADD USER ERROR:', errs)
+                            if(resp === null) {
+                                console.log('ERROR ADDING USER')
+                                response.send(errs)
+                            }
+                            else {
+                                console.log('USER ADDED TO GROUP', resp)
+                                response.send(resp)
+                            }
+                        })
+                }
+                else {
+                    // console.log('INVALID PASSWORD')  
+                    response.send('INVALID PASSWORD')
+                }
             }
         })
 })

@@ -23,7 +23,7 @@ const initialState = {
     
     case type.JOIN_GROUP_ERROR: {
       console.log('GROUP REDUCER ACTION:', action);
-      return Object.assign({}, state, { joinGroupErr: true });
+      return Object.assign({}, state, { joinGroupErr: action.payload });
     }
     
     default:{

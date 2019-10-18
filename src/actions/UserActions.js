@@ -10,9 +10,9 @@ export const logOut = () => ({
     payload:'logout'
 });
 
-export const loginError = () => ({
+export const loginError = (error) => ({
     type: type.LOGIN_ERROR,
-    payload: 'error'
+    payload: error
 });
 
 export const connectionError = (error) => ({

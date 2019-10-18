@@ -72,9 +72,11 @@ class Login extends Component {
   loginUser = (data) => {
     const component = this;
 
+    // console.log('USER LOGIN DATA:', data)
+
     axios.get('http://localhost:3001/api/user', {
       params: {
-        name: data.name.toLowerCase().trim(),
+        email: data.email.toLowerCase().trim(),
         password: data.password.trim()
       }
     })
@@ -84,7 +86,8 @@ class Login extends Component {
         component.props.login(response.data)
       }
       else if(!response.data._id){
-        component.props.loginError();
+        // console.log('LOGIN ERROR RESPONSE:', response)
+        component.props.loginError(response.data);
         component.setState({
           loading: false
         })
@@ -107,11 +110,11 @@ class Login extends Component {
           <Grid item xl ={6} lg={6} md={6} xs={10}>
               <Container className={classes.form} >
                 <Formik
-                  initialValues={{ name: '', password: '' }}
+                  initialValues={{ email: '', password: '' }}
                   validate={values => {
                     let errors = {};
-                    if (!values.name) {
-                      errors.name = 'Required';
+                    if (!values.email) {
+                      errors.email = 'Required';
                     }
                     return errors;
                   }}
@@ -136,19 +139,19 @@ class Login extends Component {
                       <div>
                         {/* <Typography variant='h5' className={classes.title}>Name</Typography> */}
                         <TextField
-                          type="name"
-                          name="name"
+                          type="email"
+                          name="email"
                           id="standard-required"
-                          label="First Name"
-                          placeholder={'First Name'}
+                          label="Email"
+                          placeholder={'Email'}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.name}
+                          value={values.email}
                           className={classes.textInput}
                         />
                       </div>
                       <div>
-                          <Typography style={{color: 'red'}}>{errors.name}</Typography>
+                          <Typography style={{color: 'red'}}>{errors.email}</Typography>
                       </div>
 
                       <div>
@@ -199,7 +202,7 @@ class Login extends Component {
                 } */}
                 {this.props.loginErr ?
                     <div>
-                    <Typography variant='h6' style={{paddingTop: '3vh', color: 'red'}}>ERROR LOGGING IN</Typography>
+                    <Typography variant='h6' style={{paddingTop: '3vh', color: 'red'}}>{this.props.loginErr}</Typography>
                     </div>
                     :
                     null

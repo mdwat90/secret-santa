@@ -82,6 +82,7 @@ class Register extends Component {
     axios.post('http://localhost:3001/api/newUser', {
       data : {
         name: data.name.toLowerCase().trim(),
+        email: data.email.toLowerCase().trim(),
         password: data.password.trim()
       }
     })
@@ -120,7 +121,7 @@ class Register extends Component {
             <Grid item xl ={6} lg={6} md={6} xs={10}>
                   <Container className={classes.form}>
                     <Formik
-                      initialValues={{ name: '', password: '', confirmPassword: ''}}
+                      initialValues={{ name: '', email: '', password: '', confirmPassword: ''}}
                       validate={values => {
                         let errors = {};
                         if (!values.name) {
@@ -161,6 +162,25 @@ class Register extends Component {
                               onChange={handleChange}
                               onBlur={handleBlur}
                               value={values.name}
+                              className={classes.textInput}
+                            />
+                          </div>
+                          {/* <div>
+                            <Typography style={{color: 'red'}}>{errors.name}</Typography>
+                          </div> */}
+                          
+                          <div>
+                            {/* <Typography variant='h5' className={classes.title}>Name</Typography> */}
+                            <TextField
+                              required
+                              type="email"
+                              name="email"
+                              id="standard-required"
+                              label="Email"
+                              placeholder={'Email'}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.email}
                               className={classes.textInput}
                             />
                           </div>

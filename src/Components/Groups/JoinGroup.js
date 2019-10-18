@@ -101,7 +101,8 @@ class JoinGroup extends Component {
         }, 1500)
       }
       else if(!response.data._id){
-        component.props.joinGroupError();
+        console.log('JOIN GROUP ERROR', response)
+        component.props.joinGroupError(response.data);
       }
     })
     .catch(function (error) {
@@ -220,7 +221,9 @@ class JoinGroup extends Component {
 
                 {this.props.joinGroupErr ?
                   <div>
-                    <Typography style={{paddingTop: '2vh', color: 'red', fontWeight: 'bold'}}>There was an error joining the group. Check the following: group name, password, if you've already joined the group, or if the group is full.</Typography>
+                    <Typography style={{paddingTop: '2vh', color: 'red', fontWeight: 'bold'}}>
+                      {this.props.joinGroupErr}
+                    </Typography>
                   </div>
                   :
                   null

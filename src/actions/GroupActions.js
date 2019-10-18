@@ -15,7 +15,7 @@ export const groupExistsError = () => ({
     payload: 'error'
 });
 
-export const joinGroupError = () => ({
+export const joinGroupError = (error) => ({
     type: type.JOIN_GROUP_ERROR,
-    payload: 'error'
+    payload: error
 });
