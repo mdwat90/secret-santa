@@ -273,7 +273,7 @@ app.post('/api/joinGroup', function(req, response) {
 })
 
 app.delete('/api/deleteGroup', function(req, response) {
-    // let groupId = req.body._id;
+    let groupId = req.body._id;
 
     // console.log('GROUP:', groupId)
 
