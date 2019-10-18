@@ -162,6 +162,7 @@ class WishList extends Component {
                   <Typography variant="h5">{this.state.userName} hasn't added any items to their list yet</Typography>
                 </Container>
                 : 
+                [<Typography variant="h5" style={{color: '#6b6b6b', marginBottom: '3vh'}}>{this.state.userName}'s Wishlist</Typography>,
                 data.map((item, index) => (
                   <div key={item._id}>
                       <ExpansionPanel 
@@ -188,7 +189,8 @@ class WishList extends Component {
                         </ExpansionPanelDetails>
                       </ExpansionPanel>
                     </div>
-                ))}
+                  ))]
+                }
 
                 <Container style={data.length > 0 ? {marginTop: '5vh'} : null }>
                   <DomLink to="/groups/my-groups" style={{ textDecoration: 'none', color: '#4f92ff' }}>

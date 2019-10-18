@@ -68,6 +68,7 @@ const styles = {
   icon: {
     margin: 5,
     color: '#b8b8b8',
+    cursor: 'pointer',
     position: 'absolute'
   },
   deleteIcon: {

@@ -202,7 +202,7 @@ class CreateGroup extends Component {
                           type="password"
                           name="confirmPassword"
                           id="standard-password-input"
-                          label="Password"
+                          label="Confirm Password"
                           placeholder={'Password'}
                           onChange={handleChange}
                           onBlur={handleBlur}

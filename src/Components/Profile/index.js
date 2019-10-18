@@ -188,33 +188,55 @@ class Profile extends Component {
   addNewItem = (description, link, notes) => {
     let component = this;
 
-    var validateLink = link.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
-    if(validateLink === null) {
-      // console.log('NOT A VALID LINK')
-      this.setState({
-        linkError: true
-      })
+    if(link) {
+      var validateLink = link.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+      if(validateLink === null) {
+        // console.log('NOT A VALID LINK')
+        this.setState({
+          linkError: true
+        })
+      }
+      else {
+        // console.log('GOOD TO GO')
+        component.closeAddForm();
+  
+        this.setState({
+          linkError: false
+        })
+        axios.post('http://localhost:3001/api/newItem', {
+          user_id: this.props.user_info._id,
+          description: description,
+          link: link,
+          notes: notes
+        })
+        .then(function (response) {
+          // console.log('AXIOS RESPONSE:', response)
+          component.getUserData(component.props.user_info._id);
+        })
+        .catch(function (error) {
+          console.log('AXIOS ERROR:', error)
+        });
+      }
     }
     else {
-      // console.log('GOOD TO GO')
       component.closeAddForm();
 
-      this.setState({
-        linkError: false
-      })
-      axios.post('http://localhost:3001/api/newItem', {
-        user_id: this.props.user_info._id,
-        description: description,
-        link: link,
-        notes: notes
-      })
-      .then(function (response) {
-        // console.log('AXIOS RESPONSE:', response)
-        component.getUserData(component.props.user_info._id);
-      })
-      .catch(function (error) {
-        console.log('AXIOS ERROR:', error)
-      });
+        this.setState({
+          linkError: false
+        })
+        axios.post('http://localhost:3001/api/newItem', {
+          user_id: this.props.user_info._id,
+          description: description,
+          link: link,
+          notes: notes
+        })
+        .then(function (response) {
+          // console.log('AXIOS RESPONSE:', response)
+          component.getUserData(component.props.user_info._id);
+        })
+        .catch(function (error) {
+          console.log('AXIOS ERROR:', error)
+        });
     }
   };
 
@@ -356,21 +378,21 @@ class Profile extends Component {
                   onChange={(e) => this.setState({ description: e.target.value })}
                 />
                 <TextField
-                  required
+                  // required
                   error={this.state.linkError ? true : false}
                   id="standard-error"
                   margin="dense"
                   label={this.state.linkError ? "Must be a valid link": "Item link"}
                   type="name"
                   fullWidth
-                  className={this.state.linkError ? null : classes.textInput}
+                  className={this.state.link && this.state.linkError ? null : classes.textInput}
                   value={this.state.link}
                   onChange={(e) => this.setState({ link: e.target.value })}
                 />
                 <TextField
                   multiline={true}
                   margin="dense"
-                  label="Additional notes"
+                  label="Additional notes (sizes, colors, etc.)"
                   type="name"
                   fullWidth
                   className={classes.textInput}
@@ -413,20 +435,20 @@ class Profile extends Component {
                   onChange={(e) => this.setState({ description: e.target.value })}
                 />
                 <TextField
-                  required
+                  // required
                   error={this.state.linkError ? true : false}
                   id="standard-error"
                   margin="dense"
-                  label={this.state.linkError ? "Must be a valid link": "Item link"}
+                  label={this.state.link && this.state.linkError ? "Must be a valid link": "Item link"}
                   type="name"
                   fullWidth
-                  className={classes.textInput}
+                  className={this.state.linkError ? null : classes.textInput}
                   onChange={(e) => this.setState({ link: e.target.value })}
                 />
                 <TextField
                   multiline={true}
                   margin="dense"
-                  label="Additional notes"
+                  label="Additional notes (sizes, colors, etc.)"
                   type="name"
                   fullWidth
                   className={classes.textInput}
