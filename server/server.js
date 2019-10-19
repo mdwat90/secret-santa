@@ -4,6 +4,7 @@ var cors = require('cors');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const bcrypt = require('bcrypt');
+const sgMail = require('@sendgrid/mail');
 const saltRounds = 10;
 const ItemSchema = require('./Models/ItemSchema/schema');
 const UserSchema = require('./Models/UserSchema/schema');
@@ -19,7 +20,9 @@ app.use(cors());
 // MongoDB database route
 const dbRoute = process.env.MONGO;
 
-// console.log('DB:', dbRoute)
+// console.log('SEND GRID API KEY:', process.env.SEND_GRID_API_KEY)
+// SendGrid Setup
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Mongoose boilerplate
 mongoose.connect(dbRoute, { useNewUrlParser: true });
@@ -59,6 +62,15 @@ app.post('/api/newUser', function(req, response) {
                 else {
                     // console.log('SUCCESS!!', res)
                     response.send(res)
+                    const msg = {
+                        // TODO: send to user.email
+                        to: 'mdwat90@gmail.com',
+                        from: 'secret-santa-app@secret_santa.com',
+                        subject: 'Welcome!',
+                        text: 'Welcome to the secret santa app!',
+                        html: '<strong>Welcome to the secret santa app!</strong>',
+                    };
+                    sgMail.send(msg);
                 }
             })
         }
@@ -140,12 +152,52 @@ app.post('/api/newItem', function(req, response) {
         else {
             // console.log('SUCCESS SAVING ITEM!', res)
             response.send(res)
+
+            GroupSchema.find(
+                {
+                    'members.uidSelected' : {$eq: item.user_id }
+                }, function (errs, resp) {
+                    console.log('ADD USER RESPONSE:', resp)
+                    console.log('ADD USER ERROR:', errs)
+                    if(resp.length === 0) {
+                        console.log('COULDNT FIND GROUPS WHERE USER IS SELECTED')
+                        // response.send(errs)
+                    }
+                    else {
+                        // console.log('USER ADDED TO GROUP', resp)
+                        console.log('FOUND GROUPS WHERE USER WAS SELECTED')
+                        // response.send(resp)
+                        let userName;
+                        let upperCaseName;
+                        resp.map((group, index) => {
+                            group.members.map((member, index) => {
+                                if(member.uid === item.user_id) {
+                                    userName = member.name;
+                                    upperCaseName = userName.replace(/^\w/, c => c.toUpperCase());
+                                }
+                                else if(member.uidSelected === item.user_id) {
+                                    console.log('MEMBER ' + member.name + ' has selected ' + userName + ' IN GROUP ' + group.name)
+                                    const msg = {
+                                        // TODO: send to member.email
+                                        to: 'mdwat90@gmail.com',
+                                        from: 'secret-santa-app@secret_santa.com',
+                                        subject: `New Item on ${upperCaseName}'s wishlist`,
+                                        text: `${upperCaseName} added a new item to their wishlist.`,
+                                        html: `<strong>${upperCaseName} added a new item to their wishlist.</strong>`,
+                                    };
+                                    sgMail.send(msg);
+                                }
+                            })
+                        })
+                    }
+                })
         }
     })
 })
 
 app.post('/api/updateItem', function(req, response) {
     let itemId = req.body._id;
+    let userId = req.body.user_id;
     let update = req.body.update;
 
     // console.log('ITEM TO UPDATE SERVER:', itemId)
@@ -159,12 +211,52 @@ app.post('/api/updateItem', function(req, response) {
         else {
             // console.log('SUCCESS UPDATING ITEM', res)
             response.send(res)
+
+            GroupSchema.find(
+                {
+                    'members.uidSelected' : {$eq: userId }
+                }, function (errs, resp) {
+                    // console.log('ADD USER RESPONSE:', resp)
+                    // console.log('ADD USER ERROR:', errs)
+                    if(resp.length === 0) {
+                        console.log('COULDNT FIND GROUPS WHERE USER IS SELECTED')
+                        // response.send(errs)
+                    }
+                    else {
+                        // console.log('USER ADDED TO GROUP', resp)
+                        console.log('FOUND GROUPS WHERE USER WAS SELECTED')
+                        // response.send(resp)
+                        let userName;
+                        let upperCaseName;
+                        resp.map((group, index) => {
+                            group.members.map((member, index) => {
+                                if(member.uid === userId) {
+                                    userName = member.name;
+                                    upperCaseName = userName.replace(/^\w/, c => c.toUpperCase());
+                                }
+                                else if(member.uidSelected === userId) {
+                                    console.log('MEMBER ' + member.name + ' has selected ' + userName + ' IN GROUP ' + group.name)
+                                    const msg = {
+                                        // TODO: send to member.email
+                                        to: 'mdwat90@gmail.com',
+                                        from: 'secret-santa-app@secret_santa.com',
+                                        subject: `Update to ${upperCaseName}'s wishlist`,
+                                        text: `${upperCaseName} updated an item on their wishlist.`,
+                                        html: `<strong>${upperCaseName} updated an item on their wishlist.</strong>`,
+                                    };
+                                    sgMail.send(msg);
+                                }
+                            })
+                        })
+                    }
+                })
         }
     })
 })
 
 app.delete('/api/deleteItem', function(req, response) {
     let itemId = req.body._id;
+    let userId = req.body.user_id;
 
     // console.log('ITEM TO DELETE:', itemId)
 
@@ -176,6 +268,45 @@ app.delete('/api/deleteItem', function(req, response) {
         else {
             // console.log('SUCCESS DELETING ITEM', res)
             response.send(res)
+
+            GroupSchema.find(
+                {
+                    'members.uidSelected' : {$eq: userId }
+                }, function (errs, resp) {
+                    // console.log('ADD USER RESPONSE:', resp)
+                    // console.log('ADD USER ERROR:', errs)
+                    if(resp.length === 0) {
+                        console.log('COULDNT FIND GROUPS WHERE USER IS SELECTED')
+                        // response.send(errs)
+                    }
+                    else {
+                        // console.log('USER ADDED TO GROUP', resp)
+                        console.log('FOUND GROUPS WHERE USER WAS SELECTED')
+                        // response.send(resp)
+                        let userName;
+                        let upperCaseName;
+                        resp.map((group, index) => {
+                            group.members.map((member, index) => {
+                                if(member.uid === userId) {
+                                    userName = member.name;
+                                    upperCaseName = userName.replace(/^\w/, c => c.toUpperCase());
+                                }
+                                else if(member.uidSelected === userId) {
+                                    console.log('MEMBER ' + member.name + ' has selected ' + userName + ' IN GROUP ' + group.name)
+                                    const msg = {
+                                        // TODO: send to member.email
+                                        to: 'mdwat90@gmail.com',
+                                        from: 'secret-santa-app@secret_santa.com',
+                                        subject: `${upperCaseName}'s deleted an item from their wishlist`,
+                                        text: `${upperCaseName} deleted an item from their wishlist.`,
+                                        html: `<strong>${upperCaseName} deleted an item from their wishlist.</strong>`,
+                                    };
+                                    sgMail.send(msg);
+                                }
+                            })
+                        })
+                    }
+                })
         }
     })
 
@@ -188,7 +319,7 @@ app.delete('/api/deleteItem', function(req, response) {
 app.post('/api/newGroup', function(req, response) {
     let group = req.body.data;
 
-    // console.log('GROUP:', group)
+    console.log('GROUP:', group)
 
     let hash = bcrypt.hashSync(group.password, saltRounds);
 
@@ -200,7 +331,7 @@ app.post('/api/newGroup', function(req, response) {
                 name: group.name, 
                 password: hash, 
                 memberCount: group.memberCount - 1, 
-                members: [{uid: group.admin, name: group.adminName, selected: false, selectedBy: null, uidSelected: null }]}).save((err, res) => {
+                members: [{uid: group.admin, name: group.adminName, email: group.adminEmail, selected: false, selectedBy: null, uidSelected: null }]}).save((err, res) => {
                 if(err) {
                     // console.log('ERROR CREATING GROUP:', err)
                     response.send(err)
@@ -249,7 +380,7 @@ app.post('/api/joinGroup', function(req, response) {
                         }, 
                         {
                             $inc: { memberCount: -1 },
-                            $push: {members: {uid: request.uid, name: request.name.toLowerCase(), selected: false, selectedBy: null, uidSelected: null } }
+                            $push: {members: {uid: request.uid, name: request.name, email: request.email, selected: false, selectedBy: null, uidSelected: null } }
                         }
                         , function (errs, resp) {
                             // console.log('ADD USER RESPONSE:', resp)
@@ -285,6 +416,26 @@ app.delete('/api/deleteGroup', function(req, response) {
         else {
             // console.log('SUCCESS DELETING GROUP', res)
             response.send(res)
+
+            let groupAdmin;
+            let upperCaseGroup = res.name.replace(/^\w/, c => c.toUpperCase());
+            let upperCaseName;
+
+            res.members.map((member, index) => {
+                if(member.uid === res.admin) {
+                    groupAdmin = member.name;
+                    upperCaseName = groupAdmin.replace(/^\w/, c => c.toUpperCase());
+                }
+                const msg = {
+                    // TODO: send to member.email
+                    to: 'mdwat90@gmail.com',
+                    from: 'secret-santa-app@secret_santa.com',
+                    subject: `The ${upperCaseGroup} group was deleted`,
+                    text: `The ${upperCaseGroup} group was deleted`,
+                    html: `<strong>The ${upperCaseGroup} group was deleted. Contact ${upperCaseName} for details.</strong>`,
+                };
+                sgMail.send(msg);
+            })
         }
     })
 })
@@ -354,70 +505,121 @@ app.delete('/api/removeMember', function(req, response) {
     // console.log('GROUP ID:', groupId)
     // console.log('USER ID:', userId)
 
-    GroupSchema.findOneAndUpdate(
+    let userName;
+    let upperCaseName;
+    let upperCaseGroup;
+    let groupAdmin;
+
+    GroupSchema.findOne(
         {
             _id: groupId,
             'members.uid' : {$in: userId}
-        }, 
-        {
-            $inc: { memberCount: 1 },
-            $pull: {members: {uid: userId } }
-        }
-        , {new: true}, function (err, res) {
-            if(res) {
-                // console.log('RESPONSE:', res)
+        }, function (error, response) {
+            console.log('RESPONSE:', response)
+            if (response.members.some(e => e.uid === userId)) {
+                upperCaseGroup = response.name.replace(/^\w/, c => c.toUpperCase());
 
-                response.send(res);
-
-                res.members.map((member, idx) => {
-                    if(member.selectedBy === userId) {
-                        let update = {
-                            $set: {'members.$.selected': false, 'members.$.selectedBy': null}
-                        }
-
-                        GroupSchema.findOneAndUpdate({
-                            _id: groupId,
-                            members: {
-                                $elemMatch: {
-                                    selected: {$eq: true},
-                                    selectedBy:{$eq: userId}
-                                }}
-                        }, update, {new: true}, function (error, resp) {
-                            if(res) {
-                                // console.log('UPDATE MEMBER RESPONSE:',res)
-                            }
-                            else {
-                                // console.log('UPDATE MEMBER ERROR:',error)
-                            }
-                        })
+                response.members.map((member, index) => {
+                    if(member.uid === response.admin) {
+                        groupAdmin = member.name;
                     }
-                    if(member.uidSelected === userId) {
-                        let update = {
-                            $set: {'members.$.uidSelected': null }
-                        }
-
-                        GroupSchema.findOneAndUpdate({
-                            _id: groupId,
-                            members: {
-                                $elemMatch: {
-                                    uidSelected: {$eq: userId}
-                                }}
-                        }, update, {new: true}, function (error, resp) {
-                            if(res) {
-                                // console.log('UPDATE MEMBER RESPONSE TWO:',res)
-                            }
-                            else {
-                                // console.log('UPDATE MEMBER ERROR TWO:',error)
-                            }
-                        })
+                    if(member.uid === userId) {
+                        userName = member.name;
+                        upperCaseName = userName.replace(/^\w/, c => c.toUpperCase());
+                        const msg = {
+                            // TODO: send to member.email
+                            to: 'mdwat90@gmail.com',
+                            from: 'secret-santa-app@secret_santa.com',
+                            subject: `${upperCaseName} removed from ${upperCaseGroup} group`,
+                            text: `You were removed from the ${upperCaseGroup} group.`,
+                            html: `<strong>You were removed from the ${upperCaseGroup} group. Contact ${groupAdmin}, the group admin, for details.</strong>`,
+                        };
+                        sgMail.send(msg);
                     }
                 })
-                
+
+            GroupSchema.findOneAndUpdate(
+                    {
+                        _id: groupId,
+                        'members.uid' : {$in: userId }
+                    }, 
+                    {
+                        $inc: { memberCount: 1 },
+                        $pull: {members: {uid: userId } }
+                    }
+                    , {new: true}, function (err, res) {
+                        if(res) {
+                            // console.log('RESPONSE:', res)
+                            // response.send(res);
+
+                            res.members.map((member, idx) => {
+                                const msg = {
+                                    // TODO: send to member.email
+                                    to: 'mdwat90@gmail.com',
+                                    from: 'secret-santa-app@secret_santa.com',
+                                    subject: `${upperCaseName} removed from ${upperCaseGroup} group`,
+                                    text: `${upperCaseName} was removed from the ${upperCaseGroup} group.`,
+                                    html: `<strong>${upperCaseName} was removed from the ${upperCaseGroup} group. You will have to login and redraw a name for this group.</strong>`,
+                                };
+                                sgMail.send(msg);
+
+                                if(member.selectedBy === userId) {
+                                    let update = {
+                                        $set: {'members.$.selected': false, 'members.$.selectedBy': null}
+                                    }
+
+                                    GroupSchema.findOneAndUpdate({
+                                        _id: groupId,
+                                        members: {
+                                            $elemMatch: {
+                                                selected: {$eq: true},
+                                                selectedBy:{$eq: userId}
+                                            }}
+                                    }, update, {new: true}, function (error, resp) {
+                                        if(res) {
+                                            // console.log('UPDATE MEMBER RESPONSE:',res)
+                                        }
+                                        else {
+                                            // console.log('UPDATE MEMBER ERROR:',error)
+                                        }
+                                    })
+                                }
+                                if(member.uidSelected === userId) {
+                                    let update = {
+                                        $set: {'members.$.uidSelected': null }
+                                    }
+
+                                    GroupSchema.findOneAndUpdate({
+                                        _id: groupId,
+                                        members: {
+                                            $elemMatch: {
+                                                uidSelected: {$eq: userId}
+                                            }}
+                                    }, update, {new: true}, function (error, resp) {
+                                        if(res) {
+                                            // console.log('UPDATE MEMBER RESPONSE TWO:',res)
+                                        }
+                                        else {
+                                            // console.log('UPDATE MEMBER ERROR TWO:',error)
+                                        }
+                                    })
+                                }
+                            })
+                            
+                        }
+                        else {
+                            // console.log('ERROR:', err)
+                        }
+                })
+
             }
             else {
-                // console.log('ERROR:', err)
+                console.log('DELETE MEMBER ERROR')
             }
-    })
+
+        })
+
+    
 })
 
 app.post('/api/clearSelections', function(req, response) {

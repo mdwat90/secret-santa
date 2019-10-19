@@ -246,6 +246,7 @@ class Profile extends Component {
     axios.delete('http://localhost:3001/api/deleteItem', {
       data: {
         _id: idTodelete,
+        user_id: this.props.user_info._id,
       },
     })
     .then(function (response) {
@@ -279,6 +280,7 @@ class Profile extends Component {
 
       axios.post('http://localhost:3001/api/updateItem', {
         _id: idToUpdate,
+        user_id: this.props.user_info._id,
         update: { description: description, link: link, notes: notes},
       })
       .then(function (response) {

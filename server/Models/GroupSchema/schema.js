@@ -10,6 +10,7 @@ const GroupSchema = new Schema(
     members: [{
       uid: String,
       name: String,
+      email: String,
       selected: false,
       selectedBy: String,
       uidSelected: String

@@ -78,12 +78,13 @@ class CreateGroup extends Component {
   createGroup = (data) => {
     const component = this;
 
-    // console.log('CLIENT GROUP DATA:', data)
+    console.log('CLIENT GROUP DATA:', data)
 
     axios.post('http://localhost:3001/api/newGroup', {
       data : {
         admin: data.admin,
         adminName: data.adminName,
+        adminEmail: data.adminEmail.toLowerCase().trim(),
         confirmPassword: data.confirmPassword,
         memberCount: data.memberCount,
         name: data.name.toLowerCase().trim(),
@@ -116,6 +117,8 @@ class CreateGroup extends Component {
   render() {
     const {user_info, classes} = this.props;
 
+    console.log('USER INFO:', user_info)
+
     return (
       this.state.groupCreated ? 
         <Container style={{ marginTop: '5vh'}}>
@@ -127,7 +130,7 @@ class CreateGroup extends Component {
             <Grid item xl ={6} lg={7} md={10} xs={12}>
               <Container className={classes.form}>
                 <Formik
-                  initialValues={{ admin: user_info._id, adminName: user_info.name, name: '', password: '', confirmPassword: '', memberCount: '' }}
+                  initialValues={{ admin: user_info._id, adminName: user_info.name, adminEmail: user_info.email, name: '', password: '', confirmPassword: '', memberCount: '' }}
                   validate={values => {
                     let errors = {};
                     if (!values.name) {

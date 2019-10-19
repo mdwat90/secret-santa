@@ -84,6 +84,7 @@ class JoinGroup extends Component {
       data: {
         uid: data.uid,
         name: data.name.toLowerCase().trim(),
+        email: data.email.toLowerCase().trim(),
         group: data.group.toLowerCase().trim(),
         password: data.password.trim()
       }
@@ -126,7 +127,7 @@ class JoinGroup extends Component {
             <Grid item xl ={6} lg={7} md={10} xs={12}>
               <Container className={classes.form}>
                 <Formik
-                  initialValues={{ uid: user_info._id, name: user_info.name, group: '',  password: '' }}
+                  initialValues={{ uid: user_info._id, name: user_info.name, email: user_info.email, group: '',  password: '' }}
                   validate={values => {
                     let errors = {};
                     if (!values.name) {
