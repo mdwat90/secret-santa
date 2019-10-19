@@ -285,7 +285,7 @@ class Groups extends Component {
     ;
   };
   
-  clearSelections = (groupId) => {
+  clearSelections = (groupId, removingMember) => {
     let component = this;
 
     this.setState({
@@ -297,6 +297,7 @@ class Groups extends Component {
     axios.post('http://localhost:3001/api/clearSelections', {
       data: {
         group_id: groupId,
+        removingMember: removingMember
       },
     })
     .then(function (response) {
@@ -323,7 +324,7 @@ class Groups extends Component {
       console.log('AXIOS RESPONSE:', response)
       component.closeDeleteModal();
       component.closeRemoveModal();
-      component.clearSelections(groupId);
+      component.clearSelections(groupId, true);
       component.getUserGroups(component.props.user_info._id);
     })
     .catch(function (error) {
@@ -623,7 +624,7 @@ class Groups extends Component {
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={() => this.clearSelections(this.state.groupId)} color="secondary">
+                    <Button onClick={() => this.clearSelections(this.state.groupId, false)} color="secondary">
                       Reset
                     </Button>
                     <Button onClick={() => this.closeResetDrawingModal()} style={{color: '#6b6b6b'}}  autoFocus>
