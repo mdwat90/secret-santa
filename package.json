@@ -2,7 +2,6 @@
   "name": "xmas-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://secret-santa-19.herokuapp.com/",
   "engines": {
     "yarn": "1.17.3",
     "node": "10.15.0"
