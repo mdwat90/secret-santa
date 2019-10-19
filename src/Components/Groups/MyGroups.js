@@ -320,7 +320,7 @@ class Groups extends Component {
       },
     })
     .then(function (response) {
-      // console.log('AXIOS RESPONSE:', response)
+      console.log('AXIOS RESPONSE:', response)
       component.closeDeleteModal();
       component.closeRemoveModal();
       component.clearSelections(groupId);

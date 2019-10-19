@@ -267,12 +267,34 @@ class Profile extends Component {
     // console.log('LINK UPDATE:', link)
     // console.log('NOTES UPDATE:', notes)
 
-    var validateLink = link.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
-    if(validateLink === null) {
-      // console.log('NOT A VALID LINK')
-      this.setState({
-        linkError: true
-      })
+    if(link) {
+      var validateLink = link.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+      if(validateLink === null) {
+        // console.log('NOT A VALID LINK')
+        this.setState({
+          linkError: true
+        })
+      }
+      else {
+        // console.log('GOOD TO GO')
+        component.closeEditForm();
+  
+        this.setState({
+          linkError: false
+        })
+        axios.post('http://localhost:3001/api/updateItem', {
+          _id: idToUpdate,
+          user_id: this.props.user_info._id,
+          update: { description: description, link: link, notes: notes},
+        })
+        .then(function (response) {
+          // console.log('AXIOS RESPONSE:', response)
+          component.getUserData(component.props.user_info._id);
+        })
+        .catch(function (error) {
+          // console.log('AXIOS ERROR:', error)
+        });
+      }
     }
     else {
       // console.log('GOOD TO GO')
@@ -290,9 +312,7 @@ class Profile extends Component {
       .catch(function (error) {
         // console.log('AXIOS ERROR:', error)
       })
-
     }
-
     
   };
 
