@@ -24,13 +24,13 @@
     "react-scripts": "3.1.1",
     "redux": "^4.0.4"
   },
+  "proxy": "http://localhost:3001",
   "scripts": {
     "start": "concurrently \"cd server && node server.js\" \"react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "yarn run build",
-    "deploy": "gh-pages -d build"
+    "heroku-postbuild": "yarn run build"
   },
   "eslintConfig": {
     "extends": "react-app"
