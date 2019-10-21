@@ -69,20 +69,20 @@ app.post('/api/newUser', function(req, response) {
                     // console.log('SUCCESS!!', res)
                     response.send(res)
                     console.log('SEND WELCOME EMAIL TO:', user.email)
-                    // const msg = {
-                    //     // TODO: send to user.email
-                    //     to: user.email,
-                    //     from: 'secret-santa-app@secretsanta.com',
-                    //     subject: 'Welcome!',
-                    //     text: 'Welcome to the secret santa app!',
-                    //     html: `<strong>Welcome to the secret santa app!</strong>
-                    //             <p>You can login with this email address and join a group, 
-                    //             add items to your wishlist, 
-                    //             and draw a name for secret santa.</p>
-                    //             <p>Merry Christmas and Happy Holidays!</p>
-                    //     `,
-                    // };
-                    // sgMail.send(msg);
+                    const msg = {
+                        // TODO: send to user.email
+                        to: user.email,
+                        from: 'secret-santa-app@secretsanta.com',
+                        subject: 'Welcome!',
+                        text: 'Welcome to the secret santa app!',
+                        html: `<strong>Welcome to the secret santa app!</strong>
+                                <p>You can login with this email address and join a group, 
+                                add items to your wishlist, 
+                                and draw a name for secret santa.</p>
+                                <p>Merry Christmas and Happy Holidays!</p>
+                        `,
+                    };
+                    sgMail.send(msg);
                 }
             })
         }
@@ -192,19 +192,19 @@ app.post('/api/newItem', function(req, response) {
                                 if(member.uidSelected === item.user_id) {
                                     // console.log('MEMBER ' + member.name + ' has selected ' + userName + ' IN GROUP ' + group.name)
                                     console.log('SEND NEW ITEM EMAIL TO:', member.email)
-                                    // const msg = {
-                                    //     // TODO: send to member.email
-                                    //     to: member.email,
-                                    //     from: 'secret-santa-app@secretsanta.com',
-                                    //     subject: `New Item on ${upperCaseName}'s wishlist`,
-                                    //     text: `${upperCaseName} added a new item to their wishlist.`,
-                                    //     html: `<strong>${upperCaseName} added the following item to their wishlist:</strong>
-                                    //               <br>
-                                    //             <p>Description: ${res.description}</p>
-                                    //             ${res.link !== null ? `<p>Link: ${res.link} </p>` : `<p/>`}
-                                    //             <p>Notes: ${res.notes} </p>`,
-                                    // };
-                                    // sgMail.send(msg);
+                                    const msg = {
+                                        // TODO: send to member.email
+                                        to: member.email,
+                                        from: 'secret-santa-app@secretsanta.com',
+                                        subject: `New Item on ${upperCaseName}'s wishlist`,
+                                        text: `${upperCaseName} added a new item to their wishlist.`,
+                                        html: `<strong>${upperCaseName} added the following item to their wishlist:</strong>
+                                                  <br>
+                                                <p>Description: ${res.description}</p>
+                                                ${res.link !== null ? `<p>Link: ${res.link} </p>` : `<p/>`}
+                                                <p>Notes: ${res.notes} </p>`,
+                                    };
+                                    sgMail.send(msg);
                                 }
                             })
                         })
@@ -259,23 +259,23 @@ app.post('/api/updateItem', function(req, response) {
                                     // console.log('MEMBER ' + member.name + ' has selected ' + userName + ' IN GROUP ' + group.name)
                                     console.log('SEND UPDATED ITEM EMAIL TO:', member.email)
                                     
-                                    // const msg = {
-                                    //     // TODO: send to member.email
-                                    //     to: member.email,
-                                    //     from: 'secret-santa-app@secretsanta.com',
-                                    //     subject: `Update to ${upperCaseName}'s wishlist`,
-                                    //     text: `${upperCaseName} updated an item on their wishlist.`,
-                                    //     html: `<strong>${upperCaseName} updated the following item on their wishlist:</strong>
-                                    //              <br>
-                                    //            <p>Description: ${update.description}</p>
-                                    //            ${update.link !== null ? `<p>Link: ${update.link} </p>` : `<p/>`}
-                                    //            <p>Notes: ${update.notes} </p>`,
-                                    // };
-                                    // sgMail.send(msg).then(() => {
-                                    //     console.log('EMAIL SENT SUCCESSFULLY')
-                                    // }).catch((error) => {
-                                    //     console.log('ERROR SENDING EMAIL:', error)
-                                    // });
+                                    const msg = {
+                                        // TODO: send to member.email
+                                        to: member.email,
+                                        from: 'secret-santa-app@secretsanta.com',
+                                        subject: `Update to ${upperCaseName}'s wishlist`,
+                                        text: `${upperCaseName} updated an item on their wishlist.`,
+                                        html: `<strong>${upperCaseName} updated the following item on their wishlist:</strong>
+                                                 <br>
+                                               <p>Description: ${update.description}</p>
+                                               ${update.link !== null ? `<p>Link: ${update.link} </p>` : `<p/>`}
+                                               <p>Notes: ${update.notes} </p>`,
+                                    };
+                                    sgMail.send(msg).then(() => {
+                                        console.log('EMAIL SENT SUCCESSFULLY')
+                                    }).catch((error) => {
+                                        console.log('ERROR SENDING EMAIL:', error)
+                                    });
                                 }
                             })
                         })
@@ -327,19 +327,19 @@ app.delete('/api/deleteItem', function(req, response) {
                                 if(member.uidSelected === userId) {
                                     // console.log('MEMBER ' + member.name + ' has selected ' + userName + ' IN GROUP ' + group.name)
                                     console.log('SEND DELETED ITEM EMAIL TO:', member.email)
-                                    // const msg = {
-                                    //     // TODO: send to member.email
-                                    //     to: member.email,
-                                    //     from: 'secret-santa-app@secretsanta.com',
-                                    //     subject: `${upperCaseName}'s deleted an item from their wishlist`,
-                                    //     text: `${upperCaseName} deleted an item from their wishlist.`,
-                                    //     html: `<strong>${upperCaseName} deleted the following item from their wishlist:</strong>
-                                    //              <br>
-                                    //            <p>Description: ${res.description}</p>
-                                    //            ${res.link !== null ? `<p>Link: ${res.link} </p>` : `<p/>`}
-                                    //            <p>Notes: ${res.notes} </p>`,
-                                    // };
-                                    // sgMail.send(msg);
+                                    const msg = {
+                                        // TODO: send to member.email
+                                        to: member.email,
+                                        from: 'secret-santa-app@secretsanta.com',
+                                        subject: `${upperCaseName}'s deleted an item from their wishlist`,
+                                        text: `${upperCaseName} deleted an item from their wishlist.`,
+                                        html: `<strong>${upperCaseName} deleted the following item from their wishlist:</strong>
+                                                 <br>
+                                               <p>Description: ${res.description}</p>
+                                               ${res.link !== null ? `<p>Link: ${res.link} </p>` : `<p/>`}
+                                               <p>Notes: ${res.notes} </p>`,
+                                    };
+                                    sgMail.send(msg);
                                 }
                             })
                         })
@@ -439,30 +439,30 @@ app.post('/api/joinGroup', function(req, response) {
                                 resp.members.map((member, index) => {
                                     if(member.uid === resp.admin) {
                                         console.log('SEND MEMBER JOINED EMAIL TO:', member.email)
-                                        // const msg = {
-                                        //     // TODO: send to member.email
-                                        //     to: member.email,
-                                        //     from: 'secret-santa-app@secretsanta.com',
-                                        //     subject: `${upperCaseName} has joined the ${upperCaseGroup} group.`,
-                                        //     text: `${upperCaseName} has joined the ${upperCaseGroup} group.`,
-                                        //     html: `<strong>${upperCaseName} has joined the ${upperCaseGroup} group.</strong>`,
-                                        // };
-                                        // sgMail.send(msg);
+                                        const msg = {
+                                            // TODO: send to member.email
+                                            to: member.email,
+                                            from: 'secret-santa-app@secretsanta.com',
+                                            subject: `${upperCaseName} has joined the ${upperCaseGroup} group.`,
+                                            text: `${upperCaseName} has joined the ${upperCaseGroup} group.`,
+                                            html: `<strong>${upperCaseName} has joined the ${upperCaseGroup} group.</strong>`,
+                                        };
+                                        sgMail.send(msg);
                                     }
                                 })
 
                                 if(resp.memberCount === 0) {
                                     resp.members.map((member, index) => {
                                         console.log('SEND DRAWING READY EMAIL TO:', member.email)
-                                        // const msg = {
-                                        //     // TODO: send to member.email
-                                        //     to: member.email,
-                                        //     from: 'secret-santa-app@secretsanta.com',
-                                        //     subject: `Name drawing for ${upperCaseGroup} group.`,
-                                        //     text: `The ${upperCaseGroup} group is now full.`,
-                                        //     html: `<strong>The ${upperCaseGroup} group is now full and ready for you to draw a name!</strong>`,
-                                        // };
-                                        // sgMail.send(msg);
+                                        const msg = {
+                                            // TODO: send to member.email
+                                            to: member.email,
+                                            from: 'secret-santa-app@secretsanta.com',
+                                            subject: `Name drawing for ${upperCaseGroup} group.`,
+                                            text: `The ${upperCaseGroup} group is now full.`,
+                                            html: `<strong>The ${upperCaseGroup} group is now full and ready for you to draw a name!</strong>`,
+                                        };
+                                        sgMail.send(msg);
                                 })
                                 }
                             }
@@ -502,15 +502,15 @@ app.delete('/api/deleteGroup', function(req, response) {
             })
             res.members.map((member, index) => {
                 console.log('SEND GROUP DELETED EMAIL TO:', member.email)
-                // const msg = {
-                //     // TODO: send to member.email
-                //     to: member.email,
-                //     from: 'secret-santa-app@secretsanta.com',
-                //     subject: `The ${upperCaseGroup} group was deleted`,
-                //     text: `The ${upperCaseGroup} group was deleted`,
-                //     html: `<strong>The ${upperCaseGroup} group was deleted. Contact ${upperCaseName} for details.</strong>`,
-                // };
-                // sgMail.send(msg);
+                const msg = {
+                    // TODO: send to member.email
+                    to: member.email,
+                    from: 'secret-santa-app@secretsanta.com',
+                    subject: `The ${upperCaseGroup} group was deleted`,
+                    text: `The ${upperCaseGroup} group was deleted`,
+                    html: `<strong>The ${upperCaseGroup} group was deleted. Contact ${upperCaseName} for details.</strong>`,
+                };
+                sgMail.send(msg);
             })
         }
     })
@@ -603,15 +603,15 @@ app.delete('/api/removeMember', function(req, response) {
                         userName = member.name;
                         upperCaseName = userName.replace(/^\w/, c => c.toUpperCase());
                         console.log('SEND 1st DELETED MEMBER EMAIL TO:', member.email)
-                        // const msg = {
-                        //     // TODO: send to member.email
-                        //     to: member.email,
-                        //     from: 'secret-santa-app@secretsanta.com',
-                        //     subject: `${upperCaseName} removed from ${upperCaseGroup} group`,
-                        //     text: `You were removed from the ${upperCaseGroup} group.`,
-                        //     html: `<strong>You were removed from the ${upperCaseGroup} group. Contact ${groupAdmin}, the group admin, for details.</strong>`,
-                        // };
-                        // sgMail.send(msg);
+                        const msg = {
+                            // TODO: send to member.email
+                            to: member.email,
+                            from: 'secret-santa-app@secretsanta.com',
+                            subject: `${upperCaseName} removed from ${upperCaseGroup} group`,
+                            text: `You were removed from the ${upperCaseGroup} group.`,
+                            html: `<strong>You were removed from the ${upperCaseGroup} group. Contact ${groupAdmin}, the group admin, for details.</strong>`,
+                        };
+                        sgMail.send(msg);
                     }
                 })
 
@@ -631,16 +631,16 @@ app.delete('/api/removeMember', function(req, response) {
 
                             res.members.map((member, idx) => {
                                 console.log('SEND 2nd DELETED MEMBER EMAIL TO:', member.email)
-                                // const msg = {
-                                //     // TODO: send to member.email
-                                //     to: member.email,
-                                //     from: 'secret-santa-app@secretsanta.com',
-                                //     subject: `${upperCaseName} removed from ${upperCaseGroup} group`,
-                                //     text: `${upperCaseName} was removed from the ${upperCaseGroup} group.`,
-                                //     html: `<strong>${upperCaseName} was removed from the ${upperCaseGroup} group. 
-                                //         You will have to login and redraw a name for this group once all members have joined.</strong>`,
-                                // };
-                                // sgMail.send(msg);
+                                const msg = {
+                                    // TODO: send to member.email
+                                    to: member.email,
+                                    from: 'secret-santa-app@secretsanta.com',
+                                    subject: `${upperCaseName} removed from ${upperCaseGroup} group`,
+                                    text: `${upperCaseName} was removed from the ${upperCaseGroup} group.`,
+                                    html: `<strong>${upperCaseName} was removed from the ${upperCaseGroup} group. 
+                                        You will have to login and redraw a name for this group once all members have joined.</strong>`,
+                                };
+                                sgMail.send(msg);
 
                                 if(member.selectedBy === userId) {
                                     let update = {
@@ -729,16 +729,16 @@ app.post('/api/clearSelections', function(req, response) {
                 })
                 resp.members.map((member, idx) => {
                     console.log('SEND RESET DRAWING EMAIL TO:', member.email)
-                    // const msg = {
-                    //     // TODO: send to member.email
-                    //     to: member.email,
-                    //     from: 'secret-santa-app@secretsanta.com',
-                    //     subject: `Name drawing reset for the ${upperCaseGroup} group`,
-                    //     text: `${groupAdmin} has reset the name drawing for the ${upperCaseGroup} group`,
-                    //     html: `<strong>${groupAdmin} has reset the name drawing for the ${upperCaseGroup} group. 
-                    //     You will have to login and redraw a name for this group once all members have joined.</strong>`,
-                    // };
-                    // sgMail.send(msg);
+                    const msg = {
+                        // TODO: send to member.email
+                        to: member.email,
+                        from: 'secret-santa-app@secretsanta.com',
+                        subject: `Name drawing reset for the ${upperCaseGroup} group`,
+                        text: `${groupAdmin} has reset the name drawing for the ${upperCaseGroup} group`,
+                        html: `<strong>${groupAdmin} has reset the name drawing for the ${upperCaseGroup} group. 
+                        You will have to login and redraw a name for this group once all members have joined.</strong>`,
+                    };
+                    sgMail.send(msg);
                 })
             }
         }

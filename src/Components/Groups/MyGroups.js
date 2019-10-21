@@ -380,8 +380,8 @@ class Groups extends Component {
               >
                 {this.state.userGroups.length <= 0 && this.state.loading === false ? 
                   <Container style={{height: '20vh', marginTop: '10vh'}}>
-                    <Typography variant='h4'>You haven't joined any groups yet!</Typography>
-                    <Typography variant='body1'>When you create or join a group, it will show up here.</Typography>
+                    <Typography variant='h5' style={{marginBottom: '2vh'}}>You haven't joined any groups yet!</Typography>
+                    <Typography variant='body1' style={{marginBottom: '2vh'}}>When you create or join a group, it will show up here.</Typography>
                   </Container>
                   :
                   this.state.userGroups.map((group, idx) => {
