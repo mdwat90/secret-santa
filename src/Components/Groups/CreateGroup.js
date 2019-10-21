@@ -80,7 +80,7 @@ class CreateGroup extends Component {
 
     console.log('CLIENT GROUP DATA:', data)
 
-    axios.post('http://localhost:3001/api/newGroup', {
+    axios.post('/api/newGroup', {
       data : {
         admin: data.admin,
         adminName: data.adminName,
@@ -117,7 +117,7 @@ class CreateGroup extends Component {
   render() {
     const {user_info, classes} = this.props;
 
-    console.log('USER INFO:', user_info)
+    // console.log('USER INFO:', user_info)
 
     return (
       this.state.groupCreated ? 

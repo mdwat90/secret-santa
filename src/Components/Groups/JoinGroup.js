@@ -80,7 +80,7 @@ class JoinGroup extends Component {
 
     // console.log('CLIENT GROUP DATA:', data)
 
-    axios.post('http://localhost:3001/api/joinGroup', {
+    axios.post('/api/joinGroup', {
       data: {
         uid: data.uid,
         name: data.name.toLowerCase().trim(),

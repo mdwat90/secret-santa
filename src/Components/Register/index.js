@@ -79,7 +79,7 @@ class Register extends Component {
 
     // console.log('REGISTER DATA:', data)
 
-    axios.post('http://localhost:3001/api/newUser', {
+    axios.post('/api/newUser', {
       data : {
         name: data.name.toLowerCase().trim(),
         email: data.email.toLowerCase().trim(),

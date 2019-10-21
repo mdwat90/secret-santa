@@ -74,7 +74,7 @@ class Login extends Component {
 
     // console.log('USER LOGIN DATA:', data)
 
-    axios.get('http://localhost:3001/api/user', {
+    axios.get('/api/user', {
       params: {
         email: data.email.toLowerCase().trim(),
         password: data.password.trim()

@@ -50,7 +50,7 @@ class Groups extends Component {
   createGroup = (data) => {
     const component = this;
 
-    axios.post('http://localhost:3001/api/newUser', {
+    axios.post('/api/newUser', {
       data
     })
     .then(function (response) {

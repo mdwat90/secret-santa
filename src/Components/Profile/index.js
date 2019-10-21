@@ -176,7 +176,7 @@ class Profile extends Component {
       loading: true
     })
 
-    axios.get('http://localhost:3001/api/getItems', {
+    axios.get('/api/getItems', {
       params: {
         user_id: userId
       }
@@ -203,7 +203,7 @@ class Profile extends Component {
         this.setState({
           linkError: false
         })
-        axios.post('http://localhost:3001/api/newItem', {
+        axios.post('/api/newItem', {
           user_id: this.props.user_info._id,
           description: description,
           link: link,
@@ -224,7 +224,7 @@ class Profile extends Component {
         this.setState({
           linkError: false
         })
-        axios.post('http://localhost:3001/api/newItem', {
+        axios.post('/api/newItem', {
           user_id: this.props.user_info._id,
           description: description,
           link: link,
@@ -243,7 +243,7 @@ class Profile extends Component {
 
   deleteFromDB = (idTodelete) => {
     let component = this;
-    axios.delete('http://localhost:3001/api/deleteItem', {
+    axios.delete('/api/deleteItem', {
       data: {
         _id: idTodelete,
         user_id: this.props.user_info._id,
@@ -282,7 +282,7 @@ class Profile extends Component {
         this.setState({
           linkError: false
         })
-        axios.post('http://localhost:3001/api/updateItem', {
+        axios.post('/api/updateItem', {
           _id: idToUpdate,
           user_id: this.props.user_info._id,
           update: { description: description, link: link, notes: notes},
@@ -300,7 +300,7 @@ class Profile extends Component {
       // console.log('GOOD TO GO')
       component.closeEditForm();
 
-      axios.post('http://localhost:3001/api/updateItem', {
+      axios.post('/api/updateItem', {
         _id: idToUpdate,
         user_id: this.props.user_info._id,
         update: { description: description, link: link, notes: notes},

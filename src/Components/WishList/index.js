@@ -133,7 +133,7 @@ class WishList extends Component {
       loading: true
     })
 
-    axios.get('http://localhost:3001/api/getItems', {
+    axios.get('/api/getItems', {
       params: {
         user_id: userId
       }

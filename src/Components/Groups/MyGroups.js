@@ -237,7 +237,7 @@ class Groups extends Component {
       loading: true
     })
 
-    axios.get('http://localhost:3001/api/getUserGroups', {
+    axios.get('/api/getUserGroups', {
       params: {
         user_id: userId
       }
@@ -251,7 +251,7 @@ class Groups extends Component {
   };
 
   getSelectedUsersData = (id) => {
-    axios.get('http://localhost:3001/api/getSelectedUsersItems', {
+    axios.get('/api/getSelectedUsersItems', {
       params: {
         user_id: id
       }
@@ -269,7 +269,7 @@ class Groups extends Component {
     })
 
     // console.log('ID OF GROUP>', idTodelete)
-    axios.delete('http://localhost:3001/api/deleteGroup', {
+    axios.delete('/api/deleteGroup', {
       data: {
         _id: idTodelete,
       },
@@ -294,7 +294,7 @@ class Groups extends Component {
     })
 
     // console.log('ID OF GROUP>', idTodelete)
-    axios.post('http://localhost:3001/api/clearSelections', {
+    axios.post('/api/clearSelections', {
       data: {
         group_id: groupId,
         removingMember: removingMember
@@ -314,7 +314,7 @@ class Groups extends Component {
   removeMember = (groupId, userId) => {
     let component = this;
 
-    axios.delete('http://localhost:3001/api/removeMember', {
+    axios.delete('/api/removeMember', {
       data: {
         group_id: groupId,
         uid: userId,
@@ -338,7 +338,7 @@ class Groups extends Component {
 
     // console.log('GROUP ID:', groupId)
     // console.log('USER ID:', userId)
-    axios.post('http://localhost:3001/api/selectUser', {
+    axios.post('/api/selectUser', {
       group_id: groupId,
       user_id: userId
     })

@@ -12,7 +12,7 @@ const initialState = {
   export default (state = initialState, action) => {
     switch (action.type) {
     case type.SET_USER_INFO: {
-      console.log('LOGIN INFO', action.payload)
+      // console.log('LOGIN INFO', action.payload)
       return Object.assign({}, state, { user_info: action.payload, loggedIn: true, loginErr: null, connectionErr: null, userExistsErr: null });
     }
     
