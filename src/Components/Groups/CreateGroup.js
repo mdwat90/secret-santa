@@ -122,7 +122,7 @@ class CreateGroup extends Component {
     return (
       this.state.groupCreated ? 
         <Container style={{ marginTop: '5vh'}}>
-          <Typography variant='h4'>Your group has been created!</Typography>
+          <Typography variant='h5'>Your group has been created!</Typography>
         </Container>
         :
         <Box className={classes.root}>

@@ -119,7 +119,7 @@ class JoinGroup extends Component {
     return (
       this.state.groupJoined ? 
         <Container style={{ marginTop: '5vh'}}>
-          <Typography variant='h4'>You have joined the group!</Typography>
+          <Typography variant='h5'>You have joined the group!</Typography>
         </Container>
         :
         <Box className={classes.root}>
