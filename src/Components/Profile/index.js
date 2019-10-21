@@ -55,6 +55,9 @@ const styles = {
     textDecoration: 'underline'
   },
   textInput: {
+    '& label.Mui': {
+      color: '#4f92ff',
+    },
     '& label.Mui-focused': {
       color: '#4f92ff',
     },
@@ -323,7 +326,7 @@ class Profile extends Component {
     return (
       <div>
         {this.state.loading ?
-          <Box className={classes.root}>
+          <Box>
             <Container className={classes.container} style={{marginTop: '10vh'}}>
               <CircularProgress style={{color:'#ff476f'}} />
             </Container>
@@ -333,7 +336,7 @@ class Profile extends Component {
             <Container className={classes.container}>
               {data.length <= 0 ? 
                 <Container style={{height: '10vh', marginTop: '10vh'}}>
-                  <Typography variant="h5">You haven't added any items to your list</Typography>
+                  <Typography variant='h5'>You haven't added any items to your list</Typography>
                 </Container>
                 : 
                 data.map((item, index) => (
@@ -371,7 +374,7 @@ class Profile extends Component {
                 ))
               }
 
-                <Container style={data.length > 0 ? {marginTop: '5vh'} : null }>
+                <Container style={{marginTop: '5vh'}}>
                   <Button variant="outlined" className={classes.button} onClick={this.openAddForm}>
                     <Typography className={classes.buttonText}>
                       Add Item
@@ -414,7 +417,7 @@ class Profile extends Component {
                 <TextField
                   multiline={true}
                   margin="dense"
-                  label="Additional notes (sizes, colors, etc.)"
+                  label="Notes (sizes, colors, etc.)"
                   type="name"
                   fullWidth
                   className={classes.textInput}
@@ -470,7 +473,7 @@ class Profile extends Component {
                 <TextField
                   multiline={true}
                   margin="dense"
-                  label="Additional notes (sizes, colors, etc.)"
+                  label="Notes (sizes, colors, etc.)"
                   type="name"
                   fullWidth
                   className={classes.textInput}

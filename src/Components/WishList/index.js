@@ -200,7 +200,7 @@ class WishList extends Component {
                   ))]
                 }
 
-                <Container style={data.length > 0 ? {marginTop: '5vh'} : null }>
+                <Container style={{marginTop: '5vh'}}>
                   <DomLink to="/groups/my-groups" style={{ textDecoration: 'none', color: '#4f92ff' }}>
                       <Button 
                         variant="outlined"
