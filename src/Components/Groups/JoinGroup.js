@@ -213,7 +213,7 @@ class JoinGroup extends Component {
 
                 <Typography className={classes.link}>
                   <Link to="/groups/create-group" style={{ textDecoration: 'none', color: '#4f92ff' }}>
-                    Haven't created a group? You can create one here.
+                    Haven't created a group? You can create one by clicking here.
                   </Link>
                 </Typography>
 
