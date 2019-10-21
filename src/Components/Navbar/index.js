@@ -46,7 +46,7 @@ function Navbar(props) {
                 
                 <div className={classes.link}>
                     <Typography>
-                        <Link to="/Profile" style={{ textDecoration: 'none', color: 'white' }} onClick={() => setTab('Profile')}>My List</Link>
+                        <Link to="/profile" style={{ textDecoration: 'none', color: 'white' }} onClick={() => setTab('Profile')}>My List</Link>
                     </Typography>
                         {activeTab === 'Profile' ?
                             <div style={{height: '2px', width:'52px', backgroundColor: 'white'}} />
