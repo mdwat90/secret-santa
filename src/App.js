@@ -8,6 +8,7 @@ import WishList from './Components/WishList';
 import { connect } from 'react-redux';
 
 import {
+  HashRouter,
   BrowserRouter as Router,
   Route,
   Link,
@@ -41,22 +42,24 @@ class Main extends Component {
     render() {
         const {loggedIn, new_user} = this.props;
         return (
-          <Router>
-            <div>
-              {loggedIn ?
-                <Navbar {...this.props} />
-              :
-                null
-              }
+          <HashRouter basename='/'>
+            <Router>
               <div>
-                  <Route path='/register' exact render = {(props) => <Register {...props}  /> } />
-                  <Route path='/profile' render = {(props) => loggedIn ? <Profile {...props} /> : <Redirect to='/'/> } />
-                  <Route path='/wish-list/:id' render = {(props) => loggedIn ? <WishList {...props} /> : <Redirect to='/'/> } />
-                  <Route path='/' exact render = {(props) => loggedIn ? <Redirect to='/groups/my-groups'/> : <Login {...props}  />} />
-                  <PrivateRoute path='/groups' {...this.props} component = {Groups} />
+                {loggedIn ?
+                  <Navbar {...this.props} />
+                :
+                  null
+                }
+                <div>
+                    <Route path='/register' exact render = {(props) => <Register {...props}  /> } />
+                    <Route path='/profile' render = {(props) => loggedIn ? <Profile {...props} /> : <Redirect to='/'/> } />
+                    <Route path='/wish-list/:id' render = {(props) => loggedIn ? <WishList {...props} /> : <Redirect to='/'/> } />
+                    <Route path='/' exact render = {(props) => loggedIn ? <Redirect to='/groups/my-groups'/> : <Login {...props}  />} />
+                    <PrivateRoute path='/groups' {...this.props} component = {Groups} />
+                </div>
               </div>
-            </div>
-          </Router>
+            </Router>
+          </HashRouter>
         ) 
     }
 }
