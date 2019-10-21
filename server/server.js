@@ -25,7 +25,8 @@ const dbRoute = process.env.MONGO;
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Mongoose boilerplate
-mongoose.connect(dbRoute, { useNewUrlParser: true });
+mongoose.connect(dbRoute);
+mongoose.set( { useNewUrlParser: true });
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
