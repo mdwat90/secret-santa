@@ -2,6 +2,9 @@
   "name": "xmas-app",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "10.15.0"
+  },
   "dependencies": {
     "@material-ui/core": "^4.5.0",
     "@material-ui/icons": "^4.5.1",
@@ -23,6 +26,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "heroku-prebuild": "cd server && node server.js",
     "heroku-postbuild": "yarn run build"
   },
   "eslintConfig": {
