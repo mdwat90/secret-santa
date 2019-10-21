@@ -6,7 +6,6 @@ const logger = require('morgan');
 const bcrypt = require('bcrypt');
 const sgMail = require('@sendgrid/mail');
 const saltRounds = 10;
-const path = require('path');
 const ItemSchema = require('./Models/ItemSchema/schema');
 const UserSchema = require('./Models/UserSchema/schema');
 const GroupSchema = require('./Models/GroupSchema/schema');
@@ -762,12 +761,5 @@ app.get('/api/getUserGroups', function(req, response) {
 })
 
 
-if(process.env.NODE_ENV === 'production') {
-    app.use(express.static( '../build' ));
-
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../', 'build', 'index.html'));
-    })
-}
 
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
