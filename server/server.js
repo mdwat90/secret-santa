@@ -767,7 +767,7 @@ app.get('/api/getUserGroups', function(req, response) {
 })
 
 // ... other app.use middleware l
-// app.use(express.static(path.join(__dirname, "../build")))
+app.use(express.static(path.join(__dirname, "../build")))
 
 // ...
 // Right before your app.listen(), add this:
