@@ -195,7 +195,7 @@ class Profile extends Component {
       var validateLink = link.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
       if(validateLink === null) {
         // console.log('NOT A VALID LINK')
-        this.setState({
+        component.setState({
           linkError: true
         })
       }
@@ -203,7 +203,7 @@ class Profile extends Component {
         // console.log('GOOD TO GO')
         component.closeAddForm();
   
-        this.setState({
+        component.setState({
           linkError: false
         })
         axios.post('/api/newItem', {
@@ -214,6 +214,11 @@ class Profile extends Component {
         })
         .then(function (response) {
           // console.log('AXIOS RESPONSE:', response)
+          component.setState({
+            description: null,
+            link: null,
+            notes: null
+          })
           component.getUserData(component.props.user_info._id);
         })
         .catch(function (error) {
@@ -224,7 +229,7 @@ class Profile extends Component {
     else {
       component.closeAddForm();
 
-        this.setState({
+      component.setState({
           linkError: false
         })
         axios.post('/api/newItem', {
@@ -235,6 +240,11 @@ class Profile extends Component {
         })
         .then(function (response) {
           // console.log('AXIOS RESPONSE:', response)
+          component.setState({
+            description: null,
+            link: null,
+            notes: null
+          })
           component.getUserData(component.props.user_info._id);
         })
         .catch(function (error) {
@@ -282,7 +292,7 @@ class Profile extends Component {
         // console.log('GOOD TO GO')
         component.closeEditForm();
   
-        this.setState({
+        component.setState({
           linkError: false
         })
         axios.post('/api/updateItem', {
@@ -292,6 +302,11 @@ class Profile extends Component {
         })
         .then(function (response) {
           // console.log('AXIOS RESPONSE:', response)
+          component.setState({
+            description: null,
+            link: null,
+            notes: null
+          })
           component.getUserData(component.props.user_info._id);
         })
         .catch(function (error) {
@@ -310,6 +325,11 @@ class Profile extends Component {
       })
       .then(function (response) {
         // console.log('AXIOS RESPONSE:', response)
+        component.setState({
+          description: null,
+          link: null,
+          notes: null
+        })
         component.getUserData(component.props.user_info._id);
       })
       .catch(function (error) {
