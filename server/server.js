@@ -24,7 +24,8 @@ const dbRoute = process.env.MONGO;
 
 // console.log('DB ROUTE:', dbRoute);
 
-// console.log('SEND GRID API KEY:', process.env.SEND_GRID_API_KEY)
+// console.log('SEND GRID API KEY:', process.env.SENDGRID_API_KEY)
+
 // SendGrid Setup
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -72,7 +73,7 @@ app.post('/api/newUser', function(req, response) {
                     const msg = {
                         // TODO: send to user.email
                         to: user.email,
-                        from: 'secret-santa-app@secretsanta.com',
+                        from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                         subject: 'Welcome!',
                         text: 'Welcome to the secret santa app!',
                         html: `<strong>Welcome to the secret santa app!</strong>
@@ -195,7 +196,7 @@ app.post('/api/newItem', function(req, response) {
                                     const msg = {
                                         // TODO: send to member.email
                                         to: member.email,
-                                        from: 'secret-santa-app@secretsanta.com',
+                                        from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                                         subject: `New Item on ${upperCaseName}'s wishlist`,
                                         text: `${upperCaseName} added a new item to their wishlist.`,
                                         html: `<strong>${upperCaseName} added the following item to their wishlist:</strong>
@@ -262,7 +263,7 @@ app.post('/api/updateItem', function(req, response) {
                                     const msg = {
                                         // TODO: send to member.email
                                         to: member.email,
-                                        from: 'secret-santa-app@secretsanta.com',
+                                        from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                                         subject: `Update to ${upperCaseName}'s wishlist`,
                                         text: `${upperCaseName} updated an item on their wishlist.`,
                                         html: `<strong>${upperCaseName} updated the following item on their wishlist:</strong>
@@ -330,7 +331,7 @@ app.delete('/api/deleteItem', function(req, response) {
                                     const msg = {
                                         // TODO: send to member.email
                                         to: member.email,
-                                        from: 'secret-santa-app@secretsanta.com',
+                                        from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                                         subject: `${upperCaseName}'s deleted an item from their wishlist`,
                                         text: `${upperCaseName} deleted an item from their wishlist.`,
                                         html: `<strong>${upperCaseName} deleted the following item from their wishlist:</strong>
@@ -442,7 +443,7 @@ app.post('/api/joinGroup', function(req, response) {
                                         const msg = {
                                             // TODO: send to member.email
                                             to: member.email,
-                                            from: 'secret-santa-app@secretsanta.com',
+                                            from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                                             subject: `${upperCaseName} has joined the ${upperCaseGroup} group.`,
                                             text: `${upperCaseName} has joined the ${upperCaseGroup} group.`,
                                             html: `<strong>${upperCaseName} has joined the ${upperCaseGroup} group.</strong>`,
@@ -457,7 +458,7 @@ app.post('/api/joinGroup', function(req, response) {
                                         const msg = {
                                             // TODO: send to member.email
                                             to: member.email,
-                                            from: 'secret-santa-app@secretsanta.com',
+                                            from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                                             subject: `Name drawing for ${upperCaseGroup} group.`,
                                             text: `The ${upperCaseGroup} group is now full.`,
                                             html: `<strong>The ${upperCaseGroup} group is now full and ready for you to draw a name!</strong>`,
@@ -505,7 +506,7 @@ app.delete('/api/deleteGroup', function(req, response) {
                 const msg = {
                     // TODO: send to member.email
                     to: member.email,
-                    from: 'secret-santa-app@secretsanta.com',
+                    from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                     subject: `The ${upperCaseGroup} group was deleted`,
                     text: `The ${upperCaseGroup} group was deleted`,
                     html: `<strong>The ${upperCaseGroup} group was deleted. Contact ${upperCaseName} for details.</strong>`,
@@ -533,7 +534,8 @@ app.post('/api/selectUser', function(req, response) {
             $elemMatch: {
                 uid: {$ne: userId },
                 selected: {$eq: false},
-                selectedBy: {$ne: userId}
+                selectedBy: {$ne: userId},
+                uidSelected: {$ne: userId}
             }}
         }, update, {new: true}, function (err, res) {
         if(err) {
@@ -606,7 +608,7 @@ app.delete('/api/removeMember', function(req, response) {
                         const msg = {
                             // TODO: send to member.email
                             to: member.email,
-                            from: 'secret-santa-app@secretsanta.com',
+                            from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                             subject: `${upperCaseName} removed from ${upperCaseGroup} group`,
                             text: `You were removed from the ${upperCaseGroup} group.`,
                             html: `<strong>You were removed from the ${upperCaseGroup} group. Contact ${groupAdmin}, the group admin, for details.</strong>`,
@@ -634,7 +636,7 @@ app.delete('/api/removeMember', function(req, response) {
                                 const msg = {
                                     // TODO: send to member.email
                                     to: member.email,
-                                    from: 'secret-santa-app@secretsanta.com',
+                                    from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                                     subject: `${upperCaseName} removed from ${upperCaseGroup} group`,
                                     text: `${upperCaseName} was removed from the ${upperCaseGroup} group.`,
                                     html: `<strong>${upperCaseName} was removed from the ${upperCaseGroup} group. 
@@ -732,7 +734,7 @@ app.post('/api/clearSelections', function(req, response) {
                     const msg = {
                         // TODO: send to member.email
                         to: member.email,
-                        from: 'secret-santa-app@secretsanta.com',
+                        from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                         subject: `Name drawing reset for the ${upperCaseGroup} group`,
                         text: `${groupAdmin} has reset the name drawing for the ${upperCaseGroup} group`,
                         html: `<strong>${groupAdmin} has reset the name drawing for the ${upperCaseGroup} group. 
