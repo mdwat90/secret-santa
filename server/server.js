@@ -81,6 +81,9 @@ app.post('/api/newUser', function(req, response) {
                                 add items to your wishlist, 
                                 and draw a name for secret santa.</p>
                                 <p>Merry Christmas and Happy Holidays!</p>
+                                <br>
+                                <br>
+                                <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
                         `,
                     };
                     sgMail.send(msg);
@@ -203,7 +206,12 @@ app.post('/api/newItem', function(req, response) {
                                                   <br>
                                                 <p>Description: ${res.description}</p>
                                                 ${res.link !== null ? `<p>Link: ${res.link} </p>` : `<p/>`}
-                                                <p>Notes: ${res.notes} </p>`,
+                                                <p>Notes: ${res.notes} </p>
+                                                <br>
+                                                <br>
+                                                <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
+                                                `
+                                                
                                     };
                                     sgMail.send(msg);
                                 }
@@ -270,7 +278,11 @@ app.post('/api/updateItem', function(req, response) {
                                                  <br>
                                                <p>Description: ${update.description}</p>
                                                ${update.link !== null ? `<p>Link: ${update.link} </p>` : `<p/>`}
-                                               <p>Notes: ${update.notes} </p>`,
+                                               <p>Notes: ${update.notes} </p>
+                                               <br>
+                                                <br>
+                                                <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
+                                               `,
                                     };
                                     sgMail.send(msg).then(() => {
                                         console.log('EMAIL SENT SUCCESSFULLY')
@@ -338,7 +350,11 @@ app.delete('/api/deleteItem', function(req, response) {
                                                  <br>
                                                <p>Description: ${res.description}</p>
                                                ${res.link !== null ? `<p>Link: ${res.link} </p>` : `<p/>`}
-                                               <p>Notes: ${res.notes} </p>`,
+                                               <p>Notes: ${res.notes} </p>
+                                               <br>
+                                                <br>
+                                                <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
+                                               `,
                                     };
                                     sgMail.send(msg);
                                 }
@@ -446,7 +462,11 @@ app.post('/api/joinGroup', function(req, response) {
                                             from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                                             subject: `${upperCaseName} has joined the ${upperCaseGroup} group.`,
                                             text: `${upperCaseName} has joined the ${upperCaseGroup} group.`,
-                                            html: `<strong>${upperCaseName} has joined the ${upperCaseGroup} group.</strong>`,
+                                            html: `<strong>${upperCaseName} has joined the ${upperCaseGroup} group.</strong>
+                                                <br>
+                                                <br>
+                                                <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
+                                            `,
                                         };
                                         sgMail.send(msg);
                                     }
@@ -461,7 +481,11 @@ app.post('/api/joinGroup', function(req, response) {
                                             from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                                             subject: `Name drawing for ${upperCaseGroup} group.`,
                                             text: `The ${upperCaseGroup} group is now full.`,
-                                            html: `<strong>The ${upperCaseGroup} group is now full and ready for you to draw a name!</strong>`,
+                                            html: `<strong>The ${upperCaseGroup} group is now full and ready for you to draw a name!</strong>
+                                                <br>
+                                                <br>
+                                                <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
+                                            `,
                                         };
                                         sgMail.send(msg);
                                 })
@@ -509,7 +533,11 @@ app.delete('/api/deleteGroup', function(req, response) {
                     from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                     subject: `The ${upperCaseGroup} group was deleted`,
                     text: `The ${upperCaseGroup} group was deleted`,
-                    html: `<strong>The ${upperCaseGroup} group was deleted. Contact ${upperCaseName} for details.</strong>`,
+                    html: `<strong>The ${upperCaseGroup} group was deleted. Contact ${upperCaseName} for details.</strong>
+                            <br>
+                            <br>
+                            <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
+                    `,
                 };
                 sgMail.send(msg);
             })
@@ -611,7 +639,11 @@ app.delete('/api/removeMember', function(req, response) {
                             from: 'secret-santa-app@secret-santa-19.herokuapp.com',
                             subject: `${upperCaseName} removed from ${upperCaseGroup} group`,
                             text: `You were removed from the ${upperCaseGroup} group.`,
-                            html: `<strong>You were removed from the ${upperCaseGroup} group. Contact ${groupAdmin}, the group admin, for details.</strong>`,
+                            html: `<strong>You were removed from the ${upperCaseGroup} group. Contact ${groupAdmin}, the group admin, for details.</strong>
+                                    <br>
+                                    <br>
+                                    <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
+                            `,
                         };
                         sgMail.send(msg);
                     }
@@ -640,7 +672,11 @@ app.delete('/api/removeMember', function(req, response) {
                                     subject: `${upperCaseName} removed from ${upperCaseGroup} group`,
                                     text: `${upperCaseName} was removed from the ${upperCaseGroup} group.`,
                                     html: `<strong>${upperCaseName} was removed from the ${upperCaseGroup} group. 
-                                        You will have to login and redraw a name for this group once all members have joined.</strong>`,
+                                        You will have to login and redraw a name for this group once all members have joined.</strong>
+                                        <br>
+                                        <br>
+                                        <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
+                                        `,
                                 };
                                 sgMail.send(msg);
 
@@ -738,7 +774,11 @@ app.post('/api/clearSelections', function(req, response) {
                         subject: `Name drawing reset for the ${upperCaseGroup} group`,
                         text: `${groupAdmin} has reset the name drawing for the ${upperCaseGroup} group`,
                         html: `<strong>${groupAdmin} has reset the name drawing for the ${upperCaseGroup} group. 
-                        You will have to login and redraw a name for this group once all members have joined.</strong>`,
+                        You will have to login and redraw a name for this group once all members have joined.</strong>
+                        <br>
+                        <br>
+                        <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
+                        `,
                     };
                     sgMail.send(msg);
                 })
