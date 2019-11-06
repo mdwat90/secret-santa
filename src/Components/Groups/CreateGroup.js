@@ -6,7 +6,7 @@ import { connectionError } from '../../actions/UserActions';
 import { groupExistsError, createGroupSuccess, joinGroupSuccess } from '../../actions/GroupActions';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { withStyles } from '@material-ui/styles';
-import { Button, Container, Box, Typography, TextField, Grid } from '@material-ui/core';
+import { Button, Container, Box, Typography, TextField, Grid, Switch, FormLabel } from '@material-ui/core';
 
 const styles = {
   root: {
@@ -65,7 +65,8 @@ class CreateGroup extends Component {
   constructor(props) {
     super(props)
     this.state={
-      groupCreated: false
+      groupCreated: false,
+      nameDrawing: true,
     }
   }
 
@@ -73,6 +74,14 @@ class CreateGroup extends Component {
     if(prevProps.loggedIn !== this.props.loggedIn) {
       this.props.history.push('/profile')
     }
+  }
+
+  handleSwitch = () => {
+    this.setState({
+      nameDrawing: !this.state.nameDrawing
+    }, () => {
+      console.log('NAME DRAWING:', this.state.nameDrawing)
+    })
   }
 
   createGroup = (data) => {
@@ -86,6 +95,7 @@ class CreateGroup extends Component {
         adminName: data.adminName,
         adminEmail: data.adminEmail.toLowerCase().trim(),
         confirmPassword: data.confirmPassword,
+        nameDrawing: data.nameDrawing,
         memberCount: data.memberCount,
         name: data.name.toLowerCase().trim(),
         password: data.password.trim()
@@ -117,8 +127,6 @@ class CreateGroup extends Component {
   render() {
     const {user_info, classes} = this.props;
 
-    // console.log('USER INFO:', user_info)
-
     return (
       this.state.groupCreated ? 
         <Container style={{ marginTop: '5vh'}}>
@@ -130,7 +138,7 @@ class CreateGroup extends Component {
             <Grid item xl ={6} lg={7} md={10} xs={12}>
               <Container className={classes.form}>
                 <Formik
-                  initialValues={{ admin: user_info._id, adminName: user_info.name, adminEmail: user_info.email, name: '', password: '', confirmPassword: '', memberCount: '' }}
+                  initialValues={{ admin: user_info._id, adminName: user_info.name, adminEmail: user_info.email, name: '', password: '', nameDrawing: false, confirmPassword: '', memberCount: '' }}
                   validate={values => {
                     let errors = {};
                     if (!values.name) {
@@ -216,6 +224,8 @@ class CreateGroup extends Component {
                       <div>
                         <Typography style={{color: 'red'}}>{errors.confirmPassword}</Typography>
                       </div>
+                      
+                      
 
                       <div>
                         {/* <Typography variant='h5' className={classes.title}>Number of Members</Typography> */}
@@ -235,11 +245,56 @@ class CreateGroup extends Component {
                       <div>
                         {/* <Typography style={{color: 'red'}}>{errors.memberCount}</Typography> */}
                       </div>
+
+                      <div style={{marginTop: '5vh'}}>
+                        <FormLabel>Enable Name Drawing</FormLabel>
+                      </div>
+                        
+                      <Grid
+                          component="label" 
+                          container 
+                          style={{
+                            justifyContent: 'center'
+                          }}
+                          alignItems="center" 
+                          spacing={1}
+                      >
+                        <Grid 
+                          item
+                          component="label" 
+                          container 
+                          style={{
+                            width: 150,
+                            justifyContent: 'center'
+                          }}
+                          alignItems="center" 
+                          spacing={1}
+                        >
+                          <Typography>
+                            <Grid item>Off</Grid>
+                          </Typography>
+                          <Grid item>
+                            <Switch
+                              checked={values.nameDrawing}
+                              name="nameDrawing"
+                              label="Enable Name Drawing"
+                              onChange={handleChange}
+                              value={values.nameDrawing}
+                              inputProps={{ 'aria-label': 'secondary checkbox' }}
+                            />
+                          </Grid>
+                          <Typography>
+                            <Grid item>On</Grid>
+                          </Typography>
+                        </Grid>
+                      </Grid>
+
                       <div>
                         <Button type="submit" className={classes.button}>
                           Create Group
                         </Button>
                       </div>
+                      
                     </form>
                   )}
                 </Formik>

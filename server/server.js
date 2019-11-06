@@ -86,7 +86,7 @@ app.post('/api/newUser', function(req, response) {
                                 <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
                         `,
                     };
-                    sgMail.send(msg);
+                    // sgMail.send(msg);
                 }
             })
         }
@@ -213,7 +213,7 @@ app.post('/api/newItem', function(req, response) {
                                                 `
                                                 
                                     };
-                                    sgMail.send(msg);
+                                    // sgMail.send(msg);
                                 }
                             })
                         })
@@ -284,11 +284,7 @@ app.post('/api/updateItem', function(req, response) {
                                                 <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
                                                `,
                                     };
-                                    sgMail.send(msg).then(() => {
-                                        console.log('EMAIL SENT SUCCESSFULLY')
-                                    }).catch((error) => {
-                                        console.log('ERROR SENDING EMAIL:', error)
-                                    });
+                                    // sgMail.send(msg);
                                 }
                             })
                         })
@@ -356,7 +352,7 @@ app.delete('/api/deleteItem', function(req, response) {
                                                 <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
                                                `,
                                     };
-                                    sgMail.send(msg);
+                                    // sgMail.send(msg);
                                 }
                             })
                         })
@@ -385,6 +381,7 @@ app.post('/api/newGroup', function(req, response) {
                 admin: group.admin, 
                 name: group.name, 
                 password: hash, 
+                nameDrawing: group.nameDrawing,
                 memberCount: group.memberCount - 1, 
                 members: [{uid: group.admin, name: group.adminName, email: group.adminEmail, selected: false, selectedBy: null, uidSelected: null }]}).save((err, res) => {
                 if(err) {
@@ -468,7 +465,7 @@ app.post('/api/joinGroup', function(req, response) {
                                                 <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
                                             `,
                                         };
-                                        sgMail.send(msg);
+                                        // sgMail.send(msg);
                                     }
                                 })
 
@@ -487,7 +484,7 @@ app.post('/api/joinGroup', function(req, response) {
                                                 <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
                                             `,
                                         };
-                                        sgMail.send(msg);
+                                        // sgMail.send(msg);
                                 })
                                 }
                             }
@@ -539,7 +536,7 @@ app.delete('/api/deleteGroup', function(req, response) {
                             <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
                     `,
                 };
-                sgMail.send(msg);
+                // sgMail.send(msg);
             })
         }
     })
@@ -553,7 +550,7 @@ app.post('/api/selectUser', function(req, response) {
     // console.log(userId)
 
     let update = {
-        $set: {'members.$.selected': true, 'members.$.selectedBy': userId}
+        $set: { 'members.$.selected': true, 'members.$.selectedBy': userId }
     }
 
     GroupSchema.findOneAndUpdate({
@@ -563,7 +560,7 @@ app.post('/api/selectUser', function(req, response) {
                 uid: {$ne: userId },
                 selected: {$eq: false},
                 selectedBy: {$ne: userId},
-                uidSelected: {$ne: userId}
+                uidSelected: { $ne: userId }
             }}
         }, update, {new: true}, function (err, res) {
         if(err) {
@@ -645,7 +642,7 @@ app.delete('/api/removeMember', function(req, response) {
                                     <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
                             `,
                         };
-                        sgMail.send(msg);
+                        // sgMail.send(msg);
                     }
                 })
 
@@ -678,7 +675,7 @@ app.delete('/api/removeMember', function(req, response) {
                                         <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
                                         `,
                                 };
-                                sgMail.send(msg);
+                                // sgMail.send(msg);
 
                                 if(member.selectedBy === userId) {
                                     let update = {
@@ -780,7 +777,7 @@ app.post('/api/clearSelections', function(req, response) {
                         <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
                         `,
                     };
-                    sgMail.send(msg);
+                    // sgMail.send(msg);
                 })
             }
         }

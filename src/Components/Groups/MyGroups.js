@@ -28,6 +28,8 @@ import {
 import SettingsIcon from '@material-ui/icons/Settings';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import NameDrawingCard from './Cards/nameDrawCard';
+import GeneralGroupCard from './Cards/generalGroupCard';
 
 const styles = {
   root: {
@@ -117,6 +119,7 @@ class Groups extends Component {
       removeUserModal: false,
       resetDrawingModal: false,
       deleteGroupModal: false,
+      nameDrawing: false,
       groupId: null,
       deleteUid: null,
       loading: null
@@ -141,96 +144,6 @@ class Groups extends Component {
       this.props.history.push('/profile');
     }
   }
-  
-  openOptionsMenu = (event) => {
-    // console.log('EVENT::', event.currentTarget.getAttribute('groupid'))
-    this.setState({
-      anchorEl: event.currentTarget,
-      groupId: event.currentTarget.getAttribute('groupid')
-    })
-  }
-  
-  closeOptionsMenu = () => {
-    this.setState({
-      anchorEl: null,
-      groupId: null
-    })
-  }
-
-  openDeleteModal = (groupId, memberId) => {
-    // console.log('Group:::', groupId)
-    // console.log('User:::', memberId)
-    // console.log('OPENING DELETE MODAL')
-    this.setState({
-      deleteUserModal: true,
-      deleteUid: memberId,
-      groupId: groupId
-    })
-  };
-
-  closeDeleteModal = () => {
-    this.setState({
-      deleteUserModal: false,
-      deleteUid: null,
-      groupId: null
-    })
-  };
-  
-  openRemoveModal = (groupId, memberId) => {
-    // console.log('Group:::', groupId)
-    // console.log('User:::', memberId)
-    // console.log('OPENING REMOVE MODAL')
-    this.setState({
-      removeUserModal: true,
-      deleteUid: memberId,
-      groupId: groupId
-    })
-  };
-
-  closeRemoveModal = () => {
-    this.setState({
-      removeUserModal: false,
-      deleteUid: null,
-      groupId: null
-    })
-  };
-
-  openResetDrawingModal = (groupId) => {
-    // console.log('Group:::', groupId)
-    // console.log('User:::', memberId)
-    // console.log('OPENING REMOVE MODAL')
-    this.setState({
-      resetDrawingModal: true,
-      groupId: groupId
-    })
-  };
-
-  closeResetDrawingModal = () => {
-    this.setState({
-      resetDrawingModal: false,
-      deleteUid: null,
-      groupId: null
-    })
-  };
-
-  
-  openDeleteGroupModal = (groupId) => {
-    // console.log('Group:::', groupId)
-    // console.log('User:::', memberId)
-    // console.log('OPENING REMOVE MODAL')
-    this.setState({
-      deleteGroupModal: true,
-      groupId: groupId
-    })
-  };
-
-  closeDeleteGroupModal = () => {
-    this.setState({
-      deleteGroupModal: false,
-      groupId: null
-    })
-  };
-
 
   getUserGroups = (userId) => {
     this.setState({
@@ -243,6 +156,7 @@ class Groups extends Component {
       }
     })
       .then((res) => {
+        console.log('RESPONSE:', res.data)
         this.setState({ userGroups: res.data, loading: false })
     })
     .catch(error => {
@@ -250,114 +164,10 @@ class Groups extends Component {
     })
   };
 
-  getSelectedUsersData = (id) => {
-    axios.get('/api/getSelectedUsersItems', {
-      params: {
-        user_id: id
-      }
-    })
-      .then((res) => this.setState({ selectedUsersData: res.data }))
-  };
-
-
-  deleteGroup = (idTodelete) => {
-    let component = this;
-
-    this.setState({
-      anchorEl: null,
-      groupId: null
-    })
-
-    // console.log('ID OF GROUP>', idTodelete)
-    axios.delete('/api/deleteGroup', {
-      data: {
-        _id: idTodelete,
-      },
-    })
-    .then(function (response) {
-      // console.log('AXIOS RESPONSE:', response)
-      component.closeDeleteGroupModal();
-      component.getUserGroups(component.props.user_info._id);
-    })
-    .catch(function (error) {
-      // console.log('AXIOS ERROR:', error)
-    })
-    ;
-  };
-  
-  clearSelections = (groupId, removingMember) => {
-    let component = this;
-
-    this.setState({
-      anchorEl: null,
-      groupId: null
-    })
-
-    // console.log('ID OF GROUP>', idTodelete)
-    axios.post('/api/clearSelections', {
-      data: {
-        group_id: groupId,
-        removingMember: removingMember
-      },
-    })
-    .then(function (response) {
-      // console.log('AXIOS RESPONSE:', response)
-      component.closeResetDrawingModal();
-      component.getUserGroups(component.props.user_info._id);
-    })
-    .catch(function (error) {
-      // console.log('AXIOS ERROR:', error)
-    })
-    ;
-  };
-
-  removeMember = (groupId, userId) => {
-    let component = this;
-
-    axios.delete('/api/removeMember', {
-      data: {
-        group_id: groupId,
-        uid: userId,
-      },
-    })
-    .then(function (response) {
-      console.log('AXIOS RESPONSE:', response)
-      component.closeDeleteModal();
-      component.closeRemoveModal();
-      component.clearSelections(groupId, true);
-      component.getUserGroups(component.props.user_info._id);
-    })
-    .catch(function (error) {
-      // console.log('AXIOS ERROR:', error)
-    })
-    ;
-  };
-
-  drawName = (groupId, userId) => {
-    let component = this;
-
-    // console.log('GROUP ID:', groupId)
-    // console.log('USER ID:', userId)
-    axios.post('/api/selectUser', {
-      group_id: groupId,
-      user_id: userId
-    })
-    .then(function (response) {
-      // console.log('DRAW NAME AXIOS RESPONSE:', response)
-       if (response.data === '') {
-          // console.log('SELECT USER ERROR!!')
-      }
-      else {
-        // console.log('USER SELECTED:', response)
-        component.getUserGroups(component.props.user_info._id);
-        // component.getSelectedUsersData(response.data._id);
-      }
-        
-    })
-    .catch(function (error) {
-      // console.log('DRAW NAME AXIOS ERROR:', error)
-    })
-  } 
+  routeChange(uid, name) {
+    let path = `/wish-list/${uid}`;
+    this.history.push(path, {user: name});
+  }
 
   render() {
     const { user_info, classes } = this.props;
@@ -374,8 +184,6 @@ class Groups extends Component {
                 container  
                 wrap='wrap' 
                 direction='row' 
-                // alignContent={'center'} 
-                // alignItems={'flex-start'} 
                 spacing={3}
               >
                 {this.state.userGroups.length <= 0 && this.state.loading === false ? 
@@ -385,163 +193,14 @@ class Groups extends Component {
                   </Container>
                   :
                   this.state.userGroups.map((group, idx) => {
-                    let groupName = group.name;
-                    const upperCaseGroup = groupName.replace(/^\w/, c => c.toUpperCase());
 
                     return (
                       <Grid item xs={12} md={6} lg={4} key={group._id}>
-                        <Card className={classes.card} style={{minHeight: '30vh'}} key={idx}>
-                          <Grid container>
-                            <Grid item style={{ flex: 1 }}>
-                              <Typography variant='h4' className={classes.title} key={idx}>{upperCaseGroup}</Typography>
-                            </Grid>
-                            {group.admin === user_info._id ?
-                              <Grid item style={{ position:'relative', right: 25, bottom: 10 }}>
-                                <SettingsIcon className={classes.icon} groupid={group._id} aria-controls="simple-menu" aria-haspopup="true" onClick={(event) => this.openOptionsMenu(event)} />
-                                <Menu
-                                  id="simple-menu"
-                                  anchorEl={this.state.anchorEl}
-                                  keepMounted
-                                  transformOrigin={{horizontal: 'right', vertical: -30}}
-                                  open={Boolean(this.state.anchorEl)}
-                                  onClose={this.closeOptionsMenu}
-                                >
-                                  <MenuItem onClick={() => this.openResetDrawingModal(this.state.groupId)}>Reset Drawing</MenuItem>
-                                  <MenuItem onClick={() => this.openDeleteGroupModal(this.state.groupId)} className={classes.delete}>Delete Group</MenuItem>
-                                </Menu>
-                              </Grid>
-                              :
-                              null
-                            }
-                          </Grid>
-
-                          {group.memberCount !== 0 ?
-                            group.memberCount === 1 ?
-                              <Typography variant='body1' key={idx}>{group.memberCount} spot left</Typography>
-                              :
-                              <Typography variant='body1' key={idx}>{group.memberCount} spots left</Typography>
-                          :
-                            null
-                          }
-
-                          <ExpansionPanel className={classes.panel}>
-                            <ExpansionPanelSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls="panel1a-content"
-                              id="panel1a-header"
-                            >
-                              <Typography variant='h6'>Members</Typography>
-                            </ExpansionPanelSummary>
-                              <ExpansionPanelDetails>
-                                <Grid 
-                                  container  
-                                  wrap='wrap' 
-                                  direction='row' 
-                                  alignContent={'flex-start'} 
-                                  alignItems={'flex-start'} 
-                                  spacing={3}
-                                >
-                                  {group.members.map((member, index) => {
-
-                                    //member is NOT current user and current user is the group admin
-                                    if ((member.uid !== user_info._id) && (group.admin === user_info._id)) {
-                                      return (
-                                        <div key={index}>
-                                          {member.selectedBy === this.props.user_info._id ?
-                                            <Grid item style={{margin: '1vh'}}>
-                                              <Chip label={member.name.toUpperCase()} style={{backgroundColor: '#4f92ff', color: 'white'}} onDelete={() => this.openDeleteModal(group._id, member.uid)} />
-                                            </Grid>
-                                            :
-                                            <Grid item style={{margin: '1vh'}}>
-                                              <Chip label={member.name.toUpperCase()} onDelete={() => this.openDeleteModal(group._id, member.uid)} />
-                                            </Grid>
-                                          }
-                                        </div>
-                                        )
-                                    }
-                                    
-                                    //member is current user and current user is NOT the group admin
-                                    else if ((member.uid === user_info._id) && (group.admin !== user_info._id)) {
-                                      return (
-                                        <div key={index}>
-                                            <Grid item style={{margin: '1vh'}}>
-                                              <Chip label={member.name.toUpperCase()} onDelete={() => this.openRemoveModal(group._id, member.uid)}/>
-                                            </Grid>
-                                        </div>
-                                        )
-                                    }
-                                    else {
-                                      return (
-                                        <div key={index}>
-                                          {member.selectedBy === this.props.user_info._id ?
-                                            <Grid item style={{margin: '1vh'}}>
-                                              <Chip style={{backgroundColor: '#4f92ff', color: 'white'}} label={member.name.toUpperCase()}/>
-                                            </Grid>
-                                            :
-                                            <Grid item style={{margin: '1vh'}}>
-                                              <Chip label={member.name.toUpperCase()} />
-                                            </Grid>
-                                          }
-                                        </div>
-                                        )
-                                    }
-                                  })}
-                                </Grid>
-                              </ExpansionPanelDetails>
-                          </ExpansionPanel>
-
-
-                          {group.memberCount !== 0 ?
-                            <div>
-                              <Typography variant='body1' className={classes.subText}>Once everyone joins the group, you can draw a name here.</Typography>
-                            </div>
-                            :
-                            null
-                            }
-
-
-                            {group.members.map((member, index) => {
-
-                              if(member.uid === this.props.user_info._id && member.uidSelected === null && group.memberCount === 0) {
-                                return (
-                                  <div key={index}>
-                                    <Button 
-                                      variant="outlined"
-                                      disabled={false} 
-                                      className={classes.drawButton} 
-                                      onClick={() => this.drawName(group._id, this.props.user_info._id)}
-                                    >
-                                      <Typography>
-                                        Draw
-                                      </Typography>
-                                    </Button>
-                                  </div>
-                                )
-                              }
-                              
-                              else if(member.selectedBy === this.props.user_info._id) {
-                                return (
-                                  <Container key={index}>
-                                    <Typography style={{margin: '4vh'}}>
-                                      You drew {' '}
-                                        <Link  
-                                          to={{
-                                            pathname: `/wish-list/${member.uid}`,
-                                            state: {
-                                              user: member.name
-                                            }
-                                          }}
-                                          style={{textDecoration: 'none'}}> 
-                                            <Chip style={{backgroundColor: '#4f92ff', color: 'white', cursor:'pointer'}} label={member.name.toUpperCase()}/>
-                                          </Link>
-                                      </Typography>
-                                      <Typography className={classes.subText}>You can click their name to see their wish list.</Typography>
-                                  </Container>
-                                )
-                              }
-                            })}
-
-                        </Card>
+                        {group.nameDrawing ? 
+                          <NameDrawingCard group={group} idx={idx} user={this.props.user} getUserGroups={this.getUserGroups} routeChange={this.routeChange} {...this.props}/>
+                        :
+                          <GeneralGroupCard group={group} idx={idx} user={this.props.user} getUserGroups={this.getUserGroups} routeChange={this.routeChange} {...this.props}/>
+                        }
                       </Grid>
                     )
                   })}
@@ -560,101 +219,6 @@ class Groups extends Component {
                     </Button>
                   </Link>
                 </Container>
-
-
-                {/* deleting member modal */}
-                <Dialog
-                    open={this.state.deleteUserModal}
-                    onClose={this.closeDeleteModal}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogTitle id="alert-dialog-title">{"Delete Member?"}</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                        <Typography style={{textAlign: 'center'}}>Are you sure you want to delete this member from the group?</Typography>
-                        <Typography style={{textAlign: 'center', fontWeight: 'bold'}}>This will reset the drawing for the entire group.</Typography>
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
-                        Delete
-                      </Button>
-                      <Button onClick={ () => this.closeDeleteModal()} style={{color: '#6b6b6b'}} autoFocus>
-                        Close
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-
-                {/* leaving group modal */}
-                <Dialog
-                  open={this.state.removeUserModal}
-                  onClose={this.closeRemoveModal}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">{"Leave Group?"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      <Typography style={{textAlign: 'center'}}> Are you sure you want to leave this group? </Typography>
-                      <Typography style={{textAlign: 'center', fontWeight: 'bold'}}>This will reset the drawing for the entire group.</Typography>
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
-                      Leave Group
-                    </Button>
-                    <Button onClick={() => this.closeRemoveModal()} style={{color: '#6b6b6b'}}  autoFocus>
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                
-                {/* reset drawing modal */}
-                <Dialog
-                  open={this.state.resetDrawingModal}
-                  onClose={this.closeResetDrawingModal}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">{"Reset Drawing?"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      <Typography style={{textAlign: 'center'}}> Are you sure you want to reset the drawing for this group? </Typography>
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={() => this.clearSelections(this.state.groupId, false)} color="secondary">
-                      Reset
-                    </Button>
-                    <Button onClick={() => this.closeResetDrawingModal()} style={{color: '#6b6b6b'}}  autoFocus>
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                
-                {/* delete group modal */}
-                <Dialog
-                  open={this.state.deleteGroupModal}
-                  onClose={this.closeDeleteGroupModal}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">{"Delete Group?"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      <Typography style={{textAlign: 'center'}}> Are you sure you want to delete this group? </Typography>
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={() => this.deleteGroup(this.state.groupId)} color="secondary">
-                      Delete Group
-                    </Button>
-                    <Button onClick={() => this.closeDeleteGroupModal()} style={{color: '#6b6b6b'}}  autoFocus>
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
             </div>
           }
       </div>

@@ -6,6 +6,7 @@ const GroupSchema = new Schema(
     admin: String,
     name: String,
     password: String,
+    nameDrawing: Boolean,
     memberCount: Number,
     members: [{
       uid: String,
