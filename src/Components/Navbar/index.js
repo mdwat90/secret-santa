@@ -45,7 +45,7 @@ function Navbar(props) {
                         <Link to="/profile" style={{ textDecoration: 'none', color: 'white' }} onClick={() => setTab('Profile')}>My Wishlist</Link>
                     </Typography>
                         {activeTab === 'Profile' ?
-                            <div style={{height: '2px', width:'52px', backgroundColor: 'white'}} />
+                            <div style={{height: '2px', width:'83px', backgroundColor: 'white'}} />
                         :
                             <div style={{height: '2px'}} />
                         }
