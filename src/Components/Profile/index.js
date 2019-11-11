@@ -126,6 +126,7 @@ class Profile extends Component {
 
   componentDidMount() {
     // console.log('PROFILE PROPS:', this.props)
+    window.scrollTo(0, 0);
 
     this.setState({
       user_id: this.props.user_info._id

@@ -42,6 +42,7 @@ class Groups extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    window.scrollTo(0, 0);
     if(prevProps.loggedIn !== this.props.loggedIn) {
       this.props.history.push('/profile')
     }

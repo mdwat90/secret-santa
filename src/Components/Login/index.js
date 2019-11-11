@@ -68,6 +68,9 @@ class Login extends Component {
       loading: false
     }
   }
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
 
   loginUser = (data) => {
     const component = this;

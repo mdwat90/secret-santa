@@ -68,6 +68,10 @@ class Register extends Component {
     }
   }
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
   componentDidUpdate(prevProps) {
     if(prevProps.loggedIn !== this.props.loggedIn) {
       this.props.history.push('/groups/my-groups')

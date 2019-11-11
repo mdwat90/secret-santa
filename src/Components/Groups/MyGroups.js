@@ -138,7 +138,9 @@ class Groups extends Component {
     //   selectedUserName: this.props.user_info.selectedUserName
     // }, () => {
     //   console.log('SELECTED USER:', this.state.selectedUserName)
-      this.getUserGroups(this.props.user_info._id);
+    window.scrollTo(0, 0);
+
+    this.getUserGroups(this.props.user_info._id);
       // this.getSelectedUsersData(this.state.selectedUserId);
     // })
     

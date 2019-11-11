@@ -113,6 +113,8 @@ class WishList extends Component {
   componentDidMount() {
     console.log('WISHLIST PROPS:', this.props)
 
+    window.scrollTo(0, 0);
+
     this.setState({
       user_id: this.props.match.params.id,
       userName: this.props.location.state.user
