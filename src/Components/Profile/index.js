@@ -54,6 +54,10 @@ const styles = {
     color: '#4f92ff',
     textDecoration: 'underline'
   },
+  noLink: {
+    marginTop: '5vh',
+    color: '#6b6b6b'
+  },
   textInput: {
     '& label.Mui': {
       color: '#4f92ff',
@@ -385,15 +389,15 @@ class Profile extends Component {
                       <ExpansionPanel 
                         style={this.state.panel === item._id && this.state.panelOpen ? {marginBottom: '4vh'} : {marginBottom: '2vh'}} 
                         expanded={this.state.panel === item._id && this.state.panelOpen} 
-                        onChange={() => this.expandPanel(item._id)}>
+                        onChange={item.notes ? () => this.expandPanel(item._id) : null}>
                         <ExpansionPanelSummary
-                          expandIcon={<ExpandMoreIcon />}
+                          expandIcon={item.notes ? <ExpandMoreIcon /> : null}
                           aria-controls="panel1bh-content"
                           id="panel1bh-header"
                         >
                           <Grid container justify={'flex-start'}>
                             <Typography className={classes.heading}>
-                              <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
+                              <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={item.link ? classes.link : classes.noLink}>
                                 {item.description}
                               </Link>
                             </Typography>
@@ -405,17 +409,21 @@ class Profile extends Component {
                             </Grid>
                           </Grid>
                         </ExpansionPanelSummary>
-                        <ExpansionPanelDetails className={classes.details}>
-                          <Typography>
-                            {item.notes}
-                          </Typography>
-                        </ExpansionPanelDetails>
+                        {item.notes ? 
+                          <ExpansionPanelDetails className={classes.details}>
+                            <Typography>
+                              {item.notes}
+                            </Typography>
+                          </ExpansionPanelDetails>
+                          :
+                          null
+                        }
                       </ExpansionPanel>
                     </div>
                 ))
               }
 
-                <Container style={{marginTop: '5vh'}}>
+                <Container style={{marginTop: '5vh', marginBottom: '5vh'}}>
                   <Button variant="outlined" className={classes.button} onClick={this.openAddForm}>
                     <Typography className={classes.buttonText}>
                       Add Item

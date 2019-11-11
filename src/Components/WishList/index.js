@@ -53,6 +53,10 @@ const styles = {
     color: '#4f92ff',
     textDecoration: 'underline'
   },
+  noLink: {
+    marginTop: '5vh',
+    color: '#6b6b6b'
+  },
   textInput: {
     margin: '1vh',
     width: '80%'
@@ -176,31 +180,35 @@ class WishList extends Component {
                       <ExpansionPanel 
                         style={this.state.panel === item._id && this.state.panelOpen ? {marginBottom: '4vh'} : {marginBottom: '2vh'}} 
                         expanded={this.state.panel === item._id && this.state.panelOpen} 
-                        onChange={() => this.expandPanel(item._id)}>
+                        onChange={item.notes ? () => this.expandPanel(item._id) : null}>
                         <ExpansionPanelSummary
-                          expandIcon={<ExpandMoreIcon />}
+                          expandIcon={item.notes ? <ExpandMoreIcon /> : null}
                           aria-controls="panel1bh-content"
                           id="panel1bh-header"
                         >
                           <Grid container justify={'flex-start'}>
                             <Typography className={classes.heading}>
-                              <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
+                              <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={item.link ? classes.link : classes.noLink}>
                                 {item.description}
                               </Link>
                             </Typography>
                           </Grid>
                         </ExpansionPanelSummary>
-                        <ExpansionPanelDetails className={classes.details}>
-                          <Typography>
-                            {item.notes}
-                          </Typography>
-                        </ExpansionPanelDetails>
+                        {item.notes ? 
+                          <ExpansionPanelDetails className={classes.details}>
+                            <Typography>
+                              {item.notes}
+                            </Typography>
+                          </ExpansionPanelDetails>
+                          :
+                          null
+                        }
                       </ExpansionPanel>
                     </div>
                   ))]
                 }
 
-                <Container style={{marginTop: '5vh'}}>
+                <Container style={{marginTop: '5vh', marginBottom: '5vh'}}>
                   <DomLink to="/groups/my-groups" style={{ textDecoration: 'none', color: '#4f92ff' }}>
                       <Button 
                         variant="outlined"
