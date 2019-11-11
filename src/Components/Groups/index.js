@@ -21,7 +21,7 @@ const styles = {
     textAlign: 'center',
     width: '100%',
     marginTop: '5vh',
-    paddingBottom: '5vh'
+    paddingBottom: '10vh'
   },
   title: {
     paddingTop: '5vh',
