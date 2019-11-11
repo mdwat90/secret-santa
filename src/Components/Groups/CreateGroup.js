@@ -11,9 +11,7 @@ import { Button, Container, Box, Typography, TextField, Grid, Switch, FormLabel 
 const styles = {
   root: {
     background: '#fff',
-    margin: 'auto',
-    // height: '100vh',
-    // paddingTop: '15vh'
+    margin: 'auto'
   },
   form: {
     background: '#fff',
@@ -300,7 +298,7 @@ class CreateGroup extends Component {
                 </Formik>
 
 
-                <Typography style={{marginTop: '4vh', marginBottom: '4vh'}}>
+                <Typography style={{marginTop: '2vh', marginBottom: '4vh'}}>
                   <Link to="/groups/join-group" style={{ textDecoration: 'none', color: '#4f92ff'}}>
                     You can join a group that's already been created by clicking here.
                   </Link>

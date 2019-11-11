@@ -43,6 +43,11 @@ const styles = {
     textAlign: 'center',
     marginTop: '3vw'
   },
+  buttonContainer: {
+    background: '#fff',
+    textAlign: 'center',
+    marginTop: '10vw'
+  },
   form: {
     background: '#fff',
     textAlign: 'center',
@@ -206,7 +211,7 @@ class Groups extends Component {
                   })}
                 </Grid>
 
-                <Container xs={12} m={6} lg={6} className={classes.container}>
+                <Container xs={12} m={6} lg={6} className={classes.buttonContainer}>
                   <Link to="/groups/create-group" style={{ textDecoration: 'none', color: '#fff'}}>
                     <Button  className={classes.link}>
                         <Typography style={{color:'#fff'}}>Create Group</Typography>

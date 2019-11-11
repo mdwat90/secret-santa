@@ -19,7 +19,7 @@ const styles = {
   container: {
     background: '#fff',
     textAlign: 'center',
-    width: '75%',
+    width: '100%',
     marginTop: '5vh'
   },
   title: {

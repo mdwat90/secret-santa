@@ -260,7 +260,6 @@ class GeneralCard extends Component {
     
         return (
             <div>
-
                 <Card className={classes.card} style={{minHeight: '30vh'}} key={idx}>
                     <Grid container>
                     <Grid item style={{ flex: 1 }}>

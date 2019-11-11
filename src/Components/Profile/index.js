@@ -36,8 +36,9 @@ const styles = {
   container: {
     background: '#fff',
     textAlign: 'center',
-    width: '75%',
-    marginTop: '5vh'
+    width: '100%',
+    marginTop: '5vh',
+    marginBottom: '5vh'
   },
   form: {
     background: '#fff',
@@ -378,56 +379,60 @@ class Profile extends Component {
           </Box>
           :
           <Box className={classes.root}>
-            <Container className={classes.container}>
+            <Container container justify='center' className={classes.container}>
               {data.length <= 0 ? 
                 <Container style={{height: '10vh', marginTop: '10vh'}}>
                   <Typography variant='h5'>You haven't added any items to your list</Typography>
                 </Container>
                 : 
                 data.map((item, index) => (
-                  <div key={item._id}>
-                      <ExpansionPanel 
-                        style={this.state.panel === item._id && this.state.panelOpen ? {marginBottom: '4vh'} : {marginBottom: '2vh'}} 
-                        expanded={this.state.panel === item._id && this.state.panelOpen} 
-                        onChange={item.notes ? () => this.expandPanel(item._id) : null}>
-                        <ExpansionPanelSummary
-                          expandIcon={item.notes ? <ExpandMoreIcon /> : null}
-                          aria-controls="panel1bh-content"
-                          id="panel1bh-header"
-                        >
-                          <Grid container justify={'flex-start'}>
-                            <Typography className={classes.heading}>
-                              {item.link ?
-                                <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
-                                  {item.description}
-                                </Link>
-                                :
-                                <Typography className={classes.noLink} style={{display: 'inline'}}>{item.description}</Typography>
-                              }
-                            </Typography>
-                          </Grid>
-                          <Grid container justify={'flex-end'} direction={'row'}>
-                            <Grid container xs={12} lg={3} justify={'flex-end'}>
-                                <Grid item xs={4}>
-                                  <DeleteIcon onClick={() => this.openDeleteModal(item)} className={classes.icon}/>
-                                </Grid>
-                                <Grid item xs={4}>
-                                  <EditIcon onClick={() => this.editForm(item)} className={classes.icon}/>
-                                </Grid>
+                  <Grid  justify='center' container>
+                   <Grid item md={8} sm={12} xs={12}>
+                    <div key={item._id}>
+                        <ExpansionPanel 
+                          style={this.state.panel === item._id && this.state.panelOpen ? {marginBottom: '4vh'} : {marginBottom: '2vh'}} 
+                          expanded={this.state.panel === item._id && this.state.panelOpen} 
+                          onChange={item.notes ? () => this.expandPanel(item._id) : null}>
+                          <ExpansionPanelSummary
+                            expandIcon={item.notes ? <ExpandMoreIcon /> : null}
+                            aria-controls="panel1bh-content"
+                            id="panel1bh-header"
+                          >
+                            <Grid container justify={'flex-start'}>
+                              <Typography className={classes.heading}>
+                                {item.link ?
+                                  <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
+                                    {item.description}
+                                  </Link>
+                                  :
+                                  <Typography className={classes.noLink} style={{display: 'inline'}}>{item.description}</Typography>
+                                }
+                              </Typography>
                             </Grid>
-                          </Grid>
-                        </ExpansionPanelSummary>
-                        {item.notes ? 
-                          <ExpansionPanelDetails className={classes.details}>
-                            <Typography>
-                              {item.notes}
-                            </Typography>
-                          </ExpansionPanelDetails>
-                          :
-                          null
-                        }
-                      </ExpansionPanel>
-                    </div>
+                            <Grid container justify={'flex-end'} direction={'row'}>
+                              <Grid container lg={4} md={4} sm={4} xs={12} justify={'flex-end'}>
+                                  <Grid item xs={3}>
+                                    <DeleteIcon onClick={() => this.openDeleteModal(item)} className={classes.icon}/>
+                                  </Grid>
+                                  <Grid item xs={3}>
+                                    <EditIcon onClick={() => this.editForm(item)} className={classes.icon}/>
+                                  </Grid>
+                              </Grid>
+                            </Grid>
+                          </ExpansionPanelSummary>
+                          {item.notes ? 
+                            <ExpansionPanelDetails className={classes.details}>
+                              <Typography>
+                                {item.notes}
+                              </Typography>
+                            </ExpansionPanelDetails>
+                            :
+                            null
+                          }
+                        </ExpansionPanel>
+                      </div>
+                   </Grid>
+                  </Grid>
                 ))
               }
 

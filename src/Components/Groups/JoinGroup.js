@@ -24,7 +24,7 @@ const styles = {
     paddingTop: '5vh',
   },
   link: {
-    margin: '4vh',
+    margin: '2vh',
   },
   textInput: {
     margin: '1vh',
