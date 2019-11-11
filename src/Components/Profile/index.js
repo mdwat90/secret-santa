@@ -113,7 +113,9 @@ class Profile extends Component {
       panel: null,
       panelOpen: false,
       linkError: false,
-      loading: false
+      loading: false,
+      deleteItemModal: false,
+      itemToDelete: null
     }
   }
 
@@ -161,6 +163,21 @@ class Profile extends Component {
   closeEditForm = () => {
     this.setState({
       updateItemForm: false
+    })
+  }
+
+  openDeleteModal = (item) => {
+    console.log('ITEM TO DELETE:', item)
+    this.setState({
+      deleteItemModal: true,
+      itemToDelete: item
+    })
+  }
+  
+  
+  closeDeleteModal = () => {
+    this.setState({
+      deleteItemModal: false
     })
   }
 
@@ -264,6 +281,10 @@ class Profile extends Component {
     })
     .then(function (response) {
       // console.log('AXIOS RESPONSE:', response)
+      component.setState({
+        itemToDelete: null,
+        deleteItemModal: false
+      });
       component.getUserData(component.props.user_info._id);
     })
     .catch(function (error) {
@@ -379,7 +400,7 @@ class Profile extends Component {
                           </Grid>
                           <Grid container justify={'center'} direction={'column'}>
                             <Grid container justify={'flex-end'}>
-                                <DeleteIcon onClick={() => this.deleteFromDB(item._id)} className={classes.icon}/>
+                                <DeleteIcon onClick={() => this.openDeleteModal(item)} className={classes.icon}/>
                                 <EditIcon onClick={() => this.editForm(item)} className={classes.icon}/>
                             </Grid>
                           </Grid>
@@ -514,6 +535,24 @@ class Profile extends Component {
                     <Typography>Add Item</Typography>
                 </Button>
               </DialogActions>
+            </Dialog>
+            
+            {/* Delete Item Modal */}
+            <Dialog open={this.state.deleteItemModal} onClose={this.closeDeleteModal} aria-labelledby="form-dialog-title">
+            <DialogTitle id="alert-dialog-title">{"Delete Item?"}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <Typography style={{textAlign: 'center'}}> Are you sure you want to delete this item? </Typography>
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => this.closeDeleteModal()} style={{color: '#6b6b6b'}}  autoFocus>
+                      Close
+                    </Button>
+                    <Button onClick={() => this.deleteFromDB(this.state.itemToDelete)} color="secondary">
+                      Delete Item
+                    </Button>
+                  </DialogActions>
             </Dialog>
           </Box>
         }
