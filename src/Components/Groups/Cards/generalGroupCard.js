@@ -306,9 +306,7 @@ class GeneralCard extends Component {
                             container  
                             wrap='wrap' 
                             direction='row' 
-                            alignContent={'flex-start'} 
-                            alignItems={'flex-start'} 
-                            spacing={3}
+                            justify='flex-start'
                         >
                             {group.members.map((member, index) => {
 
@@ -316,7 +314,7 @@ class GeneralCard extends Component {
                             if (group.admin === user_info._id && member.uid !== user_info._id) {
                                 return (
                                 <div key={index}>
-                                    <Grid item style={{margin: '1vh'}}>
+                                    <Grid item style={{marginHorizontal: '0.3em' }}>
                                         <Chip style={{backgroundColor: '#4f92ff', color: 'white', cursor:'pointer'}} onClick={() => this.props.routeChange(member.uid, member.name)} label={member.name.toUpperCase()}  onDelete={() => this.openDeleteModal(group._id, member.uid, group.nameDrawing)}/>
                                     </Grid>
                                 </div>
@@ -325,7 +323,7 @@ class GeneralCard extends Component {
                             if (group.admin !== user_info._id && member.uid === user_info._id) {
                                 return (
                                 <div key={index}>
-                                    <Grid item style={{margin: '1vh'}}>
+                                    <Grid item style={{margin: '0.3em' }}>
                                         <Chip label={member.name.toUpperCase()}  onDelete={() => this.openRemoveModal(group._id, member.uid,  group.nameDrawing)}/>
                                     </Grid>
                                 </div>
@@ -334,7 +332,7 @@ class GeneralCard extends Component {
                             else if (member.uid !== user_info._id) {
                                 return (
                                 <div key={index}>
-                                    <Grid item style={{margin: '1vh'}}>
+                                    <Grid item style={{margin: '0.3em' }}>
                                         <Chip style={{backgroundColor: '#4f92ff', color: 'white', cursor:'pointer'}} onClick={() => this.props.routeChange(member.uid, member.name)} label={member.name.toUpperCase()}/>
                                     </Grid>
                                 </div>
@@ -343,7 +341,7 @@ class GeneralCard extends Component {
                             else {
                                 return (
                                 <div key={index}>
-                                    <Grid item style={{margin: '1vh'}}>
+                                    <Grid item style={{margin: '0.3em' }}>
                                         <Chip label={member.name.toUpperCase()}/>
                                     </Grid>
                                 </div>
@@ -357,7 +355,7 @@ class GeneralCard extends Component {
 
 
                     <div>
-                    <Typography className={classes.subText}>You can click a member's name to see their wish list.</Typography>
+                    <Typography className={classes.subText}>You can click a member's name to see their wishlist.</Typography>
                     </div>
                 </Card>
 

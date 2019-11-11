@@ -382,7 +382,7 @@ class Profile extends Component {
             <Container container justify='center' className={classes.container}>
               {data.length <= 0 ? 
                 <Container style={{height: '10vh', marginTop: '10vh'}}>
-                  <Typography variant='h5'>You haven't added any items to your list</Typography>
+                  <Typography variant='h5'>You haven't added any items to your wishlist</Typography>
                 </Container>
                 : 
                 data.map((item, index) => (

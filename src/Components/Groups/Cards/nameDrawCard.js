@@ -376,9 +376,7 @@ class DrawingCard extends Component {
                         container  
                         wrap='wrap' 
                         direction='row' 
-                        alignContent={'flex-start'} 
-                        alignItems={'flex-start'} 
-                        spacing={3}
+                        justify='flex-start'
                     >
                         {group.members.map((member, index) => {
         
@@ -387,11 +385,11 @@ class DrawingCard extends Component {
                             return (
                             <div key={index}>
                                 {member.selectedBy === user_info._id ?
-                                <Grid item style={{margin: '1vh'}}>
+                                <Grid item style={{margin: '0.3em'}}>
                                     <Chip label={member.name.toUpperCase()} onClick={() => this.props.routeChange(member.uid, member.name)} style={{backgroundColor: '#4f92ff', color: 'white'}} onDelete={() => this.openDeleteModal(group._id, member.uid, group.nameDrawing)} />
                                 </Grid>
                                 :
-                                <Grid item style={{margin: '1vh'}}>
+                                <Grid item style={{margin: '0.3em'}}>
                                     <Chip label={member.name.toUpperCase()} onDelete={() => this.openDeleteModal(group._id, member.uid, group.nameDrawing)} />
                                 </Grid>
                                 }
@@ -403,7 +401,7 @@ class DrawingCard extends Component {
                         else if ((member.uid === user_info._id) && (group.admin !== user_info._id)) {
                             return (
                             <div key={index}>
-                                <Grid item style={{margin: '1vh'}}>
+                                <Grid item style={{margin: '0.3em'}}>
                                     <Chip label={member.name.toUpperCase()}  onDelete={() => this.openRemoveModal(group._id, member.uid, group.nameDrawing)}/>
                                 </Grid>
                             </div>
@@ -414,11 +412,11 @@ class DrawingCard extends Component {
                             return (
                             <div key={index}>
                                 {member.selectedBy === user_info._id ?
-                                <Grid item style={{margin: '1vh'}}>
+                                <Grid item style={{margin: '0.3em'}}>
                                     <Chip style={{backgroundColor: '#4f92ff', color: 'white'}} onClick={() => this.props.routeChange(member.uid, member.name)} label={member.name.toUpperCase()}/>
                                 </Grid>
                                 :
-                                <Grid item style={{margin: '1vh'}}>
+                                <Grid item style={{margin: '0.3em'}}>
                                     <Chip label={member.name.toUpperCase()} />
                                 </Grid>
                                 }
@@ -475,7 +473,7 @@ class DrawingCard extends Component {
                                 <Chip style={{backgroundColor: '#4f92ff', color: 'white', cursor:'pointer'}} label={member.name.toUpperCase()}/>
                                 </Link>
                             </Typography>
-                            <Typography className={classes.subText}>You can click their name to see their wish list.</Typography>
+                            <Typography className={classes.subText}>You can click their name to see their wishlist.</Typography>
                         </Container>
                     )
                     }

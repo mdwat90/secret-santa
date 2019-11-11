@@ -214,7 +214,7 @@ class WishList extends Component {
             <Container container justify='center' className={classes.container}>
               {data.length <= 0 ? 
                 <Container style={{height: '10vh', marginTop: '10vh'}}>
-                  <Typography variant="h5">{upperCaseName} hasn't added any items to their list yet</Typography>
+                  <Typography variant="h5">{upperCaseName} hasn't added any items to their wishlist yet</Typography>
                 </Container>
                 : 
                 [<Typography variant="h5" style={{color: '#6b6b6b', marginBottom: '3vh'}}>{upperCaseName}'s Wishlist</Typography>,
@@ -232,7 +232,7 @@ class WishList extends Component {
                             id="panel1bh-header"
                           >
                             <Grid container justify={'flex-start'}>
-                              <Typography className={classes.heading}>
+                              <Typography style={{textAlign:'left', marginRight: '1vw'}}>
                                 {item.link ?
                                   <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
                                     {item.description}
