@@ -20,7 +20,8 @@ const styles = {
     background: '#fff',
     textAlign: 'center',
     width: '100%',
-    marginTop: '5vh'
+    marginTop: '5vh',
+    paddingBottom: '5vh'
   },
   title: {
     paddingTop: '5vh',

@@ -39,7 +39,7 @@ const styles = {
     textAlign: 'center',
     width: '100%',
     marginTop: '5vh',
-    marginBottom: '5vh'
+    paddingBottom: '5vh'
   },
   form: {
     background: '#fff',
