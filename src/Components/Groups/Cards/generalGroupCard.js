@@ -314,7 +314,7 @@ class GeneralCard extends Component {
                             if (group.admin === user_info._id && member.uid !== user_info._id) {
                                 return (
                                 <div key={index}>
-                                    <Grid item style={{marginHorizontal: '0.3em' }}>
+                                    <Grid item style={{margin: '0.3em' }}>
                                         <Chip style={{backgroundColor: '#4f92ff', color: 'white', cursor:'pointer'}} onClick={() => this.props.routeChange(member.uid, member.name)} label={member.name.toUpperCase()}  onDelete={() => this.openDeleteModal(group._id, member.uid, group.nameDrawing)}/>
                                     </Grid>
                                 </div>
