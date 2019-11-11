@@ -7,7 +7,8 @@ const ItemSchema = new Schema(
     user_id: String,
     description: String,
     link: String,
-    notes: String
+    notes: String,
+    purchased: Boolean
   },
   { timestamps: true }
 );

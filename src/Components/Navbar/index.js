@@ -21,8 +21,7 @@ const useStyles = makeStyles({
     },
     title: {
         marginRight: 20,
-        color:'#ff476f',
-        // fontSize: '1.5vw'
+        color:'#ff476f'
     }
   });
 
@@ -34,9 +33,6 @@ function Navbar(props) {
 
     const [activeTab, setTab] = useState('Groups');
 
-    // console.log('ACTIVE TAB::', activeTab)
-
-    // console.log('NAVBAR PROPS:', props)
     return (
         <AppBar position={'sticky'} className={classes.root}>
             <Toolbar>

@@ -160,7 +160,7 @@ app.post('/api/newItem', function(req, response) {
 
     // console.log('NEW ITEM SERVER:', item)
 
-    new ItemSchema({user_id: item.user_id, description: item.description, link: item.link, notes: item.notes }).save((err, res) => {
+    new ItemSchema({user_id: item.user_id, description: item.description, link: item.link, notes: item.notes, purchased: false }).save((err, res) => {
         if(err) {
             // console.log('ERROR SAVING ITEM:', err)
             response.send(err)
