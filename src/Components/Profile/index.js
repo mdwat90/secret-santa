@@ -397,15 +397,23 @@ class Profile extends Component {
                         >
                           <Grid container justify={'flex-start'}>
                             <Typography className={classes.heading}>
-                              <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={item.link ? classes.link : classes.noLink}>
-                                {item.description}
-                              </Link>
+                              {item.link ?
+                                <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
+                                  {item.description}
+                                </Link>
+                                :
+                                <Typography className={classes.noLink} style={{display: 'inline'}}>{item.description}</Typography>
+                              }
                             </Typography>
                           </Grid>
-                          <Grid container justify={'center'} direction={'column'}>
-                            <Grid container justify={'flex-end'}>
-                                <DeleteIcon onClick={() => this.openDeleteModal(item)} className={classes.icon}/>
-                                <EditIcon onClick={() => this.editForm(item)} className={classes.icon}/>
+                          <Grid container justify={'flex-end'} direction={'row'}>
+                            <Grid container xs={12} lg={3} justify={'flex-end'}>
+                                <Grid item xs={4}>
+                                  <DeleteIcon onClick={() => this.openDeleteModal(item)} className={classes.icon}/>
+                                </Grid>
+                                <Grid item xs={4}>
+                                  <EditIcon onClick={() => this.editForm(item)} className={classes.icon}/>
+                                </Grid>
                             </Grid>
                           </Grid>
                         </ExpansionPanelSummary>

@@ -188,9 +188,13 @@ class WishList extends Component {
                         >
                           <Grid container justify={'flex-start'}>
                             <Typography className={classes.heading}>
-                              <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={item.link ? classes.link : classes.noLink}>
-                                {item.description}
-                              </Link>
+                              {item.link ?
+                                <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
+                                  {item.description}
+                                </Link>
+                                :
+                                <Typography className={classes.noLink} style={{display: 'inline'}}>{item.description}</Typography>
+                              }
                             </Typography>
                           </Grid>
                         </ExpansionPanelSummary>
