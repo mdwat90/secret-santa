@@ -410,12 +410,12 @@ class Profile extends Component {
                                 }
                               </Typography>
                             </Grid>
-                            <Grid container justify={'flex-end'} direction={'row'}>
-                              <Grid container lg={4} md={4} sm={4} xs={12} justify={'flex-end'}>
-                                  <Grid item xs={3}>
+                            <Grid container justify={'flex-end'} direction={'row'} style={{width: 80 }}>
+                              <Grid container justify={'flex-end'} direction={'row'} alignItems='center'>
+                                  <Grid item>
                                     <DeleteIcon onClick={() => this.openDeleteModal(item)} className={classes.icon}/>
                                   </Grid>
-                                  <Grid item xs={3}>
+                                  <Grid item>
                                     <EditIcon onClick={() => this.editForm(item)} className={classes.icon}/>
                                   </Grid>
                               </Grid>
