@@ -395,7 +395,7 @@ class Profile extends Component {
                           expanded={this.state.panel === item._id && this.state.panelOpen} 
                           onChange={item.notes ? () => this.expandPanel(item._id) : null}>
                           <ExpansionPanelSummary
-                            expandIcon={item.notes ? <ExpandMoreIcon /> : null}
+                            expandIcon={item.notes ? <ExpandMoreIcon /> : <ExpandMoreIcon style={{color: '#fff'}} /> }
                             aria-controls="panel1bh-content"
                             id="panel1bh-header"
                           >

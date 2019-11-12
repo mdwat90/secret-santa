@@ -24,7 +24,7 @@ import {
 } from '@material-ui/core';
 import { Link as DomLink } from "react-router-dom";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import AddShoppingCartOutlinedIcon from '@material-ui/icons/AddShoppingCartOutlined';
+import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 
 
@@ -252,7 +252,7 @@ class WishList extends Component {
                                   </Grid>
                                   :
                                   <Grid item>
-                                      <AddShoppingCartOutlinedIcon style={{color: '#6b6b6b'}} onClick={() => this.openPurchaseModal(item)} />
+                                      <ShoppingCartOutlinedIcon style={{color: '#6b6b6b', height: '0.75em'}} onClick={() => this.openPurchaseModal(item)} />
                                   </Grid>
                                 }
                               </Grid>
