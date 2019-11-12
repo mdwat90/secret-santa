@@ -260,9 +260,9 @@ class WishList extends Component {
                           </ExpansionPanelSummary>
                           {item.notes ? 
                             <ExpansionPanelDetails className={classes.details}>
-                              <Typography style={{wordBreak: 'break-all' }}>
+                              <Typography style={{wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                                 {item.notes}
-                              </Typography>
+                              </Typography> 
                             </ExpansionPanelDetails>
                             :
                             null
