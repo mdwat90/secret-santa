@@ -9,25 +9,11 @@ import {
   Button, 
   Container, 
   CircularProgress,
-  Chip,
-  Box, 
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogContentText, 
-  DialogTitle,
   Typography, 
   TextField, 
   Card, 
-  Grid, 
-  Menu, 
-  MenuItem, 
-  ExpansionPanel, 
-  ExpansionPanelSummary, 
-  ExpansionPanelDetails } from '@material-ui/core';
-import SettingsIcon from '@material-ui/icons/Settings';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+  Grid
+  } from '@material-ui/core';
 import NameDrawingCard from './Cards/nameDrawCard';
 import GeneralGroupCard from './Cards/generalGroupCard';
 

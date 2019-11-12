@@ -495,11 +495,11 @@ class DrawingCard extends Component {
                       </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                      <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
-                        Delete
-                      </Button>
                       <Button onClick={ () => this.closeDeleteModal()} style={{color: '#6b6b6b'}} autoFocus>
                         Close
+                      </Button>
+                      <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
+                        Delete
                       </Button>
                     </DialogActions>
                   </Dialog>
@@ -519,11 +519,11 @@ class DrawingCard extends Component {
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
-                      Leave Group
-                    </Button>
                     <Button onClick={() => this.closeRemoveModal()} style={{color: '#6b6b6b'}}  autoFocus>
                       Close
+                    </Button>
+                    <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
+                      Leave Group
                     </Button>
                   </DialogActions>
                 </Dialog>
@@ -542,11 +542,11 @@ class DrawingCard extends Component {
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={() => this.clearSelections(this.state.groupId, false)} color="secondary">
-                      Reset
-                    </Button>
                     <Button onClick={() => this.closeResetDrawingModal()} style={{color: '#6b6b6b'}}  autoFocus>
                       Close
+                    </Button>
+                    <Button onClick={() => this.clearSelections(this.state.groupId, false)} color="secondary">
+                      Reset
                     </Button>
                   </DialogActions>
                 </Dialog>
@@ -565,11 +565,11 @@ class DrawingCard extends Component {
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={() => this.deleteGroup(this.state.groupId)} color="secondary">
-                      Delete Group
-                    </Button>
                     <Button onClick={() => this.closeDeleteGroupModal()} style={{color: '#6b6b6b'}}  autoFocus>
                       Close
+                    </Button>
+                    <Button onClick={() => this.deleteGroup(this.state.groupId)} color="secondary">
+                      Delete Group
                     </Button>
                   </DialogActions>
                 </Dialog>
