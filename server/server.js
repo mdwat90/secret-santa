@@ -469,7 +469,7 @@ app.post('/api/joinGroup', function(req, response) {
                                     }
                                 })
 
-                                if(resp.memberCount === 0) {
+                                if(res.nameDrawing & resp.memberCount === 0) {
                                     resp.members.map((member, index) => {
                                         console.log('SEND DRAWING READY EMAIL TO:', member.email)
                                         const msg = {
