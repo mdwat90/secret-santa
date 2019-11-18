@@ -20,7 +20,8 @@ import {
   Grid,
   Typography, 
   TextField, 
-  CircularProgress
+  CircularProgress,
+  ButtonBase
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -89,7 +90,7 @@ const styles = {
     backgroundColor: '#d1d1d1'
   },
   icon: {
-    marginRight: '1vw',
+    flex: 1,
     fontSize: '20px',
     color: '#8f8f8f'
   },
@@ -420,13 +421,17 @@ class Profile extends Component {
                                 }
                               </Typography>
                             </Grid>
-                            <Grid container justify={'flex-end'} direction={'row'} style={{width: 80 }}>
-                              <Grid container justify={'flex-end'} direction={'row'} alignItems='center'>
+                            <Grid container justify={'flex-end'} direction={'row'} style={{width: 90}}>
+                              <Grid container justify={'center'} direction={'row'} alignItems='center' spacing={2}>
                                   <Grid item>
-                                    <DeleteIcon onClick={(event) =>this.openDeleteModal(event, item)} className={classes.icon}/>
+                                    <ButtonBase style={{borderRadius: 3}}>
+                                      <DeleteIcon onClick={(event) =>this.openDeleteModal(event, item)} className={classes.icon}/>
+                                    </ButtonBase>
                                   </Grid>
                                   <Grid item>
-                                    <EditIcon onClick={(event) => this.editForm(event, item)} className={classes.icon}/>
+                                    <ButtonBase style={{borderRadius: 3}}>
+                                      <EditIcon onClick={(event) => this.editForm(event, item)} className={classes.icon}/>
+                                    </ButtonBase>
                                   </Grid>
                               </Grid>
                             </Grid>

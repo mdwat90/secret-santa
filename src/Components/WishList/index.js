@@ -20,7 +20,8 @@ import {
   Link,
   Typography, 
   TextField, 
-  CircularProgress
+  CircularProgress,
+  ButtonBase
 } from '@material-ui/core';
 import { Link as DomLink } from "react-router-dom";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -256,11 +257,13 @@ class WishList extends Component {
                               <Grid container justify={'flex-end'} alignItems='center'>
                                 {item.purchased ? 
                                   <Grid item>
-                                    <CheckCircleOutlineOutlinedIcon style={{color: '#51e07e'}}/>
+                                      <CheckCircleOutlineOutlinedIcon style={{color: '#51e07e'}}/>
                                   </Grid>
                                   :
                                   <Grid item>
+                                    <ButtonBase style={{borderRadius: 3}}>
                                       <ShoppingCartOutlinedIcon style={{color: '#6b6b6b', height: '0.75em'}} onClick={(event) => this.openPurchaseModal(event, item)} />
+                                    </ButtonBase>
                                   </Grid>
                                 }
                               </Grid>
