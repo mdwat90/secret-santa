@@ -25,6 +25,7 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import Linkify from 'react-linkify';
 
 
 const styles = {
@@ -368,6 +369,13 @@ class Profile extends Component {
     
   };
 
+  componentDecorator = (href, text, key) => (
+    <a href={href} key={key} target="_blank" style={{'color': '#4f92ff'}}>
+      {text}
+    </a>
+  );
+ 
+
 
   render() {
     const { data } = this.state;
@@ -426,7 +434,9 @@ class Profile extends Component {
                           {item.notes ? 
                             <ExpansionPanelDetails className={classes.details}>
                               <Typography style={{wordBreak: 'break-word', overflowWrap: 'break-word','whiteSpace': 'pre-line', textAlign: 'left' }}>
-                                {item.notes}
+                                <Linkify componentDecorator={this.componentDecorator}>
+                                  {item.notes}
+                                </Linkify>
                               </Typography>
                             </ExpansionPanelDetails>
                             :

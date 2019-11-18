@@ -26,6 +26,7 @@ import { Link as DomLink } from "react-router-dom";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
+import Linkify from 'react-linkify';
 
 
 const styles = {
@@ -191,6 +192,12 @@ class WishList extends Component {
     })
   };
 
+  componentDecorator = (href, text, key) => (
+    <a href={href} key={key} target="_blank" style={{'color': '#4f92ff'}}>
+      {text}
+    </a>
+  );
+ 
 
 
   render() {
@@ -262,7 +269,9 @@ class WishList extends Component {
                           {item.notes ? 
                             <ExpansionPanelDetails className={classes.details}>
                               <Typography style={{wordBreak: 'break-word', overflowWrap: 'break-word','whiteSpace': 'pre-line',  textAlign: 'left' }}>
-                                {item.notes}
+                                <Linkify componentDecorator={this.componentDecorator}>
+                                  {item.notes}
+                                </Linkify>
                               </Typography> 
                             </ExpansionPanelDetails>
                             :
