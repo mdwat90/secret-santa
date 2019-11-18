@@ -490,7 +490,7 @@ class DrawingCard extends Component {
                     <DialogTitle id="alert-dialog-title">{"Delete Member?"}</DialogTitle>
                     <DialogContent>
                       <DialogContentText id="alert-dialog-description">
-                        <Typography style={{textAlign: 'center'}}>Are you sure you want to delete this member from the group?</Typography>
+                        <Typography style={{textAlign: 'center'}}>Are you sure you want to remove this member from the group?</Typography>
                         <Typography style={{textAlign: 'center', fontWeight: 'bold'}}>This will reset the drawing for the entire group.</Typography>
                       </DialogContentText>
                     </DialogContent>
@@ -499,7 +499,7 @@ class DrawingCard extends Component {
                         Close
                       </Button>
                       <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
-                        Delete
+                        Confirm
                       </Button>
                     </DialogActions>
                   </Dialog>
@@ -523,7 +523,7 @@ class DrawingCard extends Component {
                       Close
                     </Button>
                     <Button onClick={() => this.removeMember(this.state.groupId, this.state.deleteUid)} color="secondary">
-                      Leave Group
+                      Confirm
                     </Button>
                   </DialogActions>
                 </Dialog>
@@ -569,7 +569,7 @@ class DrawingCard extends Component {
                       Close
                     </Button>
                     <Button onClick={() => this.deleteGroup(this.state.groupId)} color="secondary">
-                      Delete Group
+                      Delete
                     </Button>
                   </DialogActions>
                 </Dialog>

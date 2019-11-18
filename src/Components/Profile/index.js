@@ -516,7 +516,7 @@ class Profile extends Component {
                   disabled={!this.state.description} 
                   onClick={() => this.updateDB(this.state.itemToUpdate, this.state.description, this.state.link, this.state.notes)} 
                   >
-                    <Typography>Update Item</Typography>
+                    <Typography>Update</Typography>
                 </Button>
               </DialogActions>
             </Dialog>
@@ -589,7 +589,7 @@ class Profile extends Component {
                       Close
                     </Button>
                     <Button onClick={() => this.deleteFromDB(this.state.itemToDelete)} color="secondary">
-                      Delete Item
+                      Delete
                     </Button>
                   </DialogActions>
             </Dialog>
