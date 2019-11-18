@@ -244,7 +244,7 @@ class WishList extends Component {
                             <Grid container justify={'flex-start'}>
                               <Typography style={{textAlign:'left', marginRight: '1vw'}}>
                                 {item.link ?
-                                  <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
+                                  <Link href= {item.link} onClick={(event) => {event.stopPropagation()}} target={'_blank'} className={classes.link}>
                                     {item.description}
                                   </Link>
                                   :

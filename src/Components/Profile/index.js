@@ -412,7 +412,7 @@ class Profile extends Component {
                             <Grid container justify={'flex-start'}>
                               <Typography className={classes.heading}>
                                 {item.link ?
-                                  <Link href= {item.link} onClick={() => this.preventDefault} target={'_blank'} className={classes.link}>
+                                  <Link href= {item.link} onClick={(event) => {event.stopPropagation()}} target={'_blank'} className={classes.link}>
                                     {item.description}
                                   </Link>
                                   :
