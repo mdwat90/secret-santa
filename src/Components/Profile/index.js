@@ -154,7 +154,8 @@ class Profile extends Component {
     })
   }
   
-  editForm = (item) => {
+  editForm = (event, item) => {
+    event.stopPropagation();
     // console.log('ITEM TO UPDATE:', item)
     this.setState({
       itemToUpdate: item._id,
@@ -172,7 +173,8 @@ class Profile extends Component {
     })
   }
 
-  openDeleteModal = (item) => {
+  openDeleteModal = (event, item) => {
+    event.stopPropagation();
     console.log('ITEM TO DELETE:', item)
     this.setState({
       deleteItemModal: true,
@@ -413,10 +415,10 @@ class Profile extends Component {
                             <Grid container justify={'flex-end'} direction={'row'} style={{width: 80 }}>
                               <Grid container justify={'flex-end'} direction={'row'} alignItems='center'>
                                   <Grid item>
-                                    <DeleteIcon onClick={() => this.openDeleteModal(item)} className={classes.icon}/>
+                                    <DeleteIcon onClick={(event) =>this.openDeleteModal(event, item)} className={classes.icon}/>
                                   </Grid>
                                   <Grid item>
-                                    <EditIcon onClick={() => this.editForm(item)} className={classes.icon}/>
+                                    <EditIcon onClick={(event) => this.editForm(event, item)} className={classes.icon}/>
                                   </Grid>
                               </Grid>
                             </Grid>

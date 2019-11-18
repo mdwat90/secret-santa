@@ -130,7 +130,8 @@ class WishList extends Component {
   //   }
   // }
 
-  openPurchaseModal = (item) => {
+  openPurchaseModal = (event, item) => {
+    event.stopPropagation();
     console.log('UDAPTE PURCHASED ITEM:', item)
     this.setState({
       openPurchaseModal: true,
@@ -252,7 +253,7 @@ class WishList extends Component {
                                   </Grid>
                                   :
                                   <Grid item>
-                                      <ShoppingCartOutlinedIcon style={{color: '#6b6b6b', height: '0.75em'}} onClick={() => this.openPurchaseModal(item)} />
+                                      <ShoppingCartOutlinedIcon style={{color: '#6b6b6b', height: '0.75em'}} onClick={(event) => this.openPurchaseModal(event, item)} />
                                   </Grid>
                                 }
                               </Grid>
