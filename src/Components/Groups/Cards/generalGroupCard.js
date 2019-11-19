@@ -197,7 +197,8 @@ class GeneralCard extends Component {
       closeDeleteGroupModal = () => {
         this.setState({
           deleteGroupModal: false,
-          groupId: null
+          groupId: null,
+          anchorEl: null
         })
       };
     

@@ -198,7 +198,8 @@ class DrawingCard extends Component {
         this.setState({
           resetDrawingModal: false,
           deleteUid: null,
-          groupId: null
+          groupId: null,
+          anchorEl: null
         })
       };
     
@@ -216,7 +217,8 @@ class DrawingCard extends Component {
       closeDeleteGroupModal = () => {
         this.setState({
           deleteGroupModal: false,
-          groupId: null
+          groupId: null,
+          anchorEl: null
         })
       };
     
