@@ -67,7 +67,8 @@ const styles = {
     width: '80%'
   },
   heading: {
-    // fontSize: '4vh'
+    textAlign:'left', 
+    marginRight: '1vw'
   },
   details: {
     backgroundColor: '#d1d1d1'
@@ -243,7 +244,7 @@ class WishList extends Component {
                             id="panel1bh-header"
                           >
                             <Grid container justify={'flex-start'}>
-                              <Typography style={{textAlign:'left', marginRight: '1vw'}}>
+                              <Typography className={classes.heading}>
                                 {item.link ?
                                   <Link href= {item.link} onClick={(event) => {event.stopPropagation()}} target={'_blank'} className={classes.link}>
                                     {item.description}

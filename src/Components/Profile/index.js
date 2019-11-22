@@ -84,7 +84,8 @@ const styles = {
     // }
   },
   heading: {
-    // fontSize: '3vh'
+    textAlign:'left', 
+    marginRight: '1vw'
   },
   details: {
     backgroundColor: '#d1d1d1'
