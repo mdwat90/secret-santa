@@ -88,31 +88,29 @@ class ResetPassword extends Component {
 
     console.log('REGISTER DATA:', data);
 
-    // axios
-    //   .post('/api/resetPassword', {
-    //     data: {
-    //       email: data.email.toLowerCase().trim(),
-    //       password: data.password.trim(),
-    //     },
-    //   })
-    //   .then(function (response) {
-    //     // console.log('AXIOS RESPONSE:', response)
-    //     if (response.data._id) {
-    //       component.props.login(response.data);
-    //     } else if (!response.data._id) {
-    //       component.props.userExistsError();
-    //       component.setState({
-    //         loading: false,
-    //       });
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     // console.log('AXIOS ERROR:', error)
-    //     component.props.connectionError(error);
-    //     component.setState({
-    //       loading: false,
-    //     });
-    //   });
+    axios
+      .post('/api/resetPassword', {
+        email: data.email.toLowerCase().trim(),
+        newPassword: data.password.trim(),
+      })
+      .then(function (response) {
+        // console.log('AXIOS RESPONSE:', response);
+        if (response.data._id) {
+          component.props.history.push('/');
+        } else if (!response.data._id) {
+          component.props.userExistsError();
+          component.setState({
+            loading: false,
+          });
+        }
+      })
+      .catch(function (error) {
+        // console.log('AXIOS ERROR:', error)
+        component.props.connectionError(error);
+        component.setState({
+          loading: false,
+        });
+      });
   };
 
   render() {
@@ -126,8 +124,8 @@ class ResetPassword extends Component {
                 initialValues={{ email: '', password: '', confirmPassword: '' }}
                 validate={(values) => {
                   let errors = {};
-                  if (!values.name) {
-                    errors.name = 'Required';
+                  if (!values.email) {
+                    errors.email = 'Required';
                   }
                   if (values.password !== values.confirmPassword) {
                     errors.confirmPassword = 'Passwords do not match';
@@ -136,7 +134,7 @@ class ResetPassword extends Component {
                 }}
                 onSubmit={(values) => {
                   console.log('RESET VALUES', values);
-                  //   this.resetPassword(values);
+                  this.resetPassword(values);
                   this.setState({
                     loading: true,
                   });
@@ -230,8 +228,7 @@ class ResetPassword extends Component {
                       ) : (
                         <Button
                           type="submit"
-                          onClick={handleSubmit}
-                          disabled={isSubmitting}
+                          // disabled={isSubmitting}
                           className={classes.button}
                         >
                           Reset Password

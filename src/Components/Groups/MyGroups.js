@@ -152,7 +152,7 @@ class Groups extends Component {
         },
       })
       .then((res) => {
-        console.log('RESPONSE:', res.data);
+        // console.log('RESPONSE:', res.data);
         this.setState({ userGroups: res.data, loading: false });
       })
       .catch((error) => {

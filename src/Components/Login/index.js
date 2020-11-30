@@ -34,6 +34,10 @@ const styles = {
   link: {
     margin: '2vh',
   },
+  linkGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   textInput: {
     margin: '2vh',
     width: '80%',
@@ -210,13 +214,22 @@ class Login extends Component {
               </Formik>
 
               <Typography>
-                <Link
-                  to="/register"
-                  className={classes.link}
-                  style={{ textDecoration: 'none', color: '#4f92ff' }}
-                >
-                  Register
-                </Link>
+                <div className={classes.linkGroup}>
+                  <Link
+                    to="/register"
+                    className={classes.link}
+                    style={{ textDecoration: 'none', color: '#4f92ff' }}
+                  >
+                    Register
+                  </Link>
+                  <Link
+                    to="/reset-password"
+                    className={classes.link}
+                    style={{ textDecoration: 'none', color: '#4f92ff' }}
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
               </Typography>
 
               {/* {this.props.history.action === "REPLACE" 
