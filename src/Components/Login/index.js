@@ -3,7 +3,12 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { login, loginError, connectionError } from '../../actions/UserActions';
+import {
+  setPasswordReset,
+  login,
+  loginError,
+  connectionError,
+} from '../../actions/UserActions';
 import { withStyles } from '@material-ui/styles';
 import {
   Button,
@@ -13,7 +18,13 @@ import {
   TextField,
   CircularProgress,
   Grid,
+  Snackbar,
+  SnackbarContent,
+  Icon,
+  IconButton,
 } from '@material-ui/core';
+
+import CloseIcon from '@material-ui/icons/Close';
 
 const styles = {
   root: {
@@ -32,11 +43,15 @@ const styles = {
     paddingTop: '5vh',
   },
   link: {
-    margin: '2vh',
+    margin: '0.5vh',
   },
   linkGroup: {
     display: 'flex',
     flexDirection: 'column',
+    margin: '2vh',
+  },
+  success: {
+    backgroundColor: '#00b029',
   },
   textInput: {
     margin: '2vh',
@@ -70,6 +85,9 @@ const styles = {
     padding: '0 30px',
     margin: '5vh',
   },
+  reset: {
+    color: '#00b029',
+  },
 };
 
 class Login extends Component {
@@ -82,6 +100,10 @@ class Login extends Component {
   componentDidMount() {
     window.scrollTo(0, 0);
   }
+
+  handleSnackBarClose = () => {
+    this.props.setPasswordReset(false);
+  };
 
   loginUser = (data) => {
     const component = this;
@@ -98,6 +120,7 @@ class Login extends Component {
       .then(function (response) {
         // console.log('AXIOS RESPONSE:', response)
         if (response.data._id) {
+          component.props.setPasswordReset(false);
           component.props.login(response.data);
         } else if (!response.data._id) {
           // console.log('LOGIN ERROR RESPONSE:', response)
@@ -116,8 +139,8 @@ class Login extends Component {
   };
 
   render() {
-    // console.log('HOME PROPS:', this.props)
-    const { classes } = this.props;
+    const { classes, passwordResetStatus } = this.props;
+
     return (
       <Box className={classes.root}>
         <Grid container justify={'center'}>
@@ -232,14 +255,35 @@ class Login extends Component {
                 </div>
               </Typography>
 
-              {/* {this.props.history.action === "REPLACE" 
-                ?
-                    <div>
-                      <h2>PLEASE SIGN IN</h2>
-                    </div>
-                    :
-                    null
-                } */}
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+                open={passwordResetStatus}
+                autoHideDuration={600}
+                message="Password reset successful"
+                action={
+                  <React.Fragment>
+                    <Button>Close</Button>
+                  </React.Fragment>
+                }
+              >
+                <SnackbarContent
+                  className={classes.success}
+                  message={<span>Password successfully reset</span>}
+                  action={[
+                    <IconButton
+                      key="close"
+                      aria-label="close"
+                      color="inherit"
+                      onClick={this.handleSnackBarClose}
+                    >
+                      <CloseIcon className={classes.icon} />
+                    </IconButton>,
+                  ]}
+                />
+              </Snackbar>
               {this.props.loginErr ? (
                 <div>
                   <Typography
@@ -270,11 +314,12 @@ class Login extends Component {
 
 const mapStateToProps = (state) => {
   const {
-    user: { user_info, loggedIn, loginErr, connectionErr },
+    user: { user_info, passwordResetStatus, loggedIn, loginErr, connectionErr },
   } = state;
 
   return {
     user_info: user_info,
+    passwordResetStatus: passwordResetStatus,
     loggedIn: loggedIn,
     loginErr: loginErr,
     connectionErr: connectionErr,
@@ -282,6 +327,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
+  setPasswordReset,
   login,
   loginError,
   connectionError,

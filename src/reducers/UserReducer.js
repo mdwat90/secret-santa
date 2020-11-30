@@ -3,6 +3,7 @@ import * as type from '../actions/types';
 const initialState = {
   user_info: null,
   loggedIn: false,
+  passwordResetStatus: false,
   loginErr: null,
   connectionErr: null,
   userExistsErr: null,
@@ -18,6 +19,13 @@ export default (state = initialState, action) => {
         loginErr: null,
         connectionErr: null,
         userExistsErr: null,
+      });
+    }
+
+    case type.SET_PASSWORD_RESET: {
+      // console.log('LOGIN INFO', action.payload)
+      return Object.assign({}, state, {
+        passwordResetStatus: action.payload,
       });
     }
 

@@ -10,6 +10,11 @@ export const logOut = () => ({
   payload: 'logout',
 });
 
+export const setPasswordReset = (payload) => ({
+  type: type.SET_PASSWORD_RESET,
+  payload,
+});
+
 export const loginError = (error) => ({
   type: type.LOGIN_ERROR,
   payload: error,

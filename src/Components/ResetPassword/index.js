@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import {
+  setPasswordReset,
   login,
   userExistsError,
   connectionError,
@@ -86,8 +87,6 @@ class ResetPassword extends Component {
   resetPassword = (data) => {
     const component = this;
 
-    console.log('REGISTER DATA:', data);
-
     axios
       .post('/api/resetPassword', {
         email: data.email.toLowerCase().trim(),
@@ -96,6 +95,7 @@ class ResetPassword extends Component {
       .then(function (response) {
         // console.log('AXIOS RESPONSE:', response);
         if (response.data._id) {
+          component.props.setPasswordReset(true);
           component.props.history.push('/');
         } else if (!response.data._id) {
           component.props.userExistsError();
@@ -133,7 +133,6 @@ class ResetPassword extends Component {
                   return errors;
                 }}
                 onSubmit={(values) => {
-                  console.log('RESET VALUES', values);
                   this.resetPassword(values);
                   this.setState({
                     loading: true,
@@ -281,6 +280,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
+  setPasswordReset,
   login,
   userExistsError,
   connectionError,

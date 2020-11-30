@@ -111,7 +111,7 @@ class WishList extends Component {
   }
 
   componentDidMount() {
-    console.log('WISHLIST PROPS:', this.props);
+    // console.log('WISHLIST PROPS:', this.props);
 
     window.scrollTo(0, 0);
 
@@ -135,7 +135,7 @@ class WishList extends Component {
 
   openPurchaseModal = (event, item) => {
     event.stopPropagation();
-    console.log('UDAPTE PURCHASED ITEM:', item);
+    // console.log('UDAPTE PURCHASED ITEM:', item);
     this.setState({
       openPurchaseModal: true,
       itemToUpdate: item._id,
@@ -157,7 +157,7 @@ class WishList extends Component {
   };
 
   getUserData = (userId) => {
-    console.log('GETTING USER DATA');
+    // console.log('GETTING USER DATA');
     this.setState({
       loading: true,
     });
@@ -172,7 +172,7 @@ class WishList extends Component {
   };
 
   purchaseItem = (id) => {
-    console.log('ITEM ID:', id);
+    // console.log('ITEM ID:', id);
 
     let component = this;
 
@@ -183,7 +183,7 @@ class WishList extends Component {
         update: { purchased: true },
       })
       .then(function (response) {
-        console.log('AXIOS RESPONSE:', response);
+        // console.log('AXIOS RESPONSE:', response);
         component.setState({
           openPurchaseModal: false,
           itemToUpdate: null,
