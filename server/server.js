@@ -21,9 +21,9 @@ app.use(cors());
 // MongoDB database route
 const dbRoute = process.env.MONGO;
 
-console.log('DB ROUTE:', dbRoute);
+// console.log('DB ROUTE:', dbRoute);
 
-console.log('SEND GRID API KEY:', process.env.SENDGRID_API_KEY);
+// console.log('SEND GRID API KEY:', process.env.SENDGRID_API_KEY);
 
 // SendGrid Setup
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
