@@ -1,21 +1,21 @@
-import * as type from "./types";
+import * as type from './types';
 
 export const createGroupSuccess = () => ({
-    type: type.CREATE_GROUP_SUCCESS,
-    payload: null
+  type: type.CREATE_GROUP_SUCCESS,
+  payload: null,
 });
 
 export const joinGroupSuccess = () => ({
-    type: type.JOIN_GROUP_SUCCESS,
-    payload: null
+  type: type.JOIN_GROUP_SUCCESS,
+  payload: null,
 });
 
 export const groupExistsError = () => ({
-    type: type.GROUP_EXISTS_ERROR,
-    payload: 'error'
+  type: type.GROUP_EXISTS_ERROR,
+  payload: 'error',
 });
 
 export const joinGroupError = (error) => ({
-    type: type.JOIN_GROUP_ERROR,
-    payload: error
+  type: type.JOIN_GROUP_ERROR,
+  payload: error,
 });

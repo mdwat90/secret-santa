@@ -1,12 +1,23 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { connectionError } from '../../actions/UserActions';
-import { joinGroupError, joinGroupSuccess, createGroupSuccess } from '../../actions/GroupActions';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {
+  joinGroupError,
+  joinGroupSuccess,
+  createGroupSuccess,
+} from '../../actions/GroupActions';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
-import { Button, Container, Box, Typography, TextField, Grid } from '@material-ui/core';
+import {
+  Button,
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Grid,
+} from '@material-ui/core';
 
 const styles = {
   root: {
@@ -18,7 +29,7 @@ const styles = {
   form: {
     background: '#fff',
     textAlign: 'center',
-    borderRadius: 5
+    borderRadius: 5,
   },
   title: {
     paddingTop: '5vh',
@@ -57,22 +68,22 @@ const styles = {
     // width: '25%',
     padding: '0 30px',
     margin: '5vh',
-    marginTop: '7vh'
+    marginTop: '7vh',
   },
 };
 
 class JoinGroup extends Component {
   constructor(props) {
-    super(props)
-    this.state={
-      groupJoined: false
-    }
+    super(props);
+    this.state = {
+      groupJoined: false,
+    };
   }
 
   componentDidUpdate(prevProps) {
     window.scrollTo(0, 0);
-    if(prevProps.loggedIn !== this.props.loggedIn) {
-      this.props.history.push('/profile')
+    if (prevProps.loggedIn !== this.props.loggedIn) {
+      this.props.history.push('/profile');
     }
   }
 
@@ -81,78 +92,84 @@ class JoinGroup extends Component {
 
     // console.log('CLIENT GROUP DATA:', data)
 
-    axios.post('/api/joinGroup', {
-      data: {
-        uid: data.uid,
-        name: data.name.toLowerCase().trim(),
-        email: data.email.toLowerCase().trim(),
-        group: data.group.toLowerCase().trim(),
-        password: data.password.trim()
-      }
-    })
-    .then(function (response) {
-      // console.log('AXIOS RESPONSE:', response)
-      if(response.data._id){
-        component.props.joinGroupSuccess();
-        component.props.createGroupSuccess();
-        component.setState({
-          groupJoined: !component.state.groupJoined
-        });
-        setTimeout(function() {
-          component.props.history.push('/groups/my-groups')
-        }, 1500)
-      }
-      else if(!response.data._id){
-        // console.log('JOIN GROUP ERROR', response)
-        component.props.joinGroupError(response.data);
-      }
-    })
-    .catch(function (error) {
-      // console.log('AXIOS ERROR:', error)
-      component.props.connectionError(error);
-    })
-  }
-
+    axios
+      .post('/api/joinGroup', {
+        data: {
+          uid: data.uid,
+          name: data.name.toLowerCase().trim(),
+          email: data.email.toLowerCase().trim(),
+          group: data.group.toLowerCase().trim(),
+          password: data.password.trim(),
+        },
+      })
+      .then(function (response) {
+        // console.log('AXIOS RESPONSE:', response)
+        if (response.data._id) {
+          component.props.joinGroupSuccess();
+          component.props.createGroupSuccess();
+          component.setState({
+            groupJoined: !component.state.groupJoined,
+          });
+          setTimeout(function () {
+            component.props.history.push('/groups/my-groups');
+          }, 1500);
+        } else if (!response.data._id) {
+          // console.log('JOIN GROUP ERROR', response)
+          component.props.joinGroupError(response.data);
+        }
+      })
+      .catch(function (error) {
+        // console.log('AXIOS ERROR:', error)
+        component.props.connectionError(error);
+      });
+  };
 
   render() {
-    const {user_info, classes } = this.props;
+    const { user_info, classes } = this.props;
 
-    return (
-      this.state.groupJoined ? 
-        <Container style={{ marginTop: '5vh'}}>
-          <Typography variant='h5'>You have joined the group!</Typography>
-        </Container>
-        :
-        <Box className={classes.root}>
-          <Grid container justify={'center'}>
-            <Grid item xl ={6} lg={7} md={10} xs={12}>
-              <Container className={classes.form}>
-                <Formik
-                  initialValues={{ uid: user_info._id, name: user_info.name, email: user_info.email, group: '',  password: '' }}
-                  validate={values => {
-                    let errors = {};
-                    if (!values.name) {
-                      errors.name = 'Required';
-                    }
-                    return errors;
-                  }}
-                  onSubmit={(values, { setSubmitting }) => {
-                    this.JoinGroup(values);
-                  }}
-                >
-                  {({
-                    values,
-                    errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
-                    isSubmitting
-                  }) => (
-                    <form onSubmit={handleSubmit}>
-                      {errors.admin}
-                        <Typography variant='h5' className={classes.title}>Join Group</Typography>
-                      {/* <div>
+    return this.state.groupJoined ? (
+      <Container style={{ marginTop: '5vh' }}>
+        <Typography variant="h5">You have joined the group!</Typography>
+      </Container>
+    ) : (
+      <Box className={classes.root}>
+        <Grid container justify={'center'}>
+          <Grid item xl={6} lg={7} md={10} xs={12}>
+            <Container className={classes.form}>
+              <Formik
+                initialValues={{
+                  uid: user_info._id,
+                  name: user_info.name,
+                  email: user_info.email,
+                  group: '',
+                  password: '',
+                }}
+                validate={(values) => {
+                  let errors = {};
+                  if (!values.name) {
+                    errors.name = 'Required';
+                  }
+                  return errors;
+                }}
+                onSubmit={(values, { setSubmitting }) => {
+                  this.JoinGroup(values);
+                }}
+              >
+                {({
+                  values,
+                  errors,
+                  touched,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  isSubmitting,
+                }) => (
+                  <form onSubmit={handleSubmit}>
+                    {errors.admin}
+                    <Typography variant="h5" className={classes.title}>
+                      Join Group
+                    </Typography>
+                    {/* <div>
                         <TextField
                           required
                           type="name"
@@ -167,97 +184,102 @@ class JoinGroup extends Component {
                         />
                       </div> */}
 
-                      <div>
-                        {/* <Typography variant='h5' className={classes.title}>Group Name</Typography> */}
-                        <TextField
-                          required
-                          type="name"
-                          name="group"
-                          id="standard-required"
-                          label="Group Name"
-                          placeholder={'Group Name'}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.group}
-                          className={classes.textInput}
-                        />
-                      </div>
-                      <div>
-                        {/* <Typography style={{color: 'red'}}>{errors.group}</Typography> */}
-                      </div>
-                      <div>
-                        {/* <Typography variant='h5' className={classes.title}>Password</Typography> */}
-                        <TextField
-                          required
-                          type="password"
-                          name="password"
-                          id="standard-password-input"
-                          label="Password"
-                          placeholder={'Password'}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.password}
-                          className={classes.textInput}
-                        />
-                      </div>
-                      <div>
-                        {/* <Typography style={{color: 'red'}}>{errors.password}</Typography> */}
-                      </div>
-                      <div>
-                        <Button type="submit" className={classes.button}>
-                          Join Group
-                        </Button>
-                      </div>
-                    </form>
-                  )}
-                </Formik>
+                    <div>
+                      {/* <Typography variant='h5' className={classes.title}>Group Name</Typography> */}
+                      <TextField
+                        required
+                        type="name"
+                        name="group"
+                        id="standard-required"
+                        label="Group Name"
+                        placeholder={'Group Name'}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.group}
+                        className={classes.textInput}
+                      />
+                    </div>
+                    <div>
+                      {/* <Typography style={{color: 'red'}}>{errors.group}</Typography> */}
+                    </div>
+                    <div>
+                      {/* <Typography variant='h5' className={classes.title}>Password</Typography> */}
+                      <TextField
+                        required
+                        type="password"
+                        name="password"
+                        id="standard-password-input"
+                        label="Password"
+                        placeholder={'Password'}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.password}
+                        className={classes.textInput}
+                      />
+                    </div>
+                    <div>
+                      {/* <Typography style={{color: 'red'}}>{errors.password}</Typography> */}
+                    </div>
+                    <div>
+                      <Button type="submit" className={classes.button}>
+                        Join Group
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </Formik>
 
-                <Typography className={classes.link}>
-                  <Link to="/groups/create-group" style={{ textDecoration: 'none', color: '#4f92ff' }}>
-                    Haven't created a group? You can create one by clicking here.
-                  </Link>
-                </Typography>
+              <Typography className={classes.link}>
+                <Link
+                  to="/groups/create-group"
+                  style={{ textDecoration: 'none', color: '#4f92ff' }}
+                >
+                  Create Group
+                </Link>
+              </Typography>
 
-                {this.props.joinGroupErr ?
-                  <div>
-                    <Typography style={{paddingTop: '2vh', color: 'red', fontWeight: 'bold'}}>
-                      {this.props.joinGroupErr}
-                    </Typography>
-                  </div>
-                  :
-                  null
-                  }
+              {this.props.joinGroupErr ? (
+                <div>
+                  <Typography
+                    style={{
+                      paddingTop: '2vh',
+                      color: 'red',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {this.props.joinGroupErr}
+                  </Typography>
+                </div>
+              ) : null}
             </Container>
-            </Grid>
           </Grid>
-        </Box>  
-    )
+        </Grid>
+      </Box>
+    );
   }
 }
 
-const mapStateToProps = state => {
-  const { user: {user_info, loggedIn, connectionErr }, group: {joinGroupErr }  } = state;
+const mapStateToProps = (state) => {
+  const {
+    user: { user_info, loggedIn, connectionErr },
+    group: { joinGroupErr },
+  } = state;
 
   return {
     user_info: user_info,
     loggedIn: loggedIn,
     joinGroupErr: joinGroupErr,
-    connectionErr: connectionErr
-  }
-}
+    connectionErr: connectionErr,
+  };
+};
 
 const mapDispatchToProps = {
   joinGroupError,
   connectionError,
   joinGroupSuccess,
-  createGroupSuccess
-}
+  createGroupSuccess,
+};
 
-
-const JoinGroupScreen = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(JoinGroup);
-
+const JoinGroupScreen = connect(mapStateToProps, mapDispatchToProps)(JoinGroup);
 
 export default withStyles(styles)(JoinGroupScreen);

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const id = new mongoose.Types.ObjectId();
 
@@ -8,9 +8,9 @@ const ItemSchema = new Schema(
     description: String,
     link: String,
     notes: String,
-    purchased: Boolean
+    purchased: Boolean,
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Item", ItemSchema);
+module.exports = mongoose.model('Item', ItemSchema);

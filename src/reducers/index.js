@@ -4,7 +4,7 @@ import item from './ItemReducer';
 import group from './GroupReducer';
 
 export default combineReducers({
-    item,
-    user,
-    group
+  item,
+  user,
+  group,
 });

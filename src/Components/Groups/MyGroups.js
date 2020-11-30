@@ -1,19 +1,23 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { login, userExistsError, connectionError} from '../../actions/UserActions';
+import {
+  login,
+  userExistsError,
+  connectionError,
+} from '../../actions/UserActions';
 import { withStyles } from '@material-ui/styles';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { 
-  Button, 
-  Container, 
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import {
+  Button,
+  Container,
   CircularProgress,
-  Typography, 
-  TextField, 
-  Card, 
-  Grid
-  } from '@material-ui/core';
+  Typography,
+  TextField,
+  Card,
+  Grid,
+} from '@material-ui/core';
 import NameDrawingCard from './Cards/nameDrawCard';
 import GeneralGroupCard from './Cards/generalGroupCard';
 
@@ -22,61 +26,61 @@ const styles = {
     background: '#4f92ff',
     margin: 'auto',
     height: '100vh',
-    paddingTop: '15vh'
+    paddingTop: '15vh',
   },
   container: {
     background: '#fff',
     textAlign: 'center',
-    marginTop: '3vw'
+    marginTop: '3vw',
   },
   buttonContainer: {
     background: '#fff',
     textAlign: 'center',
-    marginTop: '10vw'
+    marginTop: '10vw',
   },
   form: {
     background: '#fff',
     textAlign: 'center',
     width: '50%',
     height: '80%',
-    borderRadius: 5
+    borderRadius: 5,
   },
   title: {
     margin: '1vh',
   },
   subText: {
     margin: '2vh',
-    color: '#b8b8b8'
+    color: '#b8b8b8',
   },
   card: {
     padding: '2vh',
   },
   textInput: {
     margin: '1vh',
-    width: '80%'
+    width: '80%',
   },
   button: {
-    margin: '2vh'
+    margin: '2vh',
   },
   icon: {
     margin: 5,
     color: '#b8b8b8',
     cursor: 'pointer',
-    position: 'absolute'
+    position: 'absolute',
   },
   deleteIcon: {
     height: '20px',
     width: '20px',
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   drawButton: {
-    color: '#4f92ff',  
-    borderColor: '#4f92ff', 
-    backgroundColor: 'white', 
-    margin: '4vh'
+    color: '#4f92ff',
+    borderColor: '#4f92ff',
+    backgroundColor: 'white',
+    margin: '4vh',
   },
   delete: {
-    color: 'red'
+    color: 'red',
   },
   panel: {
     marginTop: '2vh',
@@ -90,14 +94,14 @@ const styles = {
     height: '50px',
     width: '25vh',
     padding: '0 30px',
-    margin: '4vw'
+    margin: '4vw',
   },
 };
 
 class Groups extends Component {
   constructor(props) {
-    super(props)
-    this.state={
+    super(props);
+    this.state = {
       userGroups: [],
       selectedUsersData: [],
       selectedUserId: null,
@@ -113,10 +117,9 @@ class Groups extends Component {
       nameDrawing: false,
       groupId: null,
       deleteUid: null,
-      loading: null
-    }
+      loading: null,
+    };
   }
-
 
   componentDidMount() {
     // this.setState({
@@ -127,120 +130,139 @@ class Groups extends Component {
     window.scrollTo(0, 0);
 
     this.getUserGroups(this.props.user_info._id);
-      // this.getSelectedUsersData(this.state.selectedUserId);
+    // this.getSelectedUsersData(this.state.selectedUserId);
     // })
-    
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.loggedIn !== this.props.loggedIn) {
+    if (prevProps.loggedIn !== this.props.loggedIn) {
       this.props.history.push('/profile');
     }
   }
 
   getUserGroups = (userId) => {
     this.setState({
-      loading: true
-    })
+      loading: true,
+    });
 
-    axios.get('/api/getUserGroups', {
-      params: {
-        user_id: userId
-      }
-    })
+    axios
+      .get('/api/getUserGroups', {
+        params: {
+          user_id: userId,
+        },
+      })
       .then((res) => {
-        console.log('RESPONSE:', res.data)
-        this.setState({ userGroups: res.data, loading: false })
-    })
-    .catch(error => {
-      // console.log('AXIOS GET USER GROUPS ERROR', error)
-    })
+        console.log('RESPONSE:', res.data);
+        this.setState({ userGroups: res.data, loading: false });
+      })
+      .catch((error) => {
+        // console.log('AXIOS GET USER GROUPS ERROR', error)
+      });
   };
 
   routeChange(uid, name) {
     let path = `/wish-list/${uid}`;
-    this.history.push(path, {user: name});
+    this.history.push(path, { user: name });
   }
 
   render() {
     const { user_info, classes } = this.props;
-    
+
     return (
       <div>
-          {this.state.loading ?
-            <Container style={{height: '20vh', marginTop: '10vh'}}>
-              <CircularProgress style={{color:'#ff476f'}}/>
-            </Container>
-            :
-            <div>
-              <Grid 
-                container  
-                wrap='wrap' 
-                direction='row' 
-                spacing={3}
-              >
-                {this.state.userGroups.length <= 0 && this.state.loading === false ? 
-                  <Container style={{height: '20vh', marginTop: '10vh'}}>
-                    <Typography variant='h5' style={{marginBottom: '2vh'}}>You haven't joined any groups yet!</Typography>
-                    <Typography variant='body1' style={{marginBottom: '2vh'}}>When you create or join a group, it will show up here.</Typography>
-                  </Container>
-                  :
-                  this.state.userGroups.map((group, idx) => {
-
-                    return (
-                      <Grid item xs={12} md={6} lg={4} key={group._id}>
-                        {group.nameDrawing ? 
-                          <NameDrawingCard group={group} idx={idx} user={this.props.user} getUserGroups={this.getUserGroups} routeChange={this.routeChange} {...this.props}/>
-                        :
-                          <GeneralGroupCard group={group} idx={idx} user={this.props.user} getUserGroups={this.getUserGroups} routeChange={this.routeChange} {...this.props}/>
-                        }
-                      </Grid>
-                    )
-                  })}
-                </Grid>
-
-                <Container xs={12} m={6} lg={6} className={classes.buttonContainer}>
-                  <Link to="/groups/create-group" style={{ textDecoration: 'none', color: '#fff'}}>
-                    <Button  className={classes.link}>
-                        <Typography style={{color:'#fff'}}>Create Group</Typography>
-                    </Button>
-                  </Link>
-                  
-                  <Link to="/groups/join-group" style={{ textDecoration: 'none', color: '#fff'}}>
-                    <Button className={classes.link}>
-                        <Typography style={{color:'#fff'}}>Join Group</Typography>
-                    </Button>
-                  </Link>
+        {this.state.loading ? (
+          <Container style={{ height: '20vh', marginTop: '10vh' }}>
+            <CircularProgress style={{ color: '#ff476f' }} />
+          </Container>
+        ) : (
+          <div>
+            <Grid container wrap="wrap" direction="row" spacing={3}>
+              {this.state.userGroups.length <= 0 &&
+              this.state.loading === false ? (
+                <Container style={{ height: '20vh', marginTop: '10vh' }}>
+                  <Typography variant="h5" style={{ marginBottom: '2vh' }}>
+                    You haven't joined any groups yet!
+                  </Typography>
+                  <Typography variant="body1" style={{ marginBottom: '2vh' }}>
+                    When you create or join a group, it will show up here.
+                  </Typography>
                 </Container>
-            </div>
-          }
+              ) : (
+                this.state.userGroups.map((group, idx) => {
+                  return (
+                    <Grid item xs={12} md={6} lg={4} key={group._id}>
+                      {group.nameDrawing ? (
+                        <NameDrawingCard
+                          group={group}
+                          idx={idx}
+                          user={this.props.user}
+                          getUserGroups={this.getUserGroups}
+                          routeChange={this.routeChange}
+                          {...this.props}
+                        />
+                      ) : (
+                        <GeneralGroupCard
+                          group={group}
+                          idx={idx}
+                          user={this.props.user}
+                          getUserGroups={this.getUserGroups}
+                          routeChange={this.routeChange}
+                          {...this.props}
+                        />
+                      )}
+                    </Grid>
+                  );
+                })
+              )}
+            </Grid>
+
+            <Container xs={12} m={6} lg={6} className={classes.buttonContainer}>
+              <Link
+                to="/groups/create-group"
+                style={{ textDecoration: 'none', color: '#fff' }}
+              >
+                <Button className={classes.link}>
+                  <Typography style={{ color: '#fff' }}>
+                    Create Group
+                  </Typography>
+                </Button>
+              </Link>
+
+              <Link
+                to="/groups/join-group"
+                style={{ textDecoration: 'none', color: '#fff' }}
+              >
+                <Button className={classes.link}>
+                  <Typography style={{ color: '#fff' }}>Join Group</Typography>
+                </Button>
+              </Link>
+            </Container>
+          </div>
+        )}
       </div>
-    )
+    );
   }
 }
 
-const mapStateToProps = state => {
-  const { user: {user_info, loggedIn, userExistsErr, connectionErr } } = state;
+const mapStateToProps = (state) => {
+  const {
+    user: { user_info, loggedIn, userExistsErr, connectionErr },
+  } = state;
 
   return {
     user_info: user_info,
     loggedIn: loggedIn,
     userExistsErr: userExistsErr,
-    connectionErr: connectionErr
-  }
-}
+    connectionErr: connectionErr,
+  };
+};
 
 const mapDispatchToProps = {
   login,
   userExistsError,
-  connectionError
-}
+  connectionError,
+};
 
-
-const GroupsScreen = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Groups);
-
+const GroupsScreen = connect(mapStateToProps, mapDispatchToProps)(Groups);
 
 export default withStyles(styles)(GroupsScreen);

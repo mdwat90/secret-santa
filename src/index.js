@@ -5,15 +5,14 @@ import * as serviceWorker from './serviceWorker';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import XmasApp from './reducers/index';
-import { Button, Container, Box } from '@material-ui/core';
 
 const store = createStore(XmasApp);
 
 ReactDOM.render(
-    <Provider store={store}>
-        <App /> 
-    </Provider>,
-    document.getElementById('root')
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

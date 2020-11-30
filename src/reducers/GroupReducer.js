@@ -1,13 +1,12 @@
-import * as type from "../actions/types";
+import * as type from '../actions/types';
 
 const initialState = {
-    groupExistsErr: null,
-    joinGroupErr: null
-  };
-  
+  groupExistsErr: null,
+  joinGroupErr: null,
+};
 
-  export default (state = initialState, action) => {
-    switch (action.type) {
+export default (state = initialState, action) => {
+  switch (action.type) {
     case type.CREATE_GROUP_SUCCESS: {
       return Object.assign({}, state, { groupExistsErr: null });
     }
@@ -20,10 +19,9 @@ const initialState = {
     case type.JOIN_GROUP_ERROR: {
       return Object.assign({}, state, { joinGroupErr: action.payload });
     }
-    
-    default:{
+
+    default: {
       return state;
     }
   }
-}
-  
+};

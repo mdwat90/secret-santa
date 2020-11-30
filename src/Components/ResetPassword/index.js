@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { login, loginError, connectionError } from '../../actions/UserActions';
+import {
+  login,
+  userExistsError,
+  connectionError,
+} from '../../actions/UserActions';
 import { withStyles } from '@material-ui/styles';
 import {
   Button,
@@ -35,7 +38,7 @@ const styles = {
     margin: '2vh',
   },
   textInput: {
-    margin: '2vh',
+    margin: '1vh',
     width: '80%',
     '& label.Mui-focused': {
       color: '#4f92ff',
@@ -62,57 +65,57 @@ const styles = {
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     color: 'white',
     height: 48,
-    width: '25%',
+    width: '30%',
     padding: '0 30px',
     margin: '5vh',
   },
 };
 
-class Login extends Component {
+class ResetPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
     };
   }
+
   componentDidMount() {
     window.scrollTo(0, 0);
   }
 
-  loginUser = (data) => {
+  resetPassword = (data) => {
     const component = this;
 
-    // console.log('USER LOGIN DATA:', data)
+    console.log('REGISTER DATA:', data);
 
-    axios
-      .get('/api/user', {
-        params: {
-          email: data.email.toLowerCase().trim(),
-          password: data.password.trim(),
-        },
-      })
-      .then(function (response) {
-        // console.log('AXIOS RESPONSE:', response)
-        if (response.data._id) {
-          component.props.login(response.data);
-        } else if (!response.data._id) {
-          // console.log('LOGIN ERROR RESPONSE:', response)
-          component.props.loginError(response.data);
-          component.setState({
-            loading: false,
-          });
-        }
-      })
-      .catch(function (error) {
-        component.props.connectionError(error);
-        component.setState({
-          loading: false,
-        });
-      });
+    // axios
+    //   .post('/api/resetPassword', {
+    //     data: {
+    //       email: data.email.toLowerCase().trim(),
+    //       password: data.password.trim(),
+    //     },
+    //   })
+    //   .then(function (response) {
+    //     // console.log('AXIOS RESPONSE:', response)
+    //     if (response.data._id) {
+    //       component.props.login(response.data);
+    //     } else if (!response.data._id) {
+    //       component.props.userExistsError();
+    //       component.setState({
+    //         loading: false,
+    //       });
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     // console.log('AXIOS ERROR:', error)
+    //     component.props.connectionError(error);
+    //     component.setState({
+    //       loading: false,
+    //     });
+    //   });
   };
 
   render() {
-    // console.log('HOME PROPS:', this.props)
     const { classes } = this.props;
     return (
       <Box className={classes.root}>
@@ -120,16 +123,20 @@ class Login extends Component {
           <Grid item xl={6} lg={6} md={6} xs={10}>
             <Container className={classes.form}>
               <Formik
-                initialValues={{ email: '', password: '' }}
+                initialValues={{ email: '', password: '', confirmPassword: '' }}
                 validate={(values) => {
                   let errors = {};
-                  if (!values.email) {
-                    errors.email = 'Required';
+                  if (!values.name) {
+                    errors.name = 'Required';
+                  }
+                  if (values.password !== values.confirmPassword) {
+                    errors.confirmPassword = 'Passwords do not match';
                   }
                   return errors;
                 }}
-                onSubmit={(values, { setSubmitting }) => {
-                  this.loginUser(values);
+                onSubmit={(values) => {
+                  console.log('RESET VALUES', values);
+                  //   this.resetPassword(values);
                   this.setState({
                     loading: true,
                   });
@@ -138,7 +145,6 @@ class Login extends Component {
                 {({
                   values,
                   errors,
-                  touched,
                   handleChange,
                   handleBlur,
                   handleSubmit,
@@ -146,11 +152,13 @@ class Login extends Component {
                 }) => (
                   <form onSubmit={handleSubmit}>
                     <Typography variant="h4" className={classes.title}>
-                      Login
+                      Reset Password
                     </Typography>
+
                     <div>
                       {/* <Typography variant='h5' className={classes.title}>Name</Typography> */}
                       <TextField
+                        required
                         type="email"
                         name="email"
                         id="standard-required"
@@ -162,19 +170,18 @@ class Login extends Component {
                         className={classes.textInput}
                       />
                     </div>
-                    <div>
-                      <Typography style={{ color: 'red' }}>
-                        {errors.email}
-                      </Typography>
-                    </div>
+                    {/* <div>
+                            <Typography style={{color: 'red'}}>{errors.name}</Typography>
+                          </div> */}
 
                     <div>
                       {/* <Typography variant='h5' className={classes.title}>Password</Typography> */}
                       <TextField
+                        required
                         type="password"
                         name="password"
-                        id="standard-password-input"
-                        label="Password"
+                        id="standard-password-input-1"
+                        label="New Password"
                         placeholder={'Password'}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -185,6 +192,27 @@ class Login extends Component {
                     <div>
                       <Typography style={{ color: 'red' }}>
                         {errors.password}
+                      </Typography>
+                    </div>
+
+                    <div>
+                      {/* <Typography variant='h5' className={classes.title}>Confirm Password</Typography> */}
+                      <TextField
+                        required
+                        type="password"
+                        name="confirmPassword"
+                        id="standard-password-input-2"
+                        label="Confirm Password"
+                        placeholder={'Confirm Password'}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.confirmPassword}
+                        className={classes.textInput}
+                      />
+                    </div>
+                    <div>
+                      <Typography style={{ color: 'red' }}>
+                        {errors.confirmPassword}
                       </Typography>
                     </div>
 
@@ -200,40 +228,27 @@ class Login extends Component {
                           <CircularProgress style={{ color: '#ff476f' }} />
                         </Container>
                       ) : (
-                        <Button type="submit" className={classes.button}>
-                          Login
+                        <Button
+                          type="submit"
+                          onClick={handleSubmit}
+                          disabled={isSubmitting}
+                          className={classes.button}
+                        >
+                          Reset Password
                         </Button>
                       )}
                     </div>
                   </form>
                 )}
               </Formik>
-
-              <Typography>
-                <Link
-                  to="/register"
-                  className={classes.link}
-                  style={{ textDecoration: 'none', color: '#4f92ff' }}
-                >
-                  Register
-                </Link>
-              </Typography>
-
-              {/* {this.props.history.action === "REPLACE" 
-                ?
-                    <div>
-                      <h2>PLEASE SIGN IN</h2>
-                    </div>
-                    :
-                    null
-                } */}
-              {this.props.loginErr ? (
+              {/* 
+              {this.props.userExistsErr ? (
                 <div>
                   <Typography
                     variant="h6"
-                    style={{ paddingTop: '3vh', color: 'red' }}
+                    style={{ paddingTop: '4vh', color: 'red' }}
                   >
-                    {this.props.loginErr}
+                    USER ALREADY EXISTS
                   </Typography>
                 </div>
               ) : null}
@@ -241,12 +256,12 @@ class Login extends Component {
                 <div>
                   <Typography
                     variant="h6"
-                    style={{ paddingTop: '3vh', color: 'red' }}
+                    style={{ paddingTop: '4vh', color: 'red' }}
                   >
                     ERROR CONNECTING TO DATABASE
                   </Typography>
                 </div>
-              ) : null}
+              ) : null} */}
             </Container>
           </Grid>
         </Grid>
@@ -257,23 +272,26 @@ class Login extends Component {
 
 const mapStateToProps = (state) => {
   const {
-    user: { user_info, loggedIn, loginErr, connectionErr },
+    user: { user_info, loggedIn, userExistsErr, connectionErr },
   } = state;
 
   return {
     user_info: user_info,
     loggedIn: loggedIn,
-    loginErr: loginErr,
+    userExistsErr: userExistsErr,
     connectionErr: connectionErr,
   };
 };
 
 const mapDispatchToProps = {
   login,
-  loginError,
+  userExistsError,
   connectionError,
 };
 
-const LoginScreen = connect(mapStateToProps, mapDispatchToProps)(Login);
+const ResetPasswordScreen = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ResetPassword);
 
-export default withStyles(styles)(LoginScreen);
+export default withStyles(styles)(ResetPasswordScreen);

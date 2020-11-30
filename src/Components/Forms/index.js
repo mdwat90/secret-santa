@@ -2,10 +2,10 @@ import React from 'react';
 import { Formik } from 'formik';
 
 const Basic = () => (
-    <div>
+  <div>
     <Formik
       initialValues={{ email: '', password: '', name: '' }}
-      validate={values => {
+      validate={(values) => {
         let errors = {};
         if (!values.email) {
           errors.email = 'Required';
@@ -30,48 +30,42 @@ const Basic = () => (
         handleChange,
         handleBlur,
         handleSubmit,
-        isSubmitting
+        isSubmitting,
       }) => (
         <form onSubmit={handleSubmit}>
-        <div>
-          <h1>Email</h1>
-          <input
-            type="email"
-            name="email"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
-          />
           <div>
-            {errors.email && touched.email && errors.email}
+            <h1>Email</h1>
+            <input
+              type="email"
+              name="email"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.email}
+            />
+            <div>{errors.email && touched.email && errors.email}</div>
           </div>
-        </div>
-        <div>
-          <h1>Name</h1>
-          <input
-            type="name"
-            name="name"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.name}
-          />
           <div>
-            {errors.name && touched.name && errors.name}
+            <h1>Name</h1>
+            <input
+              type="name"
+              name="name"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.name}
+            />
+            <div>{errors.name && touched.name && errors.name}</div>
           </div>
-        </div>
-        <div>
-          <h1>Password</h1>
-          <input
-            type="password"
-            name="password"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.password}
-          />
           <div>
-          {errors.password && touched.password && errors.password}
+            <h1>Password</h1>
+            <input
+              type="password"
+              name="password"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.password}
+            />
+            <div>{errors.password && touched.password && errors.password}</div>
           </div>
-        </div>
           <div>
             <button type="submit" disabled={isSubmitting}>
               Submit
@@ -82,6 +76,5 @@ const Basic = () => (
     </Formik>
   </div>
 );
-
 
 export default Basic;
