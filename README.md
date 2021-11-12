@@ -4,9 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the src directory, you can run:
 
-### `yarn dev`
+### `npm run dev`
 
 Runs the client and server for development.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -14,11 +14,11 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `yarn start`
+### `npm start`
 
 Launches the server for heroku build.<br>
 
-### `yarn build`
+### `npm run build`
 
 Builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
