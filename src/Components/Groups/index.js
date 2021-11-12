@@ -7,12 +7,20 @@ import {
   userExistsError,
   connectionError,
 } from '../../actions/UserActions';
-import { BrowserRouter as Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import CreateGroup from './CreateGroup';
 import JoinGroup from './JoinGroup';
 import MyGroups from './MyGroups';
 import { withStyles } from '@material-ui/styles';
-import { Container, Box } from '@material-ui/core';
+import {
+  Button,
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Card,
+  CardActionArea,
+} from '@material-ui/core';
 
 const styles = {
   root: {
