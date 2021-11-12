@@ -8,7 +8,7 @@ import {
   joinGroupSuccess,
   createGroupSuccess,
 } from '../../actions/GroupActions';
-import { BrowserRouter as Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
 import {
   Button,

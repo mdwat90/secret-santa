@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Formik } from 'formik';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import {
@@ -7,12 +8,14 @@ import {
   connectionError,
 } from '../../actions/UserActions';
 import { withStyles } from '@material-ui/styles';
-import { BrowserRouter as Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import {
   Button,
   Container,
   CircularProgress,
   Typography,
+  TextField,
+  Card,
   Grid,
 } from '@material-ui/core';
 import NameDrawingCard from './Cards/nameDrawCard';
