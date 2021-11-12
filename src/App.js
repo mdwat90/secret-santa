@@ -6,6 +6,7 @@ import Profile from './Components/Profile';
 import Groups from './Components/Groups';
 import WishList from './Components/WishList';
 import ResetPassword from './Components/ResetPassword';
+import ResetLink from './Components/ResetLink';
 import { connect } from 'react-redux';
 
 import {
@@ -73,7 +74,11 @@ class Main extends Component {
                 }
               />
               <Route
-                path="/reset-password"
+                path="/reset-link"
+                render={(props) => <ResetLink {...props} />}
+              />
+              <Route
+                path="/reset-password/:id"
                 render={(props) => <ResetPassword {...props} />}
               />
               <PrivateRoute path="/groups" {...this.props} component={Groups} />

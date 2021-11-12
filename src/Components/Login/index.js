@@ -235,7 +235,7 @@ class Login extends Component {
                     Register
                   </Link>
                   <Link
-                    to="/reset-password"
+                    to="/reset-link"
                     className={classes.link}
                     style={{ textDecoration: 'none', color: '#4f92ff' }}
                   >

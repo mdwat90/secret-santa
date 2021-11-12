@@ -66,7 +66,6 @@ class ResetPassword extends Component {
     super(props);
     this.state = {
       loading: false,
-      resetLinkSent: false,
     };
   }
 
@@ -74,29 +73,25 @@ class ResetPassword extends Component {
     window.scrollTo(0, 0);
   }
 
-  sendResetLink = (data) => {
+  resetPassword = (data) => {
     const component = this;
 
     axios
-      .get('/api/resetLink', {
-        data: {
-          email: data.email.toLowerCase().trim(),
-        },
+      .post('/api/resetPassword', {
+        email: data.email.toLowerCase().trim(),
+        newPassword: data.password.trim(),
       })
       .then(function (response) {
-        console.log('AXIOS RESPONSE:', response);
-
-        // if (response.data._id) {
-        //   component.setState({
-        //     loading: false,
-        //     resetLinkSent: true,
-        //   });
-        // } else if (!response.data._id) {
-        //   component.props.userExistsError();
-        //   component.setState({
-        //     loading: false,
-        //   });
-        // }
+        // console.log('AXIOS RESPONSE:', response);
+        if (response.data._id) {
+          component.props.setPasswordReset(true);
+          component.props.history.push('/');
+        } else if (!response.data._id) {
+          component.props.userExistsError();
+          component.setState({
+            loading: false,
+          });
+        }
       })
       .catch(function (error) {
         // console.log('AXIOS ERROR:', error)
@@ -107,54 +102,31 @@ class ResetPassword extends Component {
       });
   };
 
-  // resetPassword = (data) => {
-  //   const component = this;
-
-  //   axios
-  //     .post('/api/resetPassword', {
-  //       email: data.email.toLowerCase().trim(),
-  //       newPassword: data.password.trim(),
-  //     })
-  //     .then(function (response) {
-  //       // console.log('AXIOS RESPONSE:', response);
-  //       if (response.data._id) {
-  //         component.props.setPasswordReset(true);
-  //         component.props.history.push('/');
-  //       } else if (!response.data._id) {
-  //         component.props.userExistsError();
-  //         component.setState({
-  //           loading: false,
-  //         });
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       // console.log('AXIOS ERROR:', error)
-  //       component.props.connectionError(error);
-  //       component.setState({
-  //         loading: false,
-  //       });
-  //     });
-  // };
-
   render() {
     const { classes } = this.props;
-    const { resetLinkSent } = this.state;
+
     return (
       <Box className={classes.root}>
         <Grid container justify={'center'}>
           <Grid item xl={6} lg={6} md={6} xs={10}>
             <Container className={classes.form}>
               <Formik
-                initialValues={{ email: '' }}
+                initialValues={{ email: '', password: '', confirmPassword: '' }}
                 validate={(values) => {
                   let errors = {};
                   if (!values.email) {
                     errors.email = 'Required';
                   }
+                  if (!values.password) {
+                    errors.password = 'Required';
+                  }
+                  if (!values.confirmPassword) {
+                    errors.confirmPassword = 'Required';
+                  }
                   return errors;
                 }}
                 onSubmit={(values) => {
-                  this.sendResetLink(values);
+                  this.resetPassword(values);
                   this.setState({
                     loading: true,
                   });
@@ -166,55 +138,71 @@ class ResetPassword extends Component {
                       Reset Password
                     </Typography>
 
-                    {resetLinkSent ? (
+                    <div>
                       <div>
-                        <Typography variant="p" className={classes.title}>
-                          Your password reset link has been sent to your email
+                        <Typography variant="body2" className={classes.title}>
+                          Enter your email and we will send you a reset password
+                          link.
                         </Typography>
+                        <TextField
+                          required
+                          type="email"
+                          name="email"
+                          id="standard-required"
+                          label="Email"
+                          placeholder={'Email'}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.email}
+                          className={classes.textInput}
+                        />
+                        <TextField
+                          required
+                          type="password"
+                          name="password"
+                          id="standard-required"
+                          label="Password"
+                          placeholder={'Password'}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.password}
+                          className={classes.textInput}
+                        />
+                        <TextField
+                          required
+                          type="password"
+                          name="confirmPassword"
+                          id="standard-required"
+                          label="Confirm Password"
+                          placeholder={'Confirm password'}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.confirmPassword}
+                          className={classes.textInput}
+                        />
                       </div>
-                    ) : (
                       <div>
-                        <div>
-                          <Typography variant="body2" className={classes.title}>
-                            Enter your email and we will send you a reset
-                            password link.
-                          </Typography>
-                          <TextField
-                            required
-                            type="email"
-                            name="email"
-                            id="standard-required"
-                            label="Email"
-                            placeholder={'Email'}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.email}
-                            className={classes.textInput}
-                          />
-                        </div>
-                        <div>
-                          {this.state.loading ? (
-                            <Container
-                              style={{
-                                height: 48,
-                                marginBottom: '5vh',
-                                marginTop: '5vh',
-                              }}
-                            >
-                              <CircularProgress style={{ color: '#ff476f' }} />
-                            </Container>
-                          ) : (
-                            <Button
-                              type="submit"
-                              // disabled={isSubmitting}
-                              className={classes.button}
-                            >
-                              Send Link
-                            </Button>
-                          )}
-                        </div>
+                        {this.state.loading ? (
+                          <Container
+                            style={{
+                              height: 48,
+                              marginBottom: '5vh',
+                              marginTop: '5vh',
+                            }}
+                          >
+                            <CircularProgress style={{ color: '#ff476f' }} />
+                          </Container>
+                        ) : (
+                          <Button
+                            type="submit"
+                            // disabled={isSubmitting}
+                            className={classes.button}
+                          >
+                            Reset Password
+                          </Button>
+                        )}
                       </div>
-                    )}
+                    </div>
                   </form>
                 )}
               </Formik>

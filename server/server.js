@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const express = require('express');
 var cors = require('cors');
-const bodyParser = require('body-parser');
-const logger = require('morgan');
 const bcrypt = require('bcrypt');
 const sgMail = require('@sendgrid/mail');
 const path = require('path');
@@ -40,10 +38,7 @@ let db = mongoose.connection;
 db.once('open', () => console.log('connected to the database'));
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-// bodyParser boilerplate
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(logger('dev'));
+app.use(express.json());
 
 // USER ROUTES
 
@@ -74,14 +69,14 @@ app.post('/api/newUser', function (req, response) {
             subject: 'Welcome!',
             text: 'Welcome to the secret santa app!',
             html: `<strong>Welcome to the secret santa app!</strong>
-                                <p>You can login with this email address and join a group, 
-                                add items to your wishlist, 
-                                and draw a name for secret santa.</p>
-                                <p>Merry Christmas and Happy Holidays!</p>
-                                <br>
-                                <br>
-                                <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
-                        `,
+                      <p>You can login with this email address and join a group, 
+                      add items to your wishlist, 
+                      and draw a name for secret santa.</p>
+                      <p>Merry Christmas and Happy Holidays!</p>
+                      <br>
+                      <br>
+                      <p>Click <a href="https://secret-santa-19.herokuapp.com">here</a> to go to the app</p>
+              `,
           };
           // sgMail.send(msg);
         }
@@ -114,35 +109,38 @@ app.get('/api/user', function (req, response) {
 });
 
 app.get('/api/resetLink', function (req, response) {
-  console.log('REQUEST', req.body);
-  let userEmail = req.body.email;
+  let userEmail = req.query.email;
 
-  console.log('USER EMAIL', userEmail);
-
-  UserSchema.find({ email: userEmail }, function (err, res) {
+  UserSchema.find({ email: userEmail }, async function (err, res) {
     if (res === null) {
-      // console.log('ERROR FINDING USER')
       response.send('EMAIL ERROR');
     } else {
-      response.send(res);
+      // console.log('NODE_ENV', process.env.NODE_ENV);
+      let userId = res[0]._id;
 
-      const upperCaseName = res.name[0].toUpperCase() + res.name.substring(1);
+      let href =
+        process.env.NODE_ENV === 'development'
+          ? `http://localhost:3000/reset-password/${userId}`
+          : `https://secret-santa-19.herokuapp.com/reset-password/${userId}`;
+
+      const upperCaseName =
+        res[0].name[0].toUpperCase() + res[0].name.substring(1);
       const msg = {
         to: userEmail,
-        from: 'secret-santa-app@secret-santa-19.herokuapp.com',
+        from: 'mdwat90@gmail.com',
         subject: `Password Reset`,
         text: `Here's your Secret Santa password reset link, ${upperCaseName}.`,
         html: `<p>${upperCaseName},</p>
             <br>
             <p>You can reset your password by clicking the link below. Merry Christmas and Happy Holidays!<p>
             <br>
-            <a href="https://secret-santa-19.herokuapp.com/reset-password">Reset password</a>
+            <a href=${href}>Reset password</a>
             `,
       };
 
-      debugger;
+      await sgMail.send(msg);
 
-      // sgMail.send(msg);
+      response.send(res);
     }
   });
 });
