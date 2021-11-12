@@ -47,17 +47,6 @@ const styles = {
     '& .MuiInput-underline:after': {
       borderBottomColor: '#4f92ff',
     },
-    // '& .MuiOutlinedInput-root': {
-    //   '& fieldset': {
-    //     borderColor: 'red',
-    //   },
-    //   '&:hover fieldset': {
-    //     borderColor: 'yellow',
-    //   },
-    //   '&.Mui-focused fieldset': {
-    //     borderColor: 'green',
-    //   },
-    // }
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -77,6 +66,7 @@ class ResetPassword extends Component {
     super(props);
     this.state = {
       loading: false,
+      resetLinkSent: false,
     };
   }
 
@@ -84,25 +74,29 @@ class ResetPassword extends Component {
     window.scrollTo(0, 0);
   }
 
-  resetPassword = (data) => {
+  sendResetLink = (data) => {
     const component = this;
 
     axios
-      .post('/api/resetPassword', {
-        email: data.email.toLowerCase().trim(),
-        newPassword: data.password.trim(),
+      .get('/api/resetLink', {
+        data: {
+          email: data.email.toLowerCase().trim(),
+        },
       })
       .then(function (response) {
-        // console.log('AXIOS RESPONSE:', response);
-        if (response.data._id) {
-          component.props.setPasswordReset(true);
-          component.props.history.push('/');
-        } else if (!response.data._id) {
-          component.props.userExistsError();
-          component.setState({
-            loading: false,
-          });
-        }
+        console.log('AXIOS RESPONSE:', response);
+
+        // if (response.data._id) {
+        //   component.setState({
+        //     loading: false,
+        //     resetLinkSent: true,
+        //   });
+        // } else if (!response.data._id) {
+        //   component.props.userExistsError();
+        //   component.setState({
+        //     loading: false,
+        //   });
+        // }
       })
       .catch(function (error) {
         // console.log('AXIOS ERROR:', error)
@@ -113,151 +107,117 @@ class ResetPassword extends Component {
       });
   };
 
+  // resetPassword = (data) => {
+  //   const component = this;
+
+  //   axios
+  //     .post('/api/resetPassword', {
+  //       email: data.email.toLowerCase().trim(),
+  //       newPassword: data.password.trim(),
+  //     })
+  //     .then(function (response) {
+  //       // console.log('AXIOS RESPONSE:', response);
+  //       if (response.data._id) {
+  //         component.props.setPasswordReset(true);
+  //         component.props.history.push('/');
+  //       } else if (!response.data._id) {
+  //         component.props.userExistsError();
+  //         component.setState({
+  //           loading: false,
+  //         });
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       // console.log('AXIOS ERROR:', error)
+  //       component.props.connectionError(error);
+  //       component.setState({
+  //         loading: false,
+  //       });
+  //     });
+  // };
+
   render() {
     const { classes } = this.props;
+    const { resetLinkSent } = this.state;
     return (
       <Box className={classes.root}>
         <Grid container justify={'center'}>
           <Grid item xl={6} lg={6} md={6} xs={10}>
             <Container className={classes.form}>
               <Formik
-                initialValues={{ email: '', password: '', confirmPassword: '' }}
+                initialValues={{ email: '' }}
                 validate={(values) => {
                   let errors = {};
                   if (!values.email) {
                     errors.email = 'Required';
                   }
-                  if (values.password !== values.confirmPassword) {
-                    errors.confirmPassword = 'Passwords do not match';
-                  }
                   return errors;
                 }}
                 onSubmit={(values) => {
-                  this.resetPassword(values);
+                  this.sendResetLink(values);
                   this.setState({
                     loading: true,
                   });
                 }}
               >
-                {({
-                  values,
-                  errors,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  isSubmitting,
-                }) => (
+                {({ values, handleChange, handleBlur, handleSubmit }) => (
                   <form onSubmit={handleSubmit}>
                     <Typography variant="h4" className={classes.title}>
                       Reset Password
                     </Typography>
 
-                    <div>
-                      {/* <Typography variant='h5' className={classes.title}>Name</Typography> */}
-                      <TextField
-                        required
-                        type="email"
-                        name="email"
-                        id="standard-required"
-                        label="Email"
-                        placeholder={'Email'}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.email}
-                        className={classes.textInput}
-                      />
-                    </div>
-                    {/* <div>
-                            <Typography style={{color: 'red'}}>{errors.name}</Typography>
-                          </div> */}
-
-                    <div>
-                      {/* <Typography variant='h5' className={classes.title}>Password</Typography> */}
-                      <TextField
-                        required
-                        type="password"
-                        name="password"
-                        id="standard-password-input-1"
-                        label="New Password"
-                        placeholder={'Password'}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.password}
-                        className={classes.textInput}
-                      />
-                    </div>
-                    <div>
-                      <Typography style={{ color: 'red' }}>
-                        {errors.password}
-                      </Typography>
-                    </div>
-
-                    <div>
-                      {/* <Typography variant='h5' className={classes.title}>Confirm Password</Typography> */}
-                      <TextField
-                        required
-                        type="password"
-                        name="confirmPassword"
-                        id="standard-password-input-2"
-                        label="Confirm Password"
-                        placeholder={'Confirm Password'}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.confirmPassword}
-                        className={classes.textInput}
-                      />
-                    </div>
-                    <div>
-                      <Typography style={{ color: 'red' }}>
-                        {errors.confirmPassword}
-                      </Typography>
-                    </div>
-
-                    <div>
-                      {this.state.loading ? (
-                        <Container
-                          style={{
-                            height: 48,
-                            marginBottom: '5vh',
-                            marginTop: '5vh',
-                          }}
-                        >
-                          <CircularProgress style={{ color: '#ff476f' }} />
-                        </Container>
-                      ) : (
-                        <Button
-                          type="submit"
-                          // disabled={isSubmitting}
-                          className={classes.button}
-                        >
-                          Reset Password
-                        </Button>
-                      )}
-                    </div>
+                    {resetLinkSent ? (
+                      <div>
+                        <Typography variant="p" className={classes.title}>
+                          Your password reset link has been sent to your email
+                        </Typography>
+                      </div>
+                    ) : (
+                      <div>
+                        <div>
+                          <Typography variant="body2" className={classes.title}>
+                            Enter your email and we will send you a reset
+                            password link.
+                          </Typography>
+                          <TextField
+                            required
+                            type="email"
+                            name="email"
+                            id="standard-required"
+                            label="Email"
+                            placeholder={'Email'}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.email}
+                            className={classes.textInput}
+                          />
+                        </div>
+                        <div>
+                          {this.state.loading ? (
+                            <Container
+                              style={{
+                                height: 48,
+                                marginBottom: '5vh',
+                                marginTop: '5vh',
+                              }}
+                            >
+                              <CircularProgress style={{ color: '#ff476f' }} />
+                            </Container>
+                          ) : (
+                            <Button
+                              type="submit"
+                              // disabled={isSubmitting}
+                              className={classes.button}
+                            >
+                              Send Link
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </form>
                 )}
               </Formik>
-              {/* 
-              {this.props.userExistsErr ? (
-                <div>
-                  <Typography
-                    variant="h6"
-                    style={{ paddingTop: '4vh', color: 'red' }}
-                  >
-                    USER ALREADY EXISTS
-                  </Typography>
-                </div>
-              ) : null}
-              {this.props.connectionErr ? (
-                <div>
-                  <Typography
-                    variant="h6"
-                    style={{ paddingTop: '4vh', color: 'red' }}
-                  >
-                    ERROR CONNECTING TO DATABASE
-                  </Typography>
-                </div>
-              ) : null} */}
             </Container>
           </Grid>
         </Grid>

@@ -105,6 +105,7 @@ class Register extends Component {
       })
       .then(function (response) {
         // console.log('AXIOS RESPONSE:', response)
+
         if (response.data._id) {
           component.props.login(response.data);
         } else if (!response.data._id) {

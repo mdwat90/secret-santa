@@ -62,17 +62,6 @@ const styles = {
     '& .MuiInput-underline:after': {
       borderBottomColor: '#4f92ff',
     },
-    // '& .MuiOutlinedInput-root': {
-    //   '& fieldset': {
-    //     borderColor: 'red',
-    //   },
-    //   '&:hover fieldset': {
-    //     borderColor: 'yellow',
-    //   },
-    //   '&.Mui-focused fieldset': {
-    //     borderColor: 'green',
-    //   },
-    // }
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',

@@ -113,6 +113,40 @@ app.get('/api/user', function (req, response) {
   });
 });
 
+app.get('/api/resetLink', function (req, response) {
+  console.log('REQUEST', req.body);
+  let userEmail = req.body.email;
+
+  console.log('USER EMAIL', userEmail);
+
+  UserSchema.find({ email: userEmail }, function (err, res) {
+    if (res === null) {
+      // console.log('ERROR FINDING USER')
+      response.send('EMAIL ERROR');
+    } else {
+      response.send(res);
+
+      const upperCaseName = res.name[0].toUpperCase() + res.name.substring(1);
+      const msg = {
+        to: userEmail,
+        from: 'secret-santa-app@secret-santa-19.herokuapp.com',
+        subject: `Password Reset`,
+        text: `Here's your Secret Santa password reset link, ${upperCaseName}.`,
+        html: `<p>${upperCaseName},</p>
+            <br>
+            <p>You can reset your password by clicking the link below. Merry Christmas and Happy Holidays!<p>
+            <br>
+            <a href="https://secret-santa-19.herokuapp.com/reset-password">Reset password</a>
+            `,
+      };
+
+      debugger;
+
+      // sgMail.send(msg);
+    }
+  });
+});
+
 app.post('/api/resetPassword', function (req, response) {
   let userEmail = req.body.email;
   let newPassword = req.body.newPassword;
