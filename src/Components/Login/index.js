@@ -20,7 +20,6 @@ import {
   Grid,
   Snackbar,
   SnackbarContent,
-  Icon,
   IconButton,
 } from '@material-ui/core';
 
