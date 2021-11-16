@@ -251,21 +251,23 @@ class CreateGroup extends Component {
                       </Typography>
                     </div>
 
-                    <div>
-                      {/* <Typography variant='h5' className={classes.title}>Number of Members</Typography> */}
-                      <TextField
-                        required
-                        type="number"
-                        name="memberCount"
-                        id="standard-number"
-                        label="Number of Members"
-                        placeholder={'Number'}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.memberCount}
-                        className={classes.textInput}
-                      />
-                    </div>
+                    {values.nameDrawing && (
+                      <div>
+                        {/* <Typography variant='h5' className={classes.title}>Number of Members</Typography> */}
+                        <TextField
+                          required
+                          type="number"
+                          name="memberCount"
+                          id="standard-number"
+                          label="Number of Members"
+                          placeholder={'Number'}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.memberCount}
+                          className={classes.textInput}
+                        />
+                      </div>
+                    )}
                     <div>
                       {/* <Typography style={{color: 'red'}}>{errors.memberCount}</Typography> */}
                     </div>
